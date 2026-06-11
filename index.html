@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSVES Ops Daily</title>
+<title>OSVES Tech Calendar</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ── THEMES ── */
@@ -229,7 +229,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .card:hover{border-color:var(--border2);box-shadow:0 5px 26px var(--shadow);}
 @keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .card.hide-card{display:none;}
-.card.card-ready{border-color:var(--ready-bd)!important;background:var(--ready-bg)!important;}
 .card.card-ended{opacity:.32;filter:grayscale(.5);}
 
 /* card header */
@@ -391,14 +390,36 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   .tl-title{color:#000;}
   .tl-title::after{content:" — TECH SIGN-OFF SHEET";}
   .tl-hlabel{color:#000;border-color:#ccc;}
-  .tl-row{border-color:#ddd;min-height:32px;}
+  .tl-row{border-color:#ddd;min-height:40px;}
   .tl-rlabel{color:#000;border-color:#ccc;}
-  .tl-evt{border-width:1px!important;color:#000!important;font-size:9px;}
+  .tl-evt{
+    border-width:1px!important;color:#000!important;font-size:8px;
+    padding:2px 4px!important;overflow:visible!important;
+    min-width:30px;
+  }
   .tl-evt.c-notech, .tl-evt.c-allday{display:none!important;}
   .tl-evt.c-tech{background:#f0f0f0!important;border-color:#999!important;}
   .tl-row.allday-divider{display:none!important;}
   .tl-row.print-hide-row{display:none!important;}
-  .tl-signoff .so-ts{background:#000!important;color:#fff!important;}
+  .tl-evt-name{
+    font-size:8px!important;line-height:1.15;
+    overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+  }
+  /* Sign-off initials: small tag pinned to the top-left corner of the block,
+     floating outside normal flow so it never competes for space with the
+     event name or get squeezed by adjacent overlapping events. */
+  .tl-signoff{
+    position:absolute!important;
+    bottom:-7px!important; left:-2px!important;
+    z-index:10!important;
+  }
+  .tl-signoff .so-ts{
+    background:#000!important;color:#fff!important;
+    font-size:8px!important;font-weight:800!important;
+    padding:1px 4px!important;border-radius:2px;
+    line-height:1.3;white-space:nowrap;
+    box-shadow:0 0 0 1px #fff;
+  }
   .tl-evt:hover{transform:none;box-shadow:none;filter:none;}
 }
 .print-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
