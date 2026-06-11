@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSVES Ops Daily</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── THEMES ── */
+[data-theme="dark"] {
+  --bg:           #0a0c14;
+  --surface:      #111520;
+  --surface2:     #181c2c;
+  --border:       #242840;
+  --border2:      #323858;
+  --text:         #f0f4ff;
+  --text2:        #a8b4d8;
+  --muted:        #485070;
+  --muted2:       #6878a8;
+  --shadow:       rgba(0,0,0,.75);
+  --modal-bg:     rgba(0,0,0,.82);
+  --green:        #00cfbe;
+  --green-bg:     rgba(0,207,190,.16);
+  --green-border: rgba(0,207,190,.5);
+  --green-text:   #00ffe8;
+  --blue:         #4a8fff;
+  --blue-bg:      rgba(74,143,255,.16);
+  --blue-border:  rgba(74,143,255,.45);
+  --blue-text:    #7ab4ff;
+  --red:          #ff6b35;
+  --red-bg:       rgba(255,107,53,.14);
+  --red-border:   rgba(255,107,53,.42);
+  --red-text:     #ff9068;
+  --amber:        #ffc400;
+  --amber-bg:     rgba(255,196,0,.14);
+  --amber-border: rgba(255,196,0,.45);
+  --amber-text:   #ffd740;
+  --purple:       #9b8fff;
+  --purple-bg:    rgba(155,143,255,.14);
+  --purple-border:rgba(155,143,255,.38);
+  --purple-text:  #c0b8ff;
+  --techline:     #ffc400;
+  --nowline:      #ff3355;
+  --signoff-bg:   rgba(0,207,190,.2);
+  --signoff-bd:   rgba(0,207,190,.6);
+  --signoff-c:    #00ffe8;
+  --ready-bg:     rgba(0,207,190,.08);
+  --ready-bd:     rgba(0,207,190,.3);
+}
+[data-theme="light"] {
+  --bg:           #eef2fc;
+  --surface:      #ffffff;
+  --surface2:     #e4e9f8;
+  --border:       #c8d0e8;
+  --border2:      #a0aed0;
+  --text:         #0e1428;
+  --text2:        #384068;
+  --muted:        #6878a0;
+  --muted2:       #485890;
+  --shadow:       rgba(0,0,0,.1);
+  --modal-bg:     rgba(0,0,0,.5);
+  --green:        #007a70;
+  --green-bg:     rgba(0,122,112,.1);
+  --green-border: rgba(0,122,112,.4);
+  --green-text:   #005850;
+  --blue:         #2860d0;
+  --blue-bg:      rgba(40,96,208,.09);
+  --blue-border:  rgba(40,96,208,.35);
+  --blue-text:    #1848a8;
+  --red:          #d04820;
+  --red-bg:       rgba(208,72,32,.08);
+  --red-border:   rgba(208,72,32,.32);
+  --red-text:     #a83010;
+  --amber:        #b87800;
+  --amber-bg:     rgba(184,120,0,.1);
+  --amber-border: rgba(184,120,0,.38);
+  --amber-text:   #906000;
+  --purple:       #5840c0;
+  --purple-bg:    rgba(88,64,192,.09);
+  --purple-border:rgba(88,64,192,.32);
+  --purple-text:  #3828a0;
+  --techline:     #a86800;
+  --nowline:      #c02040;
+  --signoff-bg:   rgba(0,122,112,.12);
+  --signoff-bd:   rgba(0,122,112,.45);
+  --signoff-c:    #004840;
+  --ready-bg:     rgba(0,122,112,.06);
+  --ready-bd:     rgba(0,122,112,.25);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;transition:background .2s,color .2s;}
+
+/* ── HEADER ── */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 24px 12px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:300;transition:background .2s;flex-wrap:wrap;gap:8px;}
+.hdr-left{display:flex;align-items:flex-end;gap:0;flex-wrap:wrap;}
+.brand{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.16em;color:var(--green-text);text-transform:uppercase;line-height:1.3;}
+.brand-sub{font-family:'DM Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.13em;color:var(--muted2);text-transform:uppercase;line-height:1.25;display:block;}
+.hdr-date{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--text);margin-left:22px;letter-spacing:.03em;}
+.hdr-clock{font-family:'DM Mono',monospace;font-size:20px;font-weight:300;color:var(--green-text);margin-left:16px;letter-spacing:.05em;}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:5px;transition:background .3s;flex-shrink:0;}
+.sync-dot.connected{background:var(--green);box-shadow:0 0 6px rgba(0,207,190,.55);}
+.sync-dot.error{background:var(--red);}
+.sync-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;}
+.sync-wrap{display:flex;align-items:center;padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);}
+
+.initials-wrap{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);cursor:pointer;transition:all .15s;}
+.initials-wrap:hover{border-color:var(--amber);color:var(--amber-text);}
+.initials-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;}
+.initials-val{font-family:'DM Mono',monospace;font-size:13px;color:var(--amber-text);font-weight:700;letter-spacing:.1em;}
+
+.view-switch{display:flex;align-items:stretch;gap:0;border:1px solid var(--border2);border-radius:6px;overflow:hidden;background:var(--surface2);padding:0;}
+.vs-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.07em;padding:8px 18px;cursor:pointer;border:none;background:transparent;color:var(--muted2);transition:background .15s,color .15s;white-space:nowrap;line-height:1;margin:0;display:block;}
+.vs-btn:not(:last-child){border-right:1px solid var(--border2);}
+.vs-btn.active{color:var(--text);background:var(--surface);}
+.vs-btn.active.vs-tech{color:var(--green-text);background:var(--green-bg);}
+.vs-btn.active.vs-ops{color:var(--blue-text);background:var(--blue-bg);}
+.vs-btn.active.vs-all{color:var(--text);background:var(--surface);}
+.vs-btn:hover:not(.active){background:var(--border);color:var(--text2);}
+.theme-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.theme-btn:hover{border-color:var(--green);color:var(--green-text);}
+
+/* ── DROP ZONE ── */
+.drop-zone{margin:16px 24px 0;border:1.5px dashed var(--border2);border-radius:10px;padding:16px 22px;display:flex;align-items:center;gap:16px;background:var(--surface);cursor:pointer;transition:all .2s;}
+.drop-zone.drag-over{border-color:var(--green);background:rgba(0,207,190,.04);}
+.drop-zone.has-file{border-color:var(--green);border-style:solid;}
+.drop-icon{font-size:22px;flex-shrink:0;}
+.drop-text{flex:1;}
+.drop-label{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);letter-spacing:.06em;}
+.drop-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.drop-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.parse-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.07em;padding:7px 18px;border-radius:5px;cursor:pointer;border:none;background:var(--green);color:#000;font-weight:700;transition:opacity .15s;display:none;}
+.parse-btn:hover{opacity:.82;}
+.parse-btn:disabled{opacity:.4;cursor:not-allowed;}
+.clear-btn{font-family:'DM Mono',monospace;font-size:12px;padding:6px 12px;border-radius:5px;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted2);display:none;transition:all .15s;}
+.clear-btn:hover{border-color:var(--red);color:var(--red);}
+.parse-status{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);padding:6px 24px 0;min-height:20px;}
+
+/* ── EMPTY STATE ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;text-align:center;gap:14px;}
+.empty-icon{font-size:48px;opacity:.3;}
+.empty-label{font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+.empty-sub{font-size:12px;color:var(--muted);max-width:300px;line-height:1.65;}
+
+/* ── LEGEND ── */
+.legend{display:flex;gap:18px;flex-wrap:wrap;padding:16px 24px 0;}
+.li{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);}
+.ld{width:11px;height:11px;border-radius:3px;}
+
+/* ── TIMELINE ── */
+.tl-wrap{padding:16px 24px 0;overflow-x:auto;}
+.tl-header-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
+.tl-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+.tl-grid{position:relative;min-width:900px;}
+.tl-hours{display:grid;grid-template-columns:180px repeat(16,1fr);margin-bottom:2px;}
+.tl-hlabel{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--text2);text-align:center;padding-bottom:8px;border-right:1px solid var(--border);}
+.tl-hlabel:first-child{border-right:none;}
+.tl-row{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--border);min-height:48px;}
+.tl-rlabel{font-size:12px;font-weight:600;color:var(--text2);padding:8px 12px;border-right:1px solid var(--border);display:flex;align-items:center;line-height:1.3;}
+.tl-cells{position:relative;display:grid;grid-template-columns:repeat(16,1fr);}
+.tl-cell{border-right:1px solid rgba(100,120,180,.08);}
+.tl-cell:last-child{border-right:none;}
+.tl-evt{
+  position:absolute;top:5px;bottom:5px;border-radius:5px;
+  padding:0 9px;display:flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;
+  cursor:pointer;z-index:2;transition:filter .1s,transform .1s,opacity .15s,box-shadow .1s;
+}
+.tl-evt:hover{filter:brightness(1.15);transform:scaleY(1.08);z-index:6;box-shadow:0 3px 14px var(--shadow);}
+.tl-evt.c-tech  {background:var(--green-bg);color:var(--green-text);border:1.5px solid var(--green-border);}
+.tl-evt.c-notech{background:var(--blue-bg); color:var(--blue-text); border:1.5px solid var(--blue-border);}
+.tl-evt.c-allday{background:var(--purple-bg);color:var(--purple-text);border:1.5px solid var(--purple-border);opacity:0.48;}
+.tl-evt.tl-dimmed{opacity:.12;filter:grayscale(1);background:var(--surface2)!important;border-color:var(--border)!important;color:var(--muted)!important;}
+.tl-evt.tl-search-match{outline:2px solid var(--green-text);outline-offset:1px;filter:brightness(1.2);z-index:5;}
+.tl-evt.tl-search-nomatch{opacity:.18;filter:grayscale(.9);}
+/* Sign-off badge — solid-fill pill, high contrast, always readable */
+.tl-signoff{display:inline-flex;align-items:center;flex-shrink:0;}
+.tl-signoff .so-ts{font-family:'DM Mono',monospace;font-size:11px;font-weight:800;letter-spacing:.06em;color:#000;background:var(--green-text);border-radius:3px;padding:2px 7px;line-height:1.3;cursor:pointer;transition:background .15s,color .15s;}
+.tl-signoff .so-ts:hover{background:var(--red-text);}
+/* all-day divider */
+.tl-row.allday-divider{border-top:2px dashed var(--border2);}
+.tl-row.allday-divider .tl-rlabel{color:var(--muted);font-size:11px;letter-spacing:.06em;font-style:italic;}
+.tl-techline{position:absolute;top:0;bottom:0;width:2px;background:var(--techline);z-index:4;pointer-events:none;opacity:.95;}
+.tl-techline::after{content:'';position:absolute;top:-5px;left:-4px;width:10px;height:10px;border-radius:50%;background:var(--techline);}
+.now-line{position:absolute;bottom:0;width:2px;background:var(--nowline);z-index:20;pointer-events:none;display:none;top:20px;}
+.now-label{position:absolute;top:-20px;left:180px;font-family:'DM Mono',monospace;font-size:10px;color:var(--nowline);letter-spacing:.04em;pointer-events:none;display:none;white-space:nowrap;transform:translateX(-50%);text-align:center;font-weight:700;}
+.now-ball{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:var(--nowline);animation:nowpulse 2s ease-in-out infinite;}
+@keyframes nowpulse{0%{box-shadow:0 0 0 0 rgba(255,51,80,.75);}60%{box-shadow:0 0 0 9px rgba(255,51,80,0);}100%{box-shadow:0 0 0 0 rgba(255,51,80,0);}}
+.scroll-hint{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:right;padding:5px 24px 2px;}
+
+/* ── HOVER TOOLTIP ── */
+.tooltip{position:fixed;z-index:500;background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;padding:14px 16px;max-width:320px;min-width:220px;box-shadow:0 12px 40px var(--shadow);pointer-events:all;opacity:0;transition:opacity .15s;}
+.tooltip.show{opacity:1;}
+.tt-room{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px;}
+.tt-time{font-family:'DM Mono',monospace;font-size:16px;font-weight:300;color:var(--text);margin-bottom:3px;}
+.tt-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.tt-tag{display:inline-flex;align-items:center;gap:4px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:3px;border:1px solid;line-height:1.5;margin:2px 2px 0 0;}
+.tt-tag.g{color:var(--green-text);border-color:var(--green-border);background:var(--green-bg);}
+.tt-tag.b{color:var(--blue-text);border-color:var(--blue-border);background:var(--blue-bg);}
+.tt-tag.r{color:var(--red-text);border-color:var(--red-border);background:var(--red-bg);}
+.tt-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;color:var(--amber-text);background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:3px;padding:3px 8px;margin-bottom:7px;}
+.tt-notech{font-size:11px;color:var(--muted);font-style:italic;}
+.tt-click-hint{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:9px;border-top:1px solid var(--border);padding-top:7px;text-align:center;}
+
+/* ── SEARCH ── */
+.search-wrap{padding:16px 24px 0;}
+.search-input{width:100%;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.04em;padding:11px 16px 11px 38px;border-radius:7px;border:1px solid var(--border2);background:var(--surface);color:var(--text);outline:none;transition:border-color .15s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%236878a8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:13px center;}
+.search-input:focus{border-color:var(--green);}
+.search-input::placeholder{color:var(--muted);}
+.search-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);padding-top:6px;min-height:18px;}
+
+/* ── UPCOMING TECH STARTS ── */
+.upcoming-ts-wrap{margin:14px 24px 0;border-radius:8px;padding:13px 17px;background:var(--amber-bg);border:1px solid var(--amber-border);}
+.uts-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--amber-text);text-transform:uppercase;margin-bottom:10px;}
+.uts-list{display:flex;flex-direction:column;gap:7px;}
+.uts-entry{display:flex;align-items:center;gap:12px;}
+.uts-dot{width:8px;height:8px;border-radius:50%;background:var(--techline);flex-shrink:0;animation:nowpulse 2s ease-in-out infinite;}
+.uts-time{font-family:'DM Mono',monospace;font-size:14px;color:var(--amber-text);font-weight:700;min-width:80px;}
+.uts-info{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);}
+.uts-until{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── CARDS ── */
+.cards-wrap{padding:20px 24px 36px;}
+.cards-hdr{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:13px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:13px;}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;animation:up .22s ease both;transition:border-color .2s,box-shadow .2s,opacity .3s;}
+.card:hover{border-color:var(--border2);box-shadow:0 5px 26px var(--shadow);}
+@keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card.hide-card{display:none;}
+.card.card-ready{border-color:var(--ready-bd)!important;background:var(--ready-bg)!important;}
+.card.card-ended{opacity:.32;filter:grayscale(.5);}
+
+/* card header */
+.card-room{padding:12px 16px 10px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;font-size:15px;font-weight:600;letter-spacing:.04em;color:var(--text2);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+
+/* event body */
+.evt{padding:14px 16px;border-bottom:1px solid var(--border);}
+.evt:last-child{border-bottom:none;}
+.evt-time{font-family:'DM Mono',monospace;font-size:22px;font-weight:300;color:var(--text);letter-spacing:-.01em;line-height:1;margin-bottom:6px;}
+.evt-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px;}
+.evt-type{font-size:11px;color:var(--muted2);font-style:italic;margin-bottom:9px;}
+.evt-countdown{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.05em;padding:3px 9px;border-radius:4px;display:inline-block;margin-bottom:9px;}
+.evt-countdown.cd-future{color:var(--amber-text);background:var(--amber-bg);border:1px solid var(--amber-border);}
+.evt-countdown.cd-live{color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);}
+.evt-countdown.cd-ended{color:var(--muted);background:transparent;border:1px solid var(--border);}
+
+/* dept sections */
+.dept-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:12px;margin-bottom:6px;cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;}
+.dept-lbl::after{content:'▾';font-size:10px;color:var(--muted);transition:transform .15s;margin-left:4px;}
+.dept-lbl.collapsed::after{transform:rotate(-90deg);}
+.dept-section{overflow:hidden;}
+.dept-section.collapsed{display:none;}
+
+/* item tags */
+.tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-family:'DM Mono',monospace;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;border:1.5px solid;line-height:1.5;letter-spacing:.02em;display:inline-flex;align-items:baseline;gap:6px;}
+.tag-qty{font-weight:800;font-size:12px;color:inherit;background:rgba(255,255,255,.1);border-radius:3px;padding:0 5px;margin-right:1px;line-height:1.4;}
+[data-theme="light"] .tag-qty{background:rgba(0,0,0,.08);}
+.tag.tg{color:var(--green-text);border-color:var(--green-border);background:var(--green-bg);}
+.tag.tb{color:var(--blue-text);border-color:var(--blue-border);background:var(--blue-bg);}
+.tag.tr{color:var(--red-text);border-color:var(--red-border);background:var(--red-bg);}
+.tag.ta{color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);}
+.tag.tp{color:var(--purple-text);border-color:var(--purple-border);background:var(--purple-bg);}
+.no-needs-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.07em;color:var(--muted);display:block;margin-top:9px;padding:2px 0;}
+.side-notes{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}
+.side-note{font-size:11px;color:var(--muted2);line-height:1.65;padding:4px 0;}
+.side-note+.side-note{border-top:1px solid var(--border);}
+.food-emoji{font-size:16px;float:right;margin-left:8px;line-height:1;opacity:.85;}
+
+/* ── SINGLE SIGN-OFF BUTTON — full width below header ── */
+.signoff-bar{padding:0;border-top:none;background:transparent;}
+.tech-signoff-btn{
+  display:block;width:100%;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;font-weight:700;
+  padding:10px 16px;border-radius:0;cursor:pointer;border:none;
+  border-top:1px solid var(--border);
+  color:var(--amber-text);background:var(--amber-bg);
+  transition:all .15s;text-align:center;
+}
+.tech-signoff-btn:hover{background:rgba(255,196,0,.26);}
+.tech-signoff-btn.signed{
+  color:#000;background:var(--green-text);
+  cursor:pointer;font-size:15px;font-weight:800;letter-spacing:.2em;
+  padding:9px 16px;transition:all .15s;
+}
+.tech-signoff-btn.signed:hover{background:var(--red-text);color:#000;}
+.tech-signoff-btn.signed:hover::after{content:' — TAP TO UNDO';font-size:9px;letter-spacing:.1em;font-weight:700;}
+
+/* ── INITIALS MODAL ── */
+.modal-bg{position:fixed;inset:0;background:var(--modal-bg);z-index:900;display:flex;align-items:center;justify-content:center;}
+.modal-bg.hidden{display:none;}
+.modal{background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px;min-width:300px;max-width:360px;box-shadow:0 20px 60px var(--shadow);}
+.modal-title{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--text2);text-transform:uppercase;margin-bottom:16px;}
+.modal-input{width:100%;font-family:'DM Mono',monospace;font-size:24px;letter-spacing:.25em;font-weight:600;text-align:center;text-transform:uppercase;padding:12px 16px;border-radius:7px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--text);outline:none;transition:border-color .15s;margin-bottom:16px;}
+.modal-input:focus{border-color:var(--green);}
+.modal-btns{display:flex;gap:10px;}
+.modal-confirm{flex:1;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;padding:10px;border-radius:5px;cursor:pointer;border:none;background:var(--green);color:#000;transition:opacity .15s;}
+.modal-confirm:hover{opacity:.82;}
+.modal-cancel{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;padding:10px 16px;border-radius:5px;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted2);transition:all .15s;}
+.modal-cancel:hover{border-color:var(--red);color:var(--red);}
+
+/* ── EVENT DETAIL MODAL ── */
+.detail-modal-bg{position:fixed;inset:0;background:var(--modal-bg);z-index:700;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s ease;}
+.detail-modal-bg.hidden{display:none;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.detail-modal{background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px var(--shadow);animation:slideUp .18s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.dm-header{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:14px;position:sticky;top:0;background:var(--surface);z-index:2;}
+.dm-room{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;}
+.dm-name{font-size:18px;font-weight:700;color:var(--text);line-height:1.3;}
+.dm-time{font-family:'DM Mono',monospace;font-size:17px;font-weight:300;color:var(--text);margin-top:4px;}
+.dm-close{font-family:'DM Mono',monospace;font-size:20px;color:var(--muted);cursor:pointer;flex-shrink:0;padding:2px 8px;border-radius:4px;border:none;background:transparent;transition:color .15s;line-height:1;}
+.dm-close:hover{color:var(--text);}
+.dm-body{padding:18px 22px 24px;}
+.dm-badges{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px;}
+.dm-badge{font-family:'DM Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;padding:5px 11px;border-radius:5px;border:1px solid;}
+.dm-badge.amber{color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);}
+.dm-badge.green{color:var(--green-text);border-color:var(--green-border);background:var(--green-bg);}
+.dm-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px;}
+.dm-section-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:16px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+
+/* Top-level TECH / OPS collapsible groups */
+.dm-group{margin-top:14px;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+.dm-group-lbl{
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.12em;
+  padding:11px 14px;cursor:pointer;user-select:none;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .15s;
+}
+.dm-group-lbl::after{content:'▾';font-size:11px;transition:transform .15s;}
+.dm-group-lbl.collapsed::after{transform:rotate(-90deg);}
+.dm-group-lbl.dm-group-tech{color:var(--green-text);background:var(--green-bg);}
+.dm-group-lbl.dm-group-ops{color:var(--blue-text);background:var(--blue-bg);}
+.dm-group-body{padding:12px 14px 14px;}
+.dm-group-body .dept-lbl:first-child{margin-top:0;}
+.dm-signoff-btn{width:100%;margin-top:20px;font-family:'DM Mono',monospace;font-size:13px;font-weight:800;letter-spacing:.13em;padding:15px;border-radius:8px;cursor:pointer;border:2px solid;color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);transition:all .18s;text-align:center;display:block;}
+.dm-signoff-btn:hover{background:rgba(255,196,0,.32);border-color:var(--amber-text);}
+.dm-signoff-btn.signed{color:#000;border-color:var(--green-text);background:var(--green-text);cursor:pointer;font-size:16px;letter-spacing:.16em;transition:all .15s;}
+.dm-signoff-btn.signed:hover{background:var(--red-text);border-color:var(--red-text);color:#000;}
+.dm-signoff-btn.signed:hover::after{content:'  —  TAP TO UNDO';font-size:11px;letter-spacing:.1em;}
+.dm-notes{margin-top:16px;padding:11px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);}
+.dm-note{font-size:12px;color:var(--muted2);line-height:1.65;padding:4px 0;}
+.dm-note+.dm-note{border-top:1px solid var(--border);}
+
+/* ── NOTES SECTION ── */
+.notes-section{margin:0 24px 44px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);}
+.notes-hdr{padding:12px 16px 10px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--muted2);display:flex;justify-content:space-between;align-items:center;}
+.notes-saved{font-size:10px;color:var(--muted);font-weight:400;letter-spacing:.04em;}
+.notes-list{padding:6px 16px;}
+.notes-empty{font-size:12px;color:var(--muted);font-style:italic;padding:10px 0;}
+.note-entry{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.note-entry:last-child{border-bottom:none;}
+.note-initials{font-family:'DM Mono',monospace;font-size:11px;font-weight:800;letter-spacing:.08em;color:#000;background:var(--green-text);border-radius:4px;padding:3px 8px;flex-shrink:0;line-height:1.4;}
+.note-body{flex:1;}
+.note-text{font-size:13px;color:var(--text);line-height:1.6;}
+.note-meta{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.04em;margin-top:2px;}
+.note-delete{font-family:'DM Mono',monospace;font-size:14px;color:var(--muted);cursor:pointer;background:none;border:none;padding:0 4px;flex-shrink:0;transition:color .15s;line-height:1.6;}
+.note-delete:hover{color:var(--red-text);}
+.notes-input-row{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);}
+.notes-input{flex:1;font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);outline:none;transition:border-color .15s;}
+.notes-input:focus{border-color:var(--green);}
+.notes-input::placeholder{color:var(--muted);}
+.notes-add-btn{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;padding:9px 18px;border-radius:6px;cursor:pointer;border:none;background:var(--green);color:#000;transition:opacity .15s;}
+.notes-add-btn:hover{opacity:.82;}
+
+/* ── FIREBASE CONFIG BANNER ── */
+.fb-banner{margin:12px 24px 0;padding:12px 16px;border-radius:8px;background:var(--amber-bg);border:1px solid var(--amber-border);font-family:'DM Mono',monospace;font-size:11px;color:var(--amber-text);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.fb-banner.hidden{display:none;}
+.fb-banner a{color:var(--amber-text);font-weight:700;}
+
+/* utility */
+.hidden{display:none!important;}
+
+/* ── PRINT VIEW ── */
+@media print {
+  body{background:#fff;color:#000;font-size:11px;}
+  .hdr-right, .fb-banner, .drop-zone, .parse-status, .upcoming-ts-wrap,
+  .legend, .scroll-hint, .search-wrap, .search-count, .cards-wrap,
+  .notes-section, .empty-state, .tooltip, .modal-bg, .detail-modal-bg,
+  .now-line, .now-label, .tl-techline {
+    display:none!important;
+  }
+  .hdr{position:static;border-bottom:2px solid #000;padding:0 0 10px;}
+  .brand, .brand-sub{color:#000;}
+  .hdr-date{color:#000;font-size:20px;}
+  .hdr-clock{display:none;}
+  .tl-wrap{padding:14px 0 0;overflow:visible;}
+  .tl-grid{min-width:0;}
+  .tl-title{color:#000;}
+  .tl-title::after{content:" — TECH SIGN-OFF SHEET";}
+  .tl-hlabel{color:#000;border-color:#ccc;}
+  .tl-row{border-color:#ddd;min-height:32px;}
+  .tl-rlabel{color:#000;border-color:#ccc;}
+  .tl-evt{border-width:1px!important;color:#000!important;font-size:9px;}
+  .tl-evt.c-notech, .tl-evt.c-allday{display:none!important;}
+  .tl-evt.c-tech{background:#f0f0f0!important;border-color:#999!important;}
+  .tl-row.allday-divider{display:none!important;}
+  .tl-row.print-hide-row{display:none!important;}
+  .tl-signoff .so-ts{background:#000!important;color:#fff!important;}
+  .tl-evt:hover{transform:none;box-shadow:none;filter:none;}
+}
+.print-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.print-btn:hover{border-color:var(--green);color:var(--green-text);}
+
+</style>
+</head>
+<body>
+
+<!-- INITIALS MODAL -->
+<div class="modal-bg hidden" id="modal-bg">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Enter Your Initials</div>
+    <input class="modal-input" id="modal-input" maxlength="4" placeholder="e.g. AB" autocomplete="off">
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm" onclick="confirmModal()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT DETAIL MODAL -->
+<div class="detail-modal-bg hidden" id="detail-modal-bg" onclick="closeDetailIfBg(event)">
+  <div class="detail-modal" id="detail-modal">
+    <div class="dm-header">
+      <div>
+        <div class="dm-room" id="dm-room"></div>
+        <div class="dm-name" id="dm-name"></div>
+        <div class="dm-time" id="dm-time"></div>
+      </div>
+      <button class="dm-close" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="dm-body" id="dm-body"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-left">
+    <div style="display:flex;flex-direction:column;gap:1px;margin-right:14px;">
+      <span class="brand">OSVES</span>
+      <span class="brand-sub">TECH / OPS</span>
+      <span class="brand-sub">CALENDAR</span>
+    </div>
+    <span class="hdr-date" id="hdr-date"></span>
+    <span class="hdr-clock" id="hdr-clock"></span>
+  </div>
+  <div class="hdr-right">
+    <div class="sync-wrap" id="sync-wrap" title="Firebase real-time sync">
+      <span class="sync-dot" id="sync-dot"></span>
+      <span class="sync-label" id="sync-label">OFFLINE</span>
+    </div>
+    <div class="initials-wrap" id="initials-wrap" onclick="promptInitials(null)">
+      <span class="initials-label">SIGNING AS</span>
+      <span class="initials-val" id="initials-display">SET</span>
+    </div>
+    <div class="view-switch">
+      <button class="vs-btn vs-all active" id="vs-all"  onclick="setView('all')">ALL</button>
+      <button class="vs-btn vs-tech"       id="vs-tech" onclick="setView('tech')">⚙ TECH</button>
+      <button class="vs-btn vs-ops"        id="vs-ops"  onclick="setView('ops')">🪑 OPS</button>
+    </div>
+    <button class="print-btn" id="print-btn" onclick="printSchedule()">🖨 PRINT</button>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀ LIGHT</button>
+  </div>
+</div>
+
+<!-- FIREBASE CONFIG BANNER -->
+<div class="fb-banner" id="fb-banner">
+  ⚠ Firebase not configured — sign-offs are local only.
+  <a href="#" onclick="showFirebaseSetup();return false;">Configure Firebase →</a>
+</div>
+
+<!-- DROP ZONE -->
+<div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+  <input type="file" id="file-input" accept=".pdf" style="display:none" onchange="onFileSelect(event)">
+  <div class="drop-icon">📄</div>
+  <div class="drop-text">
+    <div class="drop-label" id="drop-label">DROP PDF</div>
+    <div class="drop-sub"   id="drop-sub">Momentus Elite daily export</div>
+  </div>
+  <div class="drop-right">
+    <button class="parse-btn" id="parse-btn" onclick="handleBuild(event)">⚡ BUILD</button>
+    <button class="clear-btn" id="clear-btn" onclick="clearFile(event)">✕</button>
+  </div>
+</div>
+<div class="parse-status" id="parse-status"></div>
+
+<!-- UPCOMING TECH STARTS -->
+<div class="upcoming-ts-wrap hidden" id="upcoming-ts-wrap">
+  <div class="uts-label">UPCOMING TECH STARTS</div>
+  <div class="uts-list" id="uts-list"></div>
+</div>
+
+<!-- EMPTY STATE -->
+<div class="empty-state" id="empty-state">
+  <div class="empty-icon">🗓</div>
+  <div class="empty-label">No schedule loaded</div>
+  <div class="empty-sub">Drop a Momentus Elite daily export PDF above to build today's schedule.</div>
+</div>
+
+<!-- SCHEDULE -->
+<div id="schedule-wrap" class="hidden">
+
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:var(--green)"></div>TECH</div>
+    <div class="li"><div class="ld" style="background:var(--blue)"></div>NO TECH</div>
+    <div class="li"><div class="ld" style="background:var(--purple)"></div>ALL DAY</div>
+    <div class="li"><div class="ld" style="background:var(--techline);border-radius:50%"></div>TECH START</div>
+    <div class="li"><div class="ld" style="background:var(--nowline)"></div>NOW</div>
+  </div>
+
+  <div class="tl-wrap">
+    <div class="tl-header-row">
+      <div class="tl-title">TIMELINE 7 AM – 11 PM</div>
+    </div>
+    <div class="tl-grid" id="tl-grid">
+      <div class="tl-hours" id="tl-hours">
+        <div class="tl-hlabel"></div>
+        <div class="tl-hlabel">7A</div><div class="tl-hlabel">8A</div>
+        <div class="tl-hlabel">9A</div><div class="tl-hlabel">10A</div>
+        <div class="tl-hlabel">11A</div><div class="tl-hlabel">12P</div>
+        <div class="tl-hlabel">1P</div><div class="tl-hlabel">2P</div>
+        <div class="tl-hlabel">3P</div><div class="tl-hlabel">4P</div>
+        <div class="tl-hlabel">5P</div><div class="tl-hlabel">6P</div>
+        <div class="tl-hlabel">7P</div><div class="tl-hlabel">8P</div>
+        <div class="tl-hlabel">9P</div><div class="tl-hlabel">10P</div>
+      </div>
+      <div id="tl-rows"></div>
+      <div class="now-line"  id="now-line"></div>
+      <div class="now-label" id="now-label"></div>
+    </div>
+  </div>
+  <div class="scroll-hint">← scroll →</div>
+
+  <!-- SEARCH — below timeline, above cards -->
+  <div class="search-wrap" id="search-wrap" style="padding:14px 24px 0;">
+    <input class="search-input" id="search-input" type="text" placeholder="Search events, rooms, equipment…" oninput="handleSearch()">
+    <div class="search-count hidden" id="search-count"></div>
+  </div>
+
+  <div class="cards-wrap">
+    <div class="cards-hdr">ALL EVENTS — SORTED BY START TIME</div>
+    <div class="grid" id="card-grid"></div>
+  </div>
+
+  <div class="notes-section">
+    <div class="notes-hdr">
+      <span>NOTES</span>
+      <span class="notes-saved" id="notes-saved"></span>
+    </div>
+    <div class="notes-list" id="notes-list"></div>
+    <div class="notes-input-row">
+      <input type="text" class="notes-input" id="notes-input" placeholder="Add a note…" autocomplete="off">
+      <button class="notes-add-btn" onclick="addNote()">ADD</button>
+    </div>
+  </div>
+
+</div><!-- /schedule-wrap -->
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   FIREBASE CONFIG — OSVES Daily Calendar
+═══════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCUJx8WKibvOszshK3UhIwkw6S3LacK15k",
+  authDomain: "osves-daily-calendar.firebaseapp.com",
+  databaseURL: "https://osves-daily-calendar-default-rtdb.firebaseio.com",
+  projectId: "osves-daily-calendar",
+  storageBucket: "osves-daily-calendar.firebasestorage.app",
+  messagingSenderId: "31829479692",
+  appId: "1:31829479692:web:983d21dbe40e758ecfb929"
+};
+
+/* ═══════════════════════════════
+   FIREBASE INIT & SYNC
+═══════════════════════════════ */
+let db = null;
+let currentDateKey = '';   // e.g. "2026-04-15" — scope sign-offs per day
+let signoffCache = {};     // { eventKey: { ts: bool, tsBy:'JW', tsAt:'9:42 AM', ready:bool, readyBy:'EW', readyAt:'6:14 PM' } }
+let fbListenerAttached = false;
+
+async function initFirebase() {
+  if (!FIREBASE_CONFIG) {
+    setSyncStatus('offline');
+    return;
+  }
+  try {
+    setSyncStatus('connecting');
+    // Load Firebase SDK dynamically
+    await loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+    await loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js');
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
+    setSyncStatus('connected');
+    document.getElementById('fb-banner').classList.add('hidden');
+    if (currentDateKey) attachListener();
+  } catch(e) {
+    console.error('Firebase init failed', e);
+    setSyncStatus('error');
+  }
+}
+
+function loadScript(src) {
+  return new Promise((res,rej) => {
+    if (document.querySelector(`script[src="${src}"]`)) { res(); return; }
+    const s = document.createElement('script');
+    s.src = src; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+
+function setSyncStatus(state) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot';
+  if (state === 'connected')   { dot.classList.add('connected'); lbl.textContent = 'LIVE'; }
+  else if (state === 'error')  { dot.classList.add('error');     lbl.textContent = 'ERROR'; }
+  else if (state === 'connecting') { lbl.textContent = 'CONNECTING'; }
+  else                         { lbl.textContent = 'OFFLINE'; }
+}
+
+function attachListener() {
+  if (!db || !currentDateKey || fbListenerAttached) return;
+  fbListenerAttached = true;
+  db.ref('signoffs/' + currentDateKey).on('value', snap => {
+    signoffCache = snap.val() || {};
+    applyAllSignoffs();
+  });
+}
+
+function fbPath(evKey) {
+  return 'signoffs/' + currentDateKey + '/' + evKey;
+}
+
+function writeSignoff(evKey, patch) {
+  if (db) {
+    db.ref(fbPath(evKey)).update(patch);
+  } else {
+    if (!signoffCache[evKey]) signoffCache[evKey] = {};
+    Object.assign(signoffCache[evKey], patch);
+    applyAllSignoffs();
+  }
+}
+
+function makeEventKey(ev) {
+  // Stable key from room + start time + name
+  return (ev.room + '_' + ev.startH + '_' + ev.name)
+    .replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 80);
+}
+
+/* ═══════════════════════════════
+   INITIALS
+═══════════════════════════════ */
+let myInitials = localStorage.getItem('osves_initials') || '';
+let modalResolve = null;
+
+function updateInitialsDisplay() {
+  document.getElementById('initials-display').textContent = myInitials || 'SET';
+}
+updateInitialsDisplay();
+
+function promptInitials(callback) {
+  const modal = document.getElementById('modal-bg');
+  const input = document.getElementById('modal-input');
+  document.getElementById('modal-title').textContent = 'Your Initials';
+  input.value = myInitials;
+  modal.classList.remove('hidden');
+  input.focus();
+  input.select();
+  modalResolve = callback;
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.add('hidden');
+  modalResolve = null;
+}
+
+function confirmModal() {
+  const val = document.getElementById('modal-input').value.trim().toUpperCase().substring(0,4);
+  if (!val) return;
+  myInitials = val;
+  localStorage.setItem('osves_initials', val);
+  updateInitialsDisplay();
+  document.getElementById('modal-bg').classList.add('hidden');
+  if (modalResolve) { modalResolve(val); modalResolve = null; }
+}
+
+document.getElementById('modal-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmModal();
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ═══════════════════════════════
+   SIGN-OFF ACTIONS
+═══════════════════════════════ */
+function doSignoff(evKey) {
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes();
+  const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  const timeStr = h + ':' + String(m).padStart(2,'0') + ' ' + ap;
+
+  const proceed = (initials) => {
+    const patch = { ts: true, tsBy: initials, tsAt: timeStr };
+    writeSignoff(evKey, patch);
+    if (!signoffCache[evKey]) signoffCache[evKey] = {};
+    Object.assign(signoffCache[evKey], patch);
+    applySignoffToCard(evKey);
+  };
+
+  if (myInitials) {
+    proceed(myInitials);
+  } else {
+    promptInitials((initials) => { if (initials) proceed(initials); });
+  }
+}
+
+function doUndoSignoff(evKey, roomLabel) {
+  if (!confirm(`Remove tech sign-off for ${roomLabel}?`)) return;
+
+  if (db) {
+    db.ref(fbPath(evKey)).remove();
+  }
+  delete signoffCache[evKey];
+  removeSignoffFromUI(evKey);
+}
+
+function removeSignoffFromUI(evKey) {
+  // ── Card ──
+  const card = document.querySelector(`.card[data-evkey="${CSS.escape(evKey)}"]`);
+  if (card) {
+    const btn = card.querySelector('.tech-signoff-btn');
+    if (btn) {
+      const ev = allEvents.find(e => makeEventKey(e) === evKey);
+      btn.textContent = ev ? `TECH STARTS AT ${fmtH(ev.startH - 0.5)}` : 'TECH START';
+      btn.classList.remove('signed');
+      btn.onclick = () => doSignoff(evKey);
+    }
+    card.classList.remove('card-ready');
+  }
+
+  // ── Timeline block ──
+  const tlEl = document.querySelector(`.tl-evt[data-evkey="${CSS.escape(evKey)}"]`);
+  if (tlEl) {
+    const badge = tlEl.querySelector('.tl-signoff');
+    if (badge) badge.remove();
+    tlEl.style.opacity = '';
+  }
+
+  // ── Detail modal, if open for this event ──
+  const dmBtn = document.querySelector(`.dm-signoff-btn[data-evkey="${CSS.escape(evKey)}"]`);
+  if (dmBtn) {
+    const ev = allEvents.find(e => makeEventKey(e) === evKey);
+    dmBtn.textContent = ev ? `TECH STARTS AT ${fmtH(ev.startH - 0.5)}` : 'TECH START';
+    dmBtn.classList.remove('signed');
+    dmBtn.onclick = () => doSignoff(evKey);
+  }
+}
+
+function applyAllSignoffs() {
+  Object.keys(signoffCache).forEach(k => applySignoffToCard(k));
+}
+
+function applySignoffToCard(evKey) {
+  const state = signoffCache[evKey];
+  if (!state || !state.ts) return;
+
+  const ev = allEvents.find(e => makeEventKey(e) === evKey);
+  const roomLabel = ev ? `${ev.room} — ${ev.name}` : 'this event';
+
+  // ── Update card ──
+  const card = document.querySelector(`.card[data-evkey="${CSS.escape(evKey)}"]`);
+  if (card) {
+    const btn = card.querySelector('.tech-signoff-btn');
+    if (btn) {
+      btn.textContent = state.tsBy;
+      btn.classList.add('signed');
+      btn.title = 'Tap to undo sign-off';
+      btn.onclick = () => doUndoSignoff(evKey, roomLabel);
+    }
+    card.classList.add('card-ready');
+  }
+
+  // ── Update timeline block ──
+  const tlEl = document.querySelector(`.tl-evt[data-evkey="${CSS.escape(evKey)}"]`);
+  if (tlEl) {
+    const oldBadge = tlEl.querySelector('.tl-signoff');
+    if (oldBadge) oldBadge.remove();
+    const badge = document.createElement('span');
+    badge.className = 'tl-signoff';
+    badge.innerHTML = `<span class="so-ts" title="Tech started by ${state.tsBy} ${state.tsAt} — click to undo">${state.tsBy}</span>`;
+    const soTs = badge.querySelector('.so-ts');
+    soTs.addEventListener('click', evt => {
+      evt.stopPropagation();
+      doUndoSignoff(evKey, roomLabel);
+    });
+    soTs.addEventListener('touchstart', evt => evt.stopPropagation(), { passive: true });
+    soTs.addEventListener('touchend', evt => {
+      evt.stopPropagation();
+      doUndoSignoff(evKey, roomLabel);
+    });
+    tlEl.appendChild(badge);
+    tlEl.style.opacity = '0.7';
+  }
+
+  // ── Update detail modal if currently open for this event ──
+  const dmBtn = document.querySelector(`.dm-signoff-btn[data-evkey="${CSS.escape(evKey)}"]`);
+  if (dmBtn) {
+    dmBtn.textContent = `${state.tsBy}  ·  ${state.tsAt}`;
+    dmBtn.classList.add('signed');
+    dmBtn.title = 'Tap to undo sign-off';
+    dmBtn.onclick = () => doUndoSignoff(evKey, roomLabel);
+  }
+}
+
+function showFirebaseSetup() {
+  alert('Firebase Setup:\n\n1. Go to https://console.firebase.google.com\n2. Create a new project\n3. Click "Add app" → Web\n4. Copy the firebaseConfig object\n5. Open this HTML file in a text editor\n6. Find "const FIREBASE_CONFIG = null" near the top of the <script> section\n7. Replace null with your config object\n8. Go to Realtime Database → Create database (start in test mode)\n9. Share the HTML file with your team — everyone using the same file shares sign-offs live');
+}
+
+/* ═══════════════════════════════
+   THEME
+═══════════════════════════════ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const dark = html.getAttribute('data-theme') === 'dark';
+  const next = dark ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-btn').textContent = dark ? '🌙 DARK' : '☀ LIGHT';
+  localStorage.setItem('osves_theme', next);
+}
+(function restoreTheme() {
+  const saved = localStorage.getItem('osves_theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('theme-btn').textContent = saved === 'dark' ? '☀ LIGHT' : '🌙 DARK';
+  }
+})();
+
+/* ═══════════════════════════════
+   VIEW SWITCH
+═══════════════════════════════ */
+let currentView = localStorage.getItem('osves_view') || 'all';
+function setView(v) {
+  currentView = v;
+  localStorage.setItem('osves_view', v);
+  ['all','tech','ops'].forEach(id => {
+    document.getElementById('vs-' + id).classList.toggle('active', id === v);
+  });
+  // Re-render cards to show/hide dept sections for the active view
+  if (allEvents.length) renderCards(allEvents);
+  else filterCards();
+  saveURLState();
+}
+(function restoreView() {
+  const btn = document.getElementById('vs-' + currentView);
+  if (btn) ['all','tech','ops'].forEach(id => document.getElementById('vs-'+id).classList.toggle('active', id === currentView));
+})();
+
+function filterCards() {
+  document.querySelectorAll('.card[data-has-tech]').forEach(card => {
+    const hasTech    = card.dataset.hasTech    === '1';
+    const hasNontech = card.dataset.hasNontech === '1';
+    const searchHide = card.dataset.searchHide === '1';
+    let hide = searchHide;
+    if (currentView === 'tech' && !hasTech) hide = true;
+    // FIX: OPS shows any event with nontech needs, regardless of whether it also has tech
+    if (currentView === 'ops' && !hasNontech) hide = true;
+    card.classList.toggle('hide-card', hide);
+  });
+  document.querySelectorAll('.tl-evt').forEach(el => {
+    const hasTech    = el.dataset.hasTech    === '1';
+    const hasNontech = el.dataset.hasNontech === '1';
+    let dim = false;
+    if (currentView === 'tech' && !hasTech) dim = true;
+    if (currentView === 'ops'  && !hasNontech) dim = true;
+    el.classList.toggle('tl-dimmed', dim);
+  });
+}
+
+/* ═══════════════════════════════
+   NOTES — synced via Firebase, initialed entries
+═══════════════════════════════ */
+let notesCache = {}; // { noteId: { text, by, at, ts } }
+let notesListenerAttached = false;
+
+function notesPath() {
+  return 'notes/' + currentDateKey;
+}
+
+function attachNotesListener() {
+  if (!db || !currentDateKey || notesListenerAttached) return;
+  notesListenerAttached = true;
+  db.ref(notesPath()).on('value', snap => {
+    notesCache = snap.val() || {};
+    renderNotes();
+  });
+}
+
+function renderNotes() {
+  const list = document.getElementById('notes-list');
+  const entries = Object.entries(notesCache).sort((a,b) => (a[1].ts||0) - (b[1].ts||0));
+  if (!entries.length) {
+    list.innerHTML = `<div class="notes-empty">No notes yet for today.</div>`;
+    return;
+  }
+  list.innerHTML = '';
+  entries.forEach(([id, n]) => {
+    const entry = document.createElement('div');
+    entry.className = 'note-entry';
+    entry.innerHTML = `
+      <span class="note-initials">${n.by || '—'}</span>
+      <div class="note-body">
+        <div class="note-text">${escapeHtml(n.text || '')}</div>
+        <div class="note-meta">${n.at || ''}</div>
+      </div>
+      <button class="note-delete" onclick="deleteNote('${id}')" title="Delete note">✕</button>
+    `;
+    list.appendChild(entry);
+  });
+}
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function addNote() {
+  const input = document.getElementById('notes-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const proceed = (initials) => {
+    const now = new Date();
+    let h = now.getHours(), m = now.getMinutes();
+    const ap = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    const timeStr = h + ':' + String(m).padStart(2,'0') + ' ' + ap;
+    const note = { text, by: initials, at: timeStr, ts: Date.now() };
+
+    if (db && currentDateKey) {
+      db.ref(notesPath()).push(note);
+    } else {
+      const id = 'local_' + Date.now();
+      notesCache[id] = note;
+      renderNotes();
+    }
+    input.value = '';
+    document.getElementById('notes-saved').textContent = 'ADDED ' + timeStr;
+  };
+
+  if (myInitials) {
+    proceed(myInitials);
+  } else {
+    promptInitials((initials) => { if (initials) proceed(initials); });
+  }
+}
+
+function deleteNote(id) {
+  if (db && currentDateKey) {
+    db.ref(notesPath() + '/' + id).remove();
+  } else {
+    delete notesCache[id];
+    renderNotes();
+  }
+}
+
+document.getElementById('notes-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addNote();
+});
+
+/* ═══════════════════════════════
+   TIME HELPERS
+═══════════════════════════════ */
+const TL_START = 7;
+const TL_HOURS = 16;
+
+function fmtH(h) {
+  const hr  = Math.floor(h);
+  const min = Math.round((h - hr) * 60);
+  const ap  = hr < 12 ? 'AM' : 'PM';
+  const d   = hr > 12 ? hr - 12 : (hr === 0 ? 12 : hr);
+  return d + (min ? ':' + String(min).padStart(2,'0') : '') + ' ' + ap;
+}
+function fmtRange(s, e) {
+  if (s === 7 && e === 23) return 'ALL DAY';
+  return fmtH(s) + ' – ' + fmtH(e);
+}
+function tlLeft(h)     { return ((h - TL_START) / TL_HOURS) * 100; }
+function tlWidth(s, e) { return ((e - s) / TL_HOURS) * 100; }
+
+/* ═══════════════════════════════
+   PDF DROP ZONE
+═══════════════════════════════ */
+let pdfFile = null;
+const dropZone = document.getElementById('drop-zone');
+const parseBtn = document.getElementById('parse-btn');
+const clearBtn = document.getElementById('clear-btn');
+const statusEl = document.getElementById('parse-status');
+
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f && f.type === 'application/pdf') setFile(f);
+});
+function onFileSelect(e) { const f = e.target.files[0]; if (f) setFile(f); }
+function setFile(f) {
+  pdfFile = f;
+  dropZone.classList.add('has-file');
+  document.getElementById('drop-label').textContent = f.name;
+  document.getElementById('drop-sub').textContent = (f.size/1024).toFixed(0) + ' KB — ready';
+  parseBtn.style.display = 'inline-block';
+  clearBtn.style.display = 'inline-block';
+  statusEl.textContent = '';
+}
+function clearFile(e) {
+  e.stopPropagation();
+  pdfFile = null;
+  dropZone.classList.remove('has-file');
+  document.getElementById('drop-label').textContent = 'DROP PDF';
+  document.getElementById('drop-sub').textContent   = 'Momentus Elite daily export';
+  parseBtn.style.display = 'none';
+  clearBtn.style.display = 'none';
+  statusEl.textContent   = '';
+  document.getElementById('file-input').value = '';
+}
+
+/* ═══════════════════════════════
+   PDF.js EXTRACTION
+═══════════════════════════════ */
+async function loadPDFJS() {
+  if (window.pdfjsLib) return;
+  await new Promise((res,rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+async function extractPDFText(file) {
+  await loadPDFJS();
+  const buf  = await file.arrayBuffer();
+  const pdf  = await pdfjsLib.getDocument({ data: buf }).promise;
+  const pages = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page    = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    let lineText = '', lastY = null;
+    content.items.forEach(item => {
+      if (lastY !== null && Math.abs(item.transform[5] - lastY) > 3) lineText += '\n';
+      lineText += item.str + ' ';
+      lastY = item.transform[5];
+    });
+    pages.push(lineText.trim());
+  }
+  return pages.join('\n---PAGE---\n');
+}
+
+/* ═══════════════════════════════════════════════════
+   PARSER
+   Only recognized departments are processed.
+   Everything else is skipped.
+═══════════════════════════════════════════════════ */
+
+// ── Approved department headers ──
+const DEPT_MAP = {
+  AUDIO:          /^AUDIO DEPARTMENT$/i,
+  AUDIO_LABOR:    /^AUDIO LABOR$/i,
+  VIDEO:          /^VIDEO DEPARTMENT$/i,
+  VIDEO_LABOR:    /^VIDEO LABOR$/i,
+  LIGHTING:       /^LIGHTING DEPARTMENT$/i,
+  LIGHTING_LABOR: /^LIGHTING LABOR$/i,
+  FILM:           /^FILM\s*(?:&|AND|\/)\s*BROADCAST DEPARTMENT$/i,
+  FILM_LABOR:     /^FILM\s*(?:&|AND|\/)\s*BROADCAST LABOR$/i,
+  NONTECH:        /^NON-?\s*TECHNICAL DEPARTMENT$/i,
+  NONTECH_LABOR:  /^NON-?\s*TECHNICAL LABOR$/i,
+  NONTECH_RENTAL: /^NON-?\s*TECHNICAL RENTAL$/i,
+  GENTECH:        /^GENERAL TECH DEPARTMENT$/i,
+  GENTECH_LABOR:  /^GENERAL TECH LABOR$/i,
+  TECH_RENTAL:    /^TECHNICAL RENTAL$/i,
+};
+
+// ── Departments to actively SKIP (don't let content bleed) ──
+const SKIP_DEPTS = [
+  /^FOOD\s*(?:&|AND)\s*BEVERAGE$/i,
+  /^FRONT OF HOUSE(?:\s+DEPARTMENT)?$/i,
+  /^FRONT OF HOUSE LABOR$/i,
+  /^SECURITY(?:\s+DEPARTMENT)?$/i,
+  /^SECURITY LABOR$/i,
+  /^FACILITIES MANAGEMENT(?:\s+SERVICES)?$/i,
+  /^FMS(?:\s+INSTRUCTIONS)?$/i,
+  /^TICKETING(?:\s+DEPARTMENT)?$/i,
+  /^HOUSING(?:\s+DEPARTMENT)?$/i,
+  /^ADMINISTRATIVE$/i,
+  /^GENERAL INSTRUCTIONS$/i,
+  /^BOOKING NOTES$/i,
+];
+
+// ── Sub-headers to silently skip ──
+const SUB_HEADERS = /^(Audio Equipment|Video Equipment|Audio Labor|Video Labor|AV Labor|Non-?\s*Technical Furniture|Non-?\s*Technical Equipment|Non-?\s*Technical Instructions|Non-?\s*Technical Labor|General Tech Equipment|General Tech Instructions|General Instructions|Food & Beverage Instructions|Sodexo|Booking Notes|FOAPAL|PLANNING|READY|Pre-Advance Info|Layout|Signage|Staging|Power|Certificate of Insurance|Production\/Tech Not Needed|No Production\/Tech Needs|Technical Rentals|Delivery\/pickup times|Loading Dock Info|Rehearsal ROS|Timeline|Video Instructions|Catering|Custodial Labor|EMT Labor|Usher Labor|Security Labor|Lighting Labor|Non-Technical Rental|Film Broadcast Labor)$/i;
+
+// ── "No needs" lines ──
+const NO_NEEDS = /^no\s+(?:[\w\/-]+\s+){0,4}needs?(?:\s+from\s+osves)?\.?$|no\s+osves\s+needed?|client\s+bringing|production\/tech\s+not\s+needed|empty\s+(?:room|space)/i;
+
+// ── Room header pattern ──
+// Must be mostly uppercase, 2+ words or contain a digit, length 4–80
+const ROOM_HDR_RE = /^[A-Z0-9][A-Z0-9 \-&'\.\/]+$/;
+
+// Known false-positive single tokens
+const ROOM_REJECT = /^(EVENT|ROOM|DATE|NOTES?|LAYOUT|RESERVATION|DIAGRAM|STATUS|DETAILS?|PLANNING|READY|ADMINISTRATIVE|REHEARSAL|RECEPTION|LOBBY|CATERING|POWER|SIGNAGE|STAGING|LABOR|LOAD-IN|DELIVERY|TIMELINE|SECURITY|FACILITIES|TICKETING|FOOD|BEVERAGE)$/i;
+
+function isRoomLine(line) {
+  const t = line.trim();
+  if (!t || t.length < 4 || t.length > 80) return false;
+  // Must match all-caps/digits pattern
+  if (!ROOM_HDR_RE.test(t)) return false;
+  // Must not be a known dept, sub-header, or reject token
+  for (const [, re] of Object.entries(DEPT_MAP)) { if (re.test(t)) return false; }
+  for (const re of SKIP_DEPTS) { if (re.test(t)) return false; }
+  if (SUB_HEADERS.test(t)) return false;
+  if (ROOM_REJECT.test(t.trim())) return false;
+  if (/^\d+\/\d+\/\d+/.test(t)) return false;
+  // Must have ≥2 words OR contain a digit (room codes like "SALON A", "BEAMAN 1")
+  const wordCount = t.split(/\s+/).length;
+  if (wordCount < 2 && !/\d/.test(t)) return false;
+  return true;
+}
+
+/* ── parseTimeString ──
+   Handles: "10 - 11 AM", "8 AM - 5 PM", "6:30 - 10:30 AM",
+            "7 AM - 11:59 PM", "6 PM" (single → +1hr), "(ALL DAY)"
+*/
+function parseTimeString(raw) {
+  const s = raw.replace(/\s+/g,' ').trim();
+
+  // All day
+  if (/all\s*day/i.test(s)) return { startH: 7, endH: 23, allDay: true };
+
+  // Range pattern: "start [AM|PM] - end AM|PM"
+  const rangeM = s.match(/(\d+(?::\d+)?)\s*(AM|PM)?\s*[-–]\s*(\d+(?::\d+)?)\s*(AM|PM)/i);
+  if (rangeM) {
+    const endAMPM   = rangeM[4].toUpperCase();
+    // Determine start AMPM: explicit > inferred from context
+    let startAMPM = rangeM[2] ? rangeM[2].toUpperCase() : endAMPM;
+
+    const toH = (numStr, ampm) => {
+      const parts = numStr.split(':');
+      let h = parseInt(parts[0]);
+      const min = parts[1] ? parseInt(parts[1]) : 0;
+      if (ampm === 'PM' && h < 12) h += 12;
+      if (ampm === 'AM' && h === 12) h = 0;
+      return h + min / 60;
+    };
+
+    let startH = toH(rangeM[1], startAMPM);
+    const endH = toH(rangeM[3], endAMPM);
+
+    // If start > end, start must be AM (e.g. "8 - 5 PM" → 8 AM)
+    if (startH > endH) {
+      startAMPM = startAMPM === 'AM' ? 'PM' : 'AM';
+      startH = toH(rangeM[1], startAMPM);
+    }
+    // Still invalid — skip
+    if (startH >= endH) return null;
+    return { startH, endH };
+  }
+
+  // Single time: "6 PM" → 1hr duration
+  const singleM = s.match(/(\d+(?::\d+)?)\s*(AM|PM)/i);
+  if (singleM) {
+    const ampm = singleM[2].toUpperCase();
+    const parts = singleM[1].split(':');
+    let h = parseInt(parts[0]);
+    const min = parts[1] ? parseInt(parts[1]) : 0;
+    if (ampm === 'PM' && h < 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    const startH = h + min / 60;
+    return { startH, endH: startH + 1 };
+  }
+
+  return null;
+}
+
+function parseDateString(raw) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const m1 = raw.match(/(\w{3})\s+(\d+),?\s*(\d{4})/);
+  if (m1) {
+    const d = new Date(`${m1[1]} ${m1[2]} ${m1[3]}`);
+    if (!isNaN(d)) {
+      const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+      return `${days[d.getDay()]} · ${m1[1].toUpperCase()} ${m1[2]}, ${m1[3]}`;
+    }
+  }
+  const m2 = raw.match(/(\d+)\/(\d+)\/(\d+)/);
+  if (m2) {
+    const fullYear = m2[3].length === 2 ? '20' + m2[3] : m2[3];
+    const d = new Date(`${fullYear}-${String(m2[1]).padStart(2,'0')}-${String(m2[2]).padStart(2,'0')}`);
+    if (!isNaN(d)) {
+      const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+      return `${days[d.getDay()]} · ${months[parseInt(m2[1])-1]?.toUpperCase() || m2[1]} ${m2[2]}, ${fullYear}`;
+    }
+  }
+  return '';
+}
+
+/* ── cleanItem ──
+   Extracts quantity and name, strips room code suffixes.
+   Returns { qty, name } or null.
+*/
+function cleanItem(line) {
+  // Extract quantity: "Name • 3 Each | Standard" or "Name • 1 Person * 4 Hours | Standard"
+  const qtyMatch = line.match(/[•·]\s*(\d+)\s*(Each|Person|Event|Hour)/i);
+  const qty = qtyMatch ? parseInt(qtyMatch[1]) : 1;
+
+  // Strip billing info
+  let name = line
+    .replace(/\s*[•·]\s*\d+\s*(?:Each|Person|Event|Hour)\s*(?:\*\s*\d+\s*(?:Hours?)?)?\s*\|\s*\w+\s*/gi, '')
+    .replace(/\s*\|\s*(?:Standard|Custom)\s*/gi, '')
+    .trim();
+
+  // Strip trailing room code in parentheses, e.g. "(B AB)", "(CEC)", "(FSH FOH)", "(ARENA)"
+  // Only strip if it looks like a room code: all-caps letters/spaces/digits
+  name = name.replace(/\s*\([A-Z][A-Z0-9 \-\/]*\)\s*$/, '').trim();
+
+  if (!name || name.length < 2) return null;
+  return { qty, name };
+}
+
+/* ── isCapabilityNote ──
+   Returns true for lines that describe room capabilities or known-limits
+   that technicians already know (max mic counts, built-in features, etc.)
+*/
+function isCapabilityNote(text) {
+  const t = text.toLowerCase();
+  // Max wireless / capability counts
+  if (/\(\d+\)\s*max\s+wireless|max(?:imum)?\s+\d+\s+(?:wireless|mic|microphone)|can\s+not\s+be\s+used\s+at\s+the\s+same\s+time/i.test(text)) return true;
+  // Built-in / room features
+  if (/built[- ]?in|permanent|installed|fixed\s+setup|in[- ]?house|house\s+(?:lights|sound|system)|integrated|existing/i.test(t)) return true;
+  // Capacity / fire code
+  if (/capacity|max(?:imum)?\s+\d+|fire\s+code|occupancy/i.test(t)) return true;
+  // Restrictions / notes about equipment limitations
+  if (/not\s+for\s+use\s+in|only\s+(?:in|for)\s+\d+|can\s+only\s+be\s+used/i.test(t)) return true;
+  // Tech restriction notes
+  if (/no\s+(?:mic|camera|recording|flash|photo|video)\s+allowed/i.test(t)) return true;
+  // "Tech support not required / required" — informational, not equipment
+  if (/tech(?:nical)?\s+support\s+(?:is\s+)?(?:not\s+)?required/i.test(t)) return true;
+  // "No [X] mics can be used with this system" / similar restriction sentences
+  if (/^no\s+.*\bcan\s+be\s+used\b/i.test(t)) return true;
+  // "X can('t)? be used / are not compatible" generic compatibility statements
+  if (/\bcan('?t| ?not)?\s+be\s+used\s+with\b|\bnot\s+compatible\b/i.test(t)) return true;
+  return false;
+}
+
+/* ── isPassiveNote ──
+   Returns true for instructional/informational lines that should be
+   shown as side-notes rather than equipment tags.
+*/
+function isPassiveNote(text) {
+  if (isCapabilityNote(text)) return false; // capability notes are filtered entirely
+  const t = text.toLowerCase();
+  if (/see\s+(?:layout|diagram|notes?|attachment|drawing)|refer\s+to|contact\s+|per\s+(?:client|beo|order)|as\s+requested|unless\s+otherwise|advance\s+with|coordinate\s+with|confirm\s+with|to\s+be\s+determined/i.test(t)) return true;
+  if (/^(?:classroom|theater|banquet|rounds|chevron|u[- ]?shape|crescent|reception\s+style|hollow\s+square|herringbone)\s*(?:style|layout|setup)?\s*$/i.test(t.trim())) return true;
+  // Lines ending in "- see drawing" / "see drawing" placement notes
+  if (/-\s*see\s+drawing\s*$|^see\s+drawing/i.test(t.trim())) return true;
+  // Placement/location description sentences (e.g. "Corner beside the stairs - see drawing",
+  // "Set in the middle of the foyer...") — typically start with a location preposition/word
+  // and don't describe a countable item.
+  if (/^(?:corner|along|behind|beside|between|under|near|next\s+to|in\s+(?:the|front|back)|on\s+(?:the|each)|set\s+(?:up\s+)?in|placed?\s+in|for\s+(?:catering|use\s+in))/i.test(t.trim())) return true;
+  // Sentences describing "want set up just in case..." / planning commentary
+  if (/^want\s+set\s+up|just\s+in\s+case|they\s+(?:are|aren't|are\s+not)\s+planning/i.test(t)) return true;
+  // Same as AM / same location notes
+  if (/^same\s+as\b/i.test(t.trim())) return true;
+  // Staffing/labor instruction sentences (e.g. "TT Leaders to Set Up", "Staff to flip room")
+  if (/^(?:tt\s+leaders?|staff|crew|client|ops|osves|leaders?)\s+(?:to|will)\s+/i.test(t.trim())) return true;
+  // "at [location]" placement notes (e.g. "at table at front of beaman A&B")
+  if (/^at\s+/i.test(t.trim())) return true;
+  // "Shared Set w/ X" / "Shared with X" — cross-event shared setup notes
+  if (/^shared\s+(?:set|space|room)?\s*(?:w\/|with)/i.test(t.trim())) return true;
+  return false;
+}
+
+/* ── isDescriptionLine ──
+   Returns true if the line reads as a descriptive sentence/annotation about
+   the PRECEDING item rather than a new equipment item itself. These lines
+   get appended as a detail suffix to the previous tag instead of becoming
+   their own tag. Heuristics: contains common sentence verbs/connectors,
+   starts with "For "/"Includes "/usage annotations, or is a long
+   multi-clause description with a brand-spec list (e.g. "d&b ... with ... ").
+*/
+function isDescriptionLine(text) {
+  const t = text.toLowerCase().trim();
+  // Lines starting with a parenthetical quantity/spec: "(2) ULXD4Q Receivers with..."
+  if (/^\(\d+\)/.test(t)) return true;
+  // "Includes X" / "For X" / "With X" usage or contents annotations
+  if (/^(?:includes?|for|with)\s+/i.test(t)) return true;
+  // Sentences with common linking/instructional/spec verbs (3+ words)
+  if (/\b(?:will|would|need|needs|needed|require|requires|required|is|are|should|must|including|available|separating|open|closed|equals?)\b/i.test(t) &&
+      t.split(/\s+/).length >= 3) return true;
+  // Spec-list descriptions: "X with Y; Z floor-fills" style
+  if (/\bwith\b/i.test(t) && (t.includes(';') || (t.match(/,/g)||[]).length >= 1)) return true;
+  // Definitional lines: contains '=' (e.g. "1 P&D = (1) 8' section...")
+  if (text.includes('=')) return true;
+  // Long sentence with internal punctuation (period mid-string, multiple commas) — likely a spec paragraph
+  if (/\.\s+\S/.test(text) || (text.match(/,/g)||[]).length >= 2) return true;
+  // "Rounds of N" / "Rounds of N in a circle" — seating arrangement description
+  if (/^rounds?\s+of\s+\d+/i.test(t)) return true;
+  return false;
+}
+
+/* ── Main parser ── */
+function parseMomentusText(rawText) {
+  const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+
+  let dateStr = '';
+  for (let i = 0; i < Math.min(10, lines.length); i++) {
+    const d = parseDateString(lines[i]);
+    if (d) { dateStr = d; break; }
+  }
+
+  const events = [];
+  let currentRoom  = null;
+  let currentEvent = null;
+  let currentDept  = null; // key from DEPT_MAP, 'skip', or null
+  let lastItemRef  = null; // reference to most recently pushed item, for attaching description lines
+
+  function finalizeEvent() {
+    if (currentEvent) {
+      currentEvent.hasTech = (
+        currentEvent.audio.length > 0 ||
+        currentEvent.video.length > 0 ||
+        currentEvent.lighting.length > 0 ||
+        currentEvent.film.length > 0 ||
+        currentEvent.audioLabor.length > 0 ||
+        currentEvent.videoLabor.length > 0 ||
+        currentEvent.lightingLabor.length > 0 ||
+        currentEvent.filmLabor.length > 0 ||
+        currentEvent.gentechLabor.length > 0 ||
+        currentEvent.techRental.length > 0
+      );
+      events.push(currentEvent);
+    }
+    currentEvent = null;
+    currentDept  = null;
+    lastItemRef  = null;
+  }
+
+  function newEvent(room, name, type, startH, endH, allDay) {
+    finalizeEvent();
+    currentEvent = {
+      room, name, type, startH, endH, allDay: !!allDay,
+      audio: [], audioLabor: [],
+      video: [], videoLabor: [],
+      lighting: [], lightingLabor: [],
+      film: [], filmLabor: [],
+      nontech: [], nontechLabor: [], nontechRental: [],
+      gentech: [], gentechLabor: [],
+      techRental: [],
+      notes: [],
+      hasTech: false, hasFood: false
+    };
+    currentDept = null;
+    lastItemRef = null;
+  }
+
+  function detectDept(line) {
+    for (const [key, re] of Object.entries(DEPT_MAP)) {
+      if (re.test(line)) return key;
+    }
+    return null;
+  }
+
+  function isSkipDept(line) {
+    for (const re of SKIP_DEPTS) { if (re.test(line)) return true; }
+    return false;
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line) continue;
+
+    // Skip page markers and timestamps
+    if (/^---PAGE---/.test(line)) continue;
+    if (/^\d+\/\d+\/\d+,\s*\d+:\d+\s*(?:AM|PM)/i.test(line)) continue;
+    if (/^\d+\/\d+$/.test(line)) continue;
+    // Skip the repeating page-header date line, e.g. "Jun 11, 2026" or "Apr 15, 2026"
+    // (appears at the top of every page; a bare "Mon D, YYYY" with nothing else)
+    if (/^(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s*\d{4}$/i.test(line)) continue;
+
+    // Detect date if not found yet
+    if (!dateStr) { const d = parseDateString(line); if (d) dateStr = d; }
+
+    // EVENT WIDE block → skip until a room line
+    if (/^EVENT\s+WIDE$/i.test(line)) { currentDept = 'skip'; continue; }
+
+    // Skip dept headers → skip until next room or recognized dept
+    if (isSkipDept(line)) { currentDept = 'skip'; continue; }
+
+    if (currentDept === 'skip') {
+      // Only exit skip on a real room line or approved dept header
+      const dKey = detectDept(line);
+      if (dKey) { currentDept = dKey; continue; }
+      if (isRoomLine(line)) { currentDept = null; currentRoom = line.trim(); }
+      continue;
+    }
+
+    // Sub-header skip
+    if (SUB_HEADERS.test(line)) continue;
+
+    // No-needs skip
+    if (NO_NEEDS.test(line)) continue;
+
+    // Pure status words
+    if (/^(PLANNING|READY|ADMINISTRATIVE|REHEARSAL|MAIN EVENT|PRACTICE|MEETING|MEAL|RECEPTION|LOBBY|DOORS|CLIENT PRE-ACCESS|BREAKOUT SESSION|DRESSING ROOM|PRODUCTION OFFICE|CLIENT LOAD-IN|STAFF BREAKROOM)$/i.test(line)) continue;
+
+    // ── Event header ──
+    // Format: "APR 15, 2026, 10 - 11 AM • NAME • SERIES • TYPE"
+    // Also handles: "APR 15, 2026 (ALL DAY) • NAME • TYPE"
+    const evMatch = line.match(
+      /^(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+\d+(?:\s*-\s*\d+)?,\s*\d{4},?\s*(.*?)\s*[•·]\s*(.+)/i
+    );
+    if (evMatch) {
+      const timePart = evMatch[1].trim();
+      const rest     = evMatch[2];
+      const parts    = rest.split(/\s*[•·]\s*/);
+      const evName   = parts[0]?.trim() || '';
+      const evType   = parts.length >= 3 ? (parts[parts.length-1]?.trim() || '') :
+                       parts.length === 2 ? (parts[1]?.trim() || '') : '';
+
+      // Skip purely administrative events
+      if (/^(FOAPAL|KEY LEADER|ADMINISTRATIVE|EVENT-WIDE DETAILS|BRIEFING|EVENT BRIEFING)/i.test(evName)) continue;
+      if (!evName) continue;
+      // Skip housing/dining-only events — not relevant to ops/tech
+      if (/^(HOUSING|DINING HALL MEALS|STORAGE)$/i.test(evType)) continue;
+
+      const times = parseTimeString(timePart);
+      if (times && currentRoom) {
+        newEvent(currentRoom, evName, evType !== evName ? evType : '', times.startH, times.endH, times.allDay);
+      }
+      continue;
+    }
+
+    // ── Room header ──
+    if (isRoomLine(line)) {
+      currentRoom = line.trim();
+      // Don't finalize event — a room can have multiple events listed after it
+      continue;
+    }
+
+    // ── Department header ──
+    const deptKey = detectDept(line);
+    if (deptKey) { currentDept = deptKey; lastItemRef = null; continue; }
+
+    // ── Food billing lines ──
+    if (/bill\s+to|sodexo\s+billing/i.test(line)) {
+      if (currentEvent) currentEvent.hasFood = true;
+      continue;
+    }
+
+    // No active event to attach to
+    if (!currentEvent) continue;
+
+    // ── Parse item ──
+    const item = cleanItem(line);
+    if (!item) continue;
+    const { qty, name } = item;
+    if (!name || name.length < 2) continue;
+
+    // Filter out capability notes entirely
+    if (isCapabilityNote(name)) continue;
+
+    const passive = isPassiveNote(name);
+
+    // Description line referring to the previous item — append as detail,
+    // don't create a new tag.
+    if (!passive && lastItemRef && isDescriptionLine(name)) {
+      lastItemRef.name += ` — ${name}`;
+      continue;
+    }
+
+    // Format display with quantity
+    const qtyLabel = qty > 1 ? `(${qty})` : '(1)';
+
+    // Items inside a recognized equipment/labor/rental department are
+    // included by default (the department header already scopes them).
+    // Only passive instructional lines are routed to notes instead.
+    function addItem(bucket) {
+      if (passive) {
+        currentEvent.notes.push(name);
+      } else {
+        const newItem = { qty, name, label: qtyLabel };
+        bucket.push(newItem);
+        lastItemRef = newItem;
+      }
+    }
+
+    switch(currentDept) {
+      case 'AUDIO':          addItem(currentEvent.audio); break;
+      case 'AUDIO_LABOR':    addItem(currentEvent.audioLabor); break;
+      case 'VIDEO':          addItem(currentEvent.video); break;
+      case 'VIDEO_LABOR':    addItem(currentEvent.videoLabor); break;
+      case 'LIGHTING':       addItem(currentEvent.lighting); break;
+      case 'LIGHTING_LABOR': addItem(currentEvent.lightingLabor); break;
+      case 'FILM':           addItem(currentEvent.film); break;
+      case 'FILM_LABOR':     addItem(currentEvent.filmLabor); break;
+      case 'NONTECH':        addItem(currentEvent.nontech); break;
+      case 'NONTECH_LABOR':  addItem(currentEvent.nontechLabor); break;
+      case 'NONTECH_RENTAL': addItem(currentEvent.nontechRental); break;
+      case 'GENTECH':        addItem(currentEvent.gentech); break;
+      case 'GENTECH_LABOR':  addItem(currentEvent.gentechLabor); break;
+      case 'TECH_RENTAL':    addItem(currentEvent.techRental); break;
+      default: break; // no dept context — skip
+    }
+  }
+  finalizeEvent();
+
+  const valid = events.filter(e => e.name && e.startH != null && e.endH != null && e.startH < e.endH);
+  return { date: dateStr, events: valid };
+}
+
+/* ═══════════════════════════════
+   BUILD HANDLER
+═══════════════════════════════ */
+async function handleBuild(e) {
+  e.stopPropagation();
+  if (!pdfFile) return;
+  parseBtn.disabled = true;
+  statusEl.textContent = 'Reading PDF…';
+  try {
+    const text   = await extractPDFText(pdfFile);
+    statusEl.textContent = 'Parsing…';
+    const result = parseMomentusText(text);
+
+    if (!result.events.length) {
+      statusEl.textContent = '⚠ No events found — check PDF format';
+      parseBtn.disabled = false;
+      return;
+    }
+
+    document.getElementById('hdr-date').textContent = result.date || '';
+    statusEl.textContent = `✓ ${result.events.length} events loaded`;
+
+    // Set date key for Firebase sign-off scoping
+    currentDateKey = result.date.replace(/[^a-zA-Z0-9]/g,'_');
+    fbListenerAttached = false;
+    notesListenerAttached = false;
+    if (db) { attachListener(); attachNotesListener(); }
+    renderNotes();
+
+    document.getElementById('empty-state').classList.add('hidden');
+    document.getElementById('schedule-wrap').classList.remove('hidden');
+
+    renderTimeline(result.events);
+    renderCards(result.events);
+    positionNowLine();
+    updateNextUp(result.events);
+  } catch(err) {
+    console.error(err);
+    statusEl.textContent = '✗ ' + (err.message || 'Failed to parse PDF');
+  }
+  parseBtn.disabled = false;
+}
+
+/* ═══════════════════════════════
+   TOOLTIP
+═══════════════════════════════ */
+const tooltip = document.getElementById('tooltip');
+let tooltipVisible = false;
+let tooltipHideTimer = null;
+
+function showTooltip(ev, evKey, x, y) {
+  clearTimeout(tooltipHideTimer);
+  let h = '';
+  h += `<div class="tt-room">${ev.room}</div>`;
+  h += `<div class="tt-time">${fmtRange(ev.startH, ev.endH)}</div>`;
+  h += `<div class="tt-name">${ev.name}</div>`;
+  if (ev.hasTech) h += `<div class="tt-badge">⚙ TECH START ${fmtH(ev.startH - 0.5)}</div>`;
+
+  const tags = [];
+  ev.audio.forEach(a    => tags.push(`<span class="tt-tag g">🎙 <b>${a.label}</b> ${a.name}</span>`));
+  ev.video.forEach(v    => tags.push(`<span class="tt-tag g">📽 <b>${v.label}</b> ${v.name}</span>`));
+  ev.lighting.forEach(l => tags.push(`<span class="tt-tag g">💡 <b>${l.label}</b> ${l.name}</span>`));
+  ev.nontech.forEach(n  => tags.push(`<span class="tt-tag b">🪑 <b>${n.label}</b> ${n.name}</span>`));
+  ev.gentech.forEach(g  => tags.push(`<span class="tt-tag b">⚡ <b>${g.label}</b> ${g.name}</span>`));
+
+  if (tags.length) h += `<div style="margin-top:7px;line-height:1.9">${tags.join('')}</div>`;
+  else h += `<div class="tt-notech">No tech or ops needs</div>`;
+
+  h += `<div class="tt-click-hint">CLICK TO OPEN DETAILS & SIGN OFF</div>`;
+
+  tooltip.innerHTML = h;
+  positionTooltip(x, y);
+  tooltip.classList.add('show');
+  tooltipVisible = true;
+}
+
+/* ═══════════════════════════════
+   EVENT DETAIL MODAL
+═══════════════════════════════ */
+let detailCurrentEv = null;
+let detailCurrentKey = null;
+
+function openDetailModal(ev, evKey) {
+  hideTooltip();
+  detailCurrentEv  = ev;
+  detailCurrentKey = evKey;
+
+  document.getElementById('dm-room').textContent = ev.room;
+  document.getElementById('dm-name').textContent = ev.name;
+  document.getElementById('dm-time').textContent = fmtRange(ev.startH, ev.endH);
+
+  const state = signoffCache[evKey] || {};
+  let body = '';
+
+  // Badges row
+  body += `<div class="dm-badges">`;
+  if (ev.hasTech && !ev.allDay) body += `<span class="dm-badge amber">⚙ TECH START ${fmtH(ev.startH - 0.5)}</span>`;
+  if (ev.hasFood) body += `<span class="dm-badge amber">🍽 CATERING</span>`;
+  if (ev.allDay)  body += `<span class="dm-badge amber">ALL DAY</span>`;
+  body += `</div>`;
+
+  function dmSection(label, items, cls) {
+    if (!items.length) return '';
+    let s = `<div class="dept-lbl" onclick="toggleSection(this)">${label}</div>`;
+    s += `<div class="dept-section dm-tags">`;
+    items.forEach(it => { s += `<span class="tag ${cls}"><span class="tag-qty">${it.label}</span>${it.name}</span>`; });
+    s += `</div>`;
+    return s;
+  }
+
+  // Group header for TECH / OPS — collapsible, contains the dept sections
+  function dmGroup(label, innerHtml, groupCls) {
+    if (!innerHtml) return '';
+    return `<div class="dm-group">
+      <div class="dm-group-lbl ${groupCls}" onclick="toggleSection(this)">${label}</div>
+      <div class="dept-section dm-group-body">${innerHtml}</div>
+    </div>`;
+  }
+
+  let techHtml = '';
+  techHtml += dmSection('Audio Equipment',    ev.audio,        'tg');
+  techHtml += dmSection('Video Equipment',    ev.video,        'tg');
+  techHtml += dmSection('Lighting Equipment', ev.lighting,     'tg');
+  techHtml += dmSection('Film / Broadcast',   ev.film,         'tg');
+  techHtml += dmSection('Audio Labor',        ev.audioLabor,   'tr');
+  techHtml += dmSection('Video Labor',        ev.videoLabor,   'tr');
+  techHtml += dmSection('Lighting Labor',     ev.lightingLabor,'tr');
+  techHtml += dmSection('Film Labor',         ev.filmLabor,    'tr');
+  techHtml += dmSection('Technical Rentals',  ev.techRental,   'ta');
+  if (!techHtml) techHtml = `<div class="no-needs-label">No Technical Needs</div>`;
+
+  let opsHtml = '';
+  opsHtml += dmSection('General Tech',       ev.gentech,      'tb');
+  opsHtml += dmSection('Non-Technical',      ev.nontech,      'tb');
+  opsHtml += dmSection('NT Labor',           ev.nontechLabor, 'tr');
+  opsHtml += dmSection('General Tech Labor', ev.gentechLabor, 'tr');
+  opsHtml += dmSection('NT Rentals',         ev.nontechRental,'ta');
+  if (!opsHtml) opsHtml = `<div class="no-needs-label">No Ops Needs</div>`;
+
+  body += dmGroup('⚙ TECH', techHtml, 'dm-group-tech');
+  body += dmGroup('🪑 OPS',  opsHtml,  'dm-group-ops');
+
+  // Notes
+  if (ev.notes.length) {
+    body += `<div class="dm-section-lbl">Notes</div><div class="dm-notes">`;
+    ev.notes.forEach(n => { body += `<div class="dm-note">${n}</div>`; });
+    body += `</div>`;
+  }
+
+  // Single sign-off button — only if event has tech needs
+  if (ev.hasTech && !ev.allDay) {
+    if (state.ts) {
+      body += `<button class="dm-signoff-btn signed" data-evkey="${evKey}">${state.tsBy}  ·  ${state.tsAt}</button>`;
+    } else {
+      body += `<button class="dm-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">TECH STARTS AT ${fmtH(ev.startH - 0.5)}</button>`;
+    }
+  }
+
+  document.getElementById('dm-body').innerHTML = body;
+  const bg = document.getElementById('detail-modal-bg');
+  bg.classList.remove('hidden');
+  // Force reflow so the fadeIn/slideUp animations replay on each open
+  const modalEl = document.getElementById('detail-modal');
+  bg.style.animation = 'none';
+  modalEl.style.animation = 'none';
+  void bg.offsetWidth;
+  bg.style.animation = '';
+  modalEl.style.animation = '';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetailModal() {
+  document.getElementById('detail-modal-bg').classList.add('hidden');
+  document.body.style.overflow = '';
+  detailCurrentEv = null;
+  detailCurrentKey = null;
+}
+
+function closeDetailIfBg(e) {
+  if (e.target === document.getElementById('detail-modal-bg')) closeDetailModal();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (!document.getElementById('detail-modal-bg').classList.contains('hidden')) closeDetailModal();
+    if (!document.getElementById('modal-bg').classList.contains('hidden')) closeModal();
+  }
+});
+function positionTooltip(x, y) {
+  tooltip.style.display = 'block';
+  const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+  const vw = window.innerWidth,   vh = window.innerHeight;
+  let tx = x + 14, ty = y + 14;
+  if (tx + tw > vw - 10) tx = x - tw - 10;
+  if (ty + th > vh - 10) ty = y - th - 10;
+  tooltip.style.left = tx + 'px';
+  tooltip.style.top  = ty + 'px';
+}
+function hideTooltip() {
+  tooltip.classList.remove('show');
+  tooltipVisible = false;
+}
+function hideTooltipDelay() {
+  tooltipHideTimer = setTimeout(hideTooltip, 200);
+}
+tooltip.addEventListener('mouseenter', () => clearTimeout(tooltipHideTimer));
+tooltip.addEventListener('mouseleave', hideTooltipDelay);
+document.addEventListener('touchstart', function(e) {
+  if (tooltipVisible && !tooltip.contains(e.target)) hideTooltip();
+}, { passive: true });
+
+/* ═══════════════════════════════
+   TIMELINE RENDER
+═══════════════════════════════ */
+function renderTimeline(events) {
+  // Separate rooms with only all-day events vs timed events
+  // All-day rooms go to the bottom
+  const allRooms = [...new Set(events.map(e => e.room))].sort((a,b) => a.localeCompare(b));
+  const timedRooms   = allRooms.filter(r => events.some(e => e.room === r && !e.allDay));
+  const allDayRooms  = allRooms.filter(r => !timedRooms.includes(r));
+  const rooms = [...timedRooms, ...allDayRooms];
+  const rowsEl = document.getElementById('tl-rows');
+  rowsEl.innerHTML = '';
+
+  rooms.forEach((room, idx) => {
+    // Insert a dashed divider before the first all-day-only room
+    if (allDayRooms.length > 0 && idx === timedRooms.length) {
+      const divRow = document.createElement('div');
+      divRow.className = 'tl-row allday-divider';
+      const divLbl = document.createElement('div');
+      divLbl.className = 'tl-rlabel';
+      divLbl.textContent = '── ALL DAY ──';
+      divRow.appendChild(divLbl);
+      const divCells = document.createElement('div');
+      divCells.className = 'tl-cells';
+      for (let i = 0; i < TL_HOURS; i++) {
+        const c = document.createElement('div'); c.className = 'tl-cell'; divCells.appendChild(c);
+      }
+      divRow.appendChild(divCells);
+      rowsEl.appendChild(divRow);
+    }
+    const evs = events.filter(e => e.room === room);
+    const row = document.createElement('div');
+    row.className = 'tl-row';
+    if (!evs.some(e => e.hasTech)) row.classList.add('print-hide-row');
+
+    const lbl = document.createElement('div');
+    lbl.className = 'tl-rlabel';
+    lbl.textContent = room;
+    row.appendChild(lbl);
+
+    const cells = document.createElement('div');
+    cells.className = 'tl-cells';
+    for (let i = 0; i < TL_HOURS; i++) {
+      const c = document.createElement('div'); c.className = 'tl-cell'; cells.appendChild(c);
+    }
+
+    evs.forEach(ev => {
+      const s = Math.max(ev.startH, TL_START);
+      const e = Math.min(ev.endH, TL_START + TL_HOURS);
+      if (s >= e) return;
+
+      const evKey = makeEventKey(ev);
+      const el = document.createElement('div');
+      let cls = ev.allDay ? 'c-allday' : (ev.hasTech ? 'c-tech' : 'c-notech');
+      el.className = 'tl-evt ' + cls;
+      el.style.left  = tlLeft(s) + '%';
+      el.style.width = tlWidth(s, e) + '%';
+      el.dataset.evkey    = evKey;
+      el.dataset.evname   = ev.name.toLowerCase();
+      el.dataset.evroom   = ev.room.toLowerCase();
+      el.dataset.evequip  = [...ev.audio, ...ev.video, ...ev.lighting, ...ev.nontech, ...ev.gentech,
+                              ...ev.audioLabor, ...ev.videoLabor, ...ev.nontechLabor, ...ev.techRental]
+                              .map(it => it.name).join(' ').toLowerCase();
+
+      // Event name text node (so sign-off badge can sit alongside it)
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'tl-evt-name';
+      nameSpan.textContent = ev.name;
+      nameSpan.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;';
+      el.style.display = 'flex';
+      el.style.alignItems = 'center';
+      el.style.gap = '4px';
+      el.appendChild(nameSpan);
+
+      const hasNontech = ev.nontech.length > 0 || ev.nontechLabor.length > 0 || ev.nontechRental.length > 0 || ev.gentech.length > 0;
+      el.dataset.hasTech    = ev.hasTech ? '1' : '0';
+      el.dataset.hasNontech = hasNontech ? '1' : '0';
+
+      el.addEventListener('mouseenter', evt => showTooltip(ev, evKey, evt.clientX, evt.clientY));
+      el.addEventListener('mousemove',  evt => { if (tooltipVisible) positionTooltip(evt.clientX, evt.clientY); });
+      el.addEventListener('mouseleave', evt => { hideTooltipDelay(); });
+      el.addEventListener('click', evt => {
+        evt.stopPropagation();
+        openDetailModal(ev, evKey);
+      });
+      el.addEventListener('touchstart', evt => {
+        evt.stopPropagation();
+        const t = evt.touches[0];
+        el._touchStartX = t.clientX;
+        el._touchStartY = t.clientY;
+        showTooltip(ev, evKey, t.clientX, t.clientY);
+      }, { passive: true });
+      el.addEventListener('touchend', evt => {
+        evt.stopPropagation();
+        const t = evt.changedTouches[0];
+        const dx = Math.abs(t.clientX - (el._touchStartX || t.clientX));
+        const dy = Math.abs(t.clientY - (el._touchStartY || t.clientY));
+        // Only treat as a tap (not a scroll/swipe) if movement is small
+        if (dx < 10 && dy < 10) openDetailModal(ev, evKey);
+      });
+
+      cells.appendChild(el);
+
+      // Apply existing sign-off state
+      applySignoffToCard(evKey);
+
+      // Tech-start line 30 min before
+      if (ev.hasTech && !ev.allDay) {
+        const tsH = ev.startH - 0.5;
+        if (tsH >= TL_START) {
+          const line = document.createElement('div');
+          line.className = 'tl-techline';
+          line.style.left = tlLeft(tsH) + '%';
+          line.title = 'Tech Start ' + fmtH(tsH);
+          cells.appendChild(line);
+        }
+      }
+    });
+
+    row.appendChild(cells);
+    rowsEl.appendChild(row);
+  });
+}
+
+/* ═══════════════════════════════
+   CARD RENDER
+═══════════════════════════════ */
+let allEvents = [];
+
+function fmtDuration(mins) {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+}
+
+function getCountdownText(startH, endH, allDay) {
+  if (allDay) return { text: 'ALL DAY', cls: 'cd-future' };
+  const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+  if (nowH >= endH) return { text: 'ENDED', cls: 'cd-ended' };
+  if (nowH >= startH) {
+    const minsLeft = Math.round((endH - nowH) * 60);
+    return { text: `● LIVE · ends in ${fmtDuration(minsLeft)}`, cls: 'cd-live' };
+  }
+  const minsTo = Math.round((startH - nowH) * 60);
+  return { text: `starts in ${fmtDuration(minsTo)}`, cls: 'cd-future' };
+}
+
+/* Build a styled tag HTML string with prominent quantity */
+function makeTag(item, colorClass) {
+  return `<span class="tag ${colorClass}"><span class="tag-qty">${item.label}</span>${item.name}</span>`;
+}
+
+/* Build a dept section if items exist */
+function deptSection(label, items, colorClass, maxHeight) {
+  if (!items.length) return '';
+  const mh = maxHeight || Math.min(300, 50 + items.length * 30);
+  let h = `<div class="dept-lbl" onclick="toggleSection(this)">${label}</div>`;
+  h += `<div class="dept-section tags" style="max-height:${mh}px;">`;
+  items.forEach(it => { h += makeTag(it, colorClass); });
+  h += `</div>`;
+  return h;
+}
+
+function renderCards(events) {
+  allEvents = events;
+  const sorted = [...events].sort((a,b) => a.startH - b.startH || a.room.localeCompare(b.room));
+  const grid = document.getElementById('card-grid');
+  grid.innerHTML = '';
+  const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+
+  sorted.forEach((ev, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = (i * 0.018) + 's';
+
+    const evKey = makeEventKey(ev);
+    card.dataset.evkey = evKey;
+
+    const hasNontech = ev.nontech.length > 0 || ev.nontechLabor.length > 0 || ev.nontechRental.length > 0 || ev.gentech.length > 0 || ev.gentechLabor.length > 0;
+    const hasFood    = ev.hasFood;
+    const isEnded    = nowH >= ev.endH && !ev.allDay;
+
+    card.dataset.hasTech    = ev.hasTech ? '1' : '0';
+    card.dataset.hasNontech = hasNontech ? '1' : '0';
+    card.dataset.allday     = ev.allDay ? '1' : '0';
+    card.dataset.searchHide = '0';
+    card.dataset.searchText = (ev.room + ' ' + ev.name + ' ' + ev.type + ' ' +
+      [...ev.audio, ...ev.video, ...ev.lighting, ...ev.nontech, ...ev.gentech,
+       ...ev.audioLabor, ...ev.videoLabor, ...ev.nontechLabor, ...ev.techRental]
+      .map(it => it.name).join(' ')).toLowerCase();
+
+    if (isEnded) card.classList.add('card-ended');
+
+    const foodEmoji = hasFood ? `<span class="food-emoji" title="Food/beverage">🍽</span>` : '';
+    const cd = getCountdownText(ev.startH, ev.endH, ev.allDay);
+
+    let inner = `<div class="card-room">`;
+    inner += `<span>${ev.room}</span>`;
+    inner += `</div>`;
+    inner += `<div class="evt">`;
+    inner += `<div class="evt-time">${fmtRange(ev.startH, ev.endH)}${foodEmoji}</div>`;
+    inner += `<span class="evt-countdown ${cd.cls}" data-start="${ev.startH}" data-end="${ev.endH}">${cd.text}</span>`;
+    inner += `<div class="evt-name">${ev.name}</div>`;
+    if (ev.type && ev.type.toLowerCase() !== ev.name.toLowerCase()
+        && !/^(main event|rehearsal|practice|meeting|meal|reception|planning|ready|doors|client pre-access|breakout session|dressing room|production office|client load-in)$/i.test(ev.type)) {
+      inner += `<div class="evt-type">${ev.type}</div>`;
+    }
+
+    // ── Department sections — filtered by current view ──
+    const showTech = (currentView !== 'ops');
+    const showOps  = (currentView !== 'tech');
+
+    if (showTech) {
+      inner += deptSection('Audio Equipment',    ev.audio,        'tg');
+      inner += deptSection('Video Equipment',    ev.video,        'tg');
+      inner += deptSection('Lighting Equipment', ev.lighting,     'tg');
+      inner += deptSection('Film / Broadcast',   ev.film,         'tg');
+      inner += deptSection('Audio Labor',        ev.audioLabor,   'tr');
+      inner += deptSection('Video Labor',        ev.videoLabor,   'tr');
+      inner += deptSection('Lighting Labor',     ev.lightingLabor,'tr');
+      inner += deptSection('Film Labor',         ev.filmLabor,    'tr');
+      inner += deptSection('Technical Rentals',  ev.techRental,   'ta');
+    }
+    if (showOps) {
+      inner += deptSection('General Tech',       ev.gentech,      'tb');
+      inner += deptSection('Non-Technical',      ev.nontech,      'tb');
+      inner += deptSection('NT Labor',           ev.nontechLabor, 'tr');
+      inner += deptSection('General Tech Labor', ev.gentechLabor, 'tr');
+      inner += deptSection('NT Rentals',         ev.nontechRental,'ta');
+    }
+
+    // No-needs labels (only show for the relevant view)
+    const techItems = [...ev.audio, ...ev.video, ...ev.lighting, ...ev.film];
+    const ntItems   = [...ev.nontech, ...ev.gentech];
+    if (showTech && !techItems.length && !ev.audioLabor.length && !ev.videoLabor.length && !ev.techRental.length) {
+      inner += `<div class="no-needs-label">No Technical Needs</div>`;
+    }
+    if (showOps && !ntItems.length && !ev.nontechLabor.length && !ev.nontechRental.length) {
+      inner += `<div class="no-needs-label">No Ops Needs</div>`;
+    }
+
+    // Notes
+    if (ev.notes.length) {
+      inner += `<div class="side-notes">`;
+      ev.notes.forEach(n => { inner += `<div class="side-note">${n}</div>`; });
+      inner += `</div>`;
+    }
+
+    inner += `</div>`; // .evt
+
+    // ── Single sign-off button — only if event has tech needs ──
+    if (ev.hasTech && !ev.allDay) {
+      const state = signoffCache[evKey] || {};
+      if (state.ts) {
+        inner += `<div class="signoff-bar"><button class="tech-signoff-btn signed" data-evkey="${evKey}">${state.tsBy}</button></div>`;
+      } else {
+        inner += `<div class="signoff-bar"><button class="tech-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">TECH STARTS AT ${fmtH(ev.startH - 0.5)}</button></div>`;
+      }
+    }
+
+    card.innerHTML = inner;
+    grid.appendChild(card);
+
+    // Apply any existing sign-off state
+    applySignoffToCard(evKey);
+  });
+
+  filterCards();
+  applySearch();
+}
+
+/* ═══════════════════════════════
+   COLLAPSIBLE SECTIONS
+═══════════════════════════════ */
+function toggleSection(lbl) {
+  const section = lbl.nextElementSibling;
+  if (!section || !section.classList.contains('dept-section')) return;
+  const collapsed = section.classList.toggle('collapsed');
+  lbl.classList.toggle('collapsed', collapsed);
+}
+
+/* ═══════════════════════════════
+   SEARCH
+═══════════════════════════════ */
+let searchQuery = '';
+function handleSearch() {
+  searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+  applySearch();
+  saveURLState();
+}
+function applySearch() {
+  // Cards
+  const cards = document.querySelectorAll('.card[data-search-text]');
+  let visible = 0;
+  cards.forEach(card => {
+    const match = !searchQuery || card.dataset.searchText.includes(searchQuery);
+    card.dataset.searchHide = match ? '0' : '1';
+    if (match) visible++;
+  });
+  filterCards();
+  const countEl = document.getElementById('search-count');
+  countEl.classList.toggle('hidden', !searchQuery);
+  if (searchQuery) countEl.textContent = visible + ' result' + (visible!==1?'s':'');
+
+  // Timeline blocks — highlight matches, fade non-matches
+  document.querySelectorAll('.tl-evt').forEach(el => {
+    el.classList.remove('tl-search-match','tl-search-nomatch');
+    if (!searchQuery) return;
+    const name  = (el.dataset.evname  || '');
+    const room  = (el.dataset.evroom  || '');
+    const equip = (el.dataset.evequip || '');
+    const match = name.includes(searchQuery) || room.includes(searchQuery) || equip.includes(searchQuery);
+    el.classList.add(match ? 'tl-search-match' : 'tl-search-nomatch');
+  });
+}
+
+/* ═══════════════════════════════
+   UPCOMING TECH STARTS
+═══════════════════════════════ */
+function updateNextUp(events) {
+  const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+  const wrap = document.getElementById('upcoming-ts-wrap');
+  const list = document.getElementById('uts-list');
+
+  const upcoming = events
+    .filter(ev => ev.hasTech && !ev.allDay)
+    .map(ev => ({ ...ev, tsH: ev.startH - 0.5 }))
+    .filter(ev => ev.tsH > nowH && ev.tsH <= nowH + 4)
+    .sort((a,b) => a.tsH - b.tsH);
+
+  if (!upcoming.length) { wrap.classList.add('hidden'); return; }
+
+  list.innerHTML = '';
+  upcoming.forEach(ev => {
+    const minsTo = Math.round((ev.tsH - nowH) * 60);
+    const untilLabel = minsTo < 60 ? `in ${minsTo}m` : `in ${Math.floor(minsTo/60)}h${minsTo%60?' '+(minsTo%60)+'m':''}`;
+    const entry = document.createElement('div');
+    entry.className = 'uts-entry';
+    entry.innerHTML = `<div class="uts-dot"></div><span class="uts-time">${fmtH(ev.tsH)}</span><span class="uts-info">${ev.room} · ${ev.name}</span><span class="uts-until">${untilLabel}</span>`;
+    list.appendChild(entry);
+  });
+  wrap.classList.remove('hidden');
+}
+
+/* ═══════════════════════════════
+   COUNTDOWN REFRESH
+═══════════════════════════════ */
+function refreshCountdowns() {
+  document.querySelectorAll('.evt-countdown').forEach(el => {
+    const startH = parseFloat(el.dataset.start);
+    const endH   = parseFloat(el.dataset.end);
+    const card   = el.closest('.card');
+    const allDay = card && card.dataset.allday === '1';
+    const cd = getCountdownText(startH, endH, allDay);
+    el.textContent = cd.text;
+    el.className = 'evt-countdown ' + cd.cls;
+    if (card) {
+      const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+      card.classList.toggle('card-ended', nowH >= endH && !allDay);
+      card.classList.toggle('card-live',  nowH >= startH && nowH < endH);
+    }
+  });
+  if (allEvents.length) updateNextUp(allEvents);
+}
+setInterval(refreshCountdowns, 60000);
+
+/* ═══════════════════════════════
+   LIVE CLOCK
+═══════════════════════════════ */
+function tickClock() {
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  document.getElementById('hdr-clock').textContent =
+    h + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + ' ' + ap;
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+/* ═══════════════════════════════
+   URL STATE
+═══════════════════════════════ */
+function saveURLState() {
+  const params = new URLSearchParams();
+  if (currentView !== 'all') params.set('view', currentView);
+  if (searchQuery) params.set('q', searchQuery);
+  const newURL = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+  history.replaceState(null, '', newURL);
+}
+function loadURLState() {
+  const params = new URLSearchParams(window.location.search);
+  const view = params.get('view');
+  if (view && ['all','tech','ops'].includes(view)) {
+    currentView = view;
+    ['all','tech','ops'].forEach(id => document.getElementById('vs-'+id).classList.toggle('active', id === view));
+  }
+  const q = params.get('q');
+  if (q) {
+    searchQuery = q;
+    const si = document.getElementById('search-input');
+    if (si) si.value = q;
+  }
+}
+loadURLState();
+
+/* ═══════════════════════════════
+   NOW LINE
+═══════════════════════════════ */
+function positionNowLine() {
+  const now = new Date();
+  const h   = now.getHours() + now.getMinutes() / 60;
+  const line  = document.getElementById('now-line');
+  const label = document.getElementById('now-label');
+  if (h < TL_START || h >= TL_START + TL_HOURS) {
+    line.style.display  = 'none';
+    label.style.display = 'none';
+    return;
+  }
+  const grid = document.getElementById('tl-grid');
+  const cellsWidth = grid.offsetWidth - 180;
+  const px = 180 + (((h - TL_START) / TL_HOURS) * cellsWidth);
+  line.style.left    = px + 'px';
+  line.style.display = 'block';
+  let hrs = now.getHours(), mins = now.getMinutes();
+  const ampm = hrs >= 12 ? 'PM' : 'AM';
+  hrs = hrs % 12 || 12;
+  label.style.left    = px + 'px';
+  label.textContent   = hrs + ':' + String(mins).padStart(2,'0') + ' ' + ampm;
+  label.style.display = 'block';
+  if (!document.getElementById('now-ball')) {
+    const ball = document.createElement('div');
+    ball.id = 'now-ball'; ball.className = 'now-ball';
+    line.appendChild(ball);
+  }
+}
+setInterval(positionNowLine, 30000);
+window.addEventListener('resize', positionNowLine);
+
+/* ═══════════════════════════════
+   PRINT
+═══════════════════════════════ */
+function printSchedule() {
+  window.print();
+}
+
+// Init Firebase on load
+initFirebase();
+</script>
+</body>
+</html>
