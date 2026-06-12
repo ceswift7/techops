@@ -123,11 +123,12 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .theme-btn:hover{border-color:var(--green);color:var(--green-text);}
 
 /* ── DROP ZONE ── */
-.drop-zone{margin:16px 24px 0;border:1.5px dashed var(--border2);border-radius:10px;padding:16px 22px;display:flex;align-items:center;gap:16px;background:var(--surface);cursor:pointer;transition:all .2s;}
+.drop-zone-wrap{margin:16px 24px 0;}
+.drop-zone{border:1.5px dashed var(--border2);border-radius:10px;padding:16px 22px;display:flex;align-items:center;gap:16px;background:var(--surface);cursor:pointer;transition:all .2s;}
 .drop-zone.drag-over{border-color:var(--green);background:rgba(0,207,190,.04);}
 .drop-zone.has-file{border-color:var(--green);border-style:solid;}
 .drop-icon{font-size:22px;flex-shrink:0;}
-.drop-text{flex:1;}
+.drop-text{flex:1;min-width:0;}
 .drop-label{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);letter-spacing:.06em;}
 .drop-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 .drop-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
@@ -136,7 +137,23 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .parse-btn:disabled{opacity:.4;cursor:not-allowed;}
 .clear-btn{font-family:'DM Mono',monospace;font-size:12px;padding:6px 12px;border-radius:5px;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted2);display:none;transition:all .15s;}
 .clear-btn:hover{border-color:var(--red);color:var(--red);}
-.parse-status{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);padding:6px 24px 0;min-height:20px;}
+.parse-status{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);padding:6px 2px 0;min-height:20px;}
+
+/* ── SHARED SCHEDULE BANNER ── */
+.shared-schedule-banner{
+  margin:16px 24px 0;border:1.5px solid var(--green-border);border-radius:10px;
+  padding:12px 18px;display:flex;align-items:center;gap:12px;
+  background:var(--green-bg);color:var(--green-text);
+  font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.04em;
+}
+.shared-icon{font-size:16px;flex-shrink:0;}
+#shared-schedule-label{flex:1;min-width:0;}
+.reupload-btn{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.07em;font-weight:700;
+  padding:6px 12px;border-radius:5px;cursor:pointer;border:1px solid var(--green-border);
+  background:transparent;color:var(--green-text);transition:all .15s;flex-shrink:0;white-space:nowrap;
+}
+.reupload-btn:hover{background:var(--green-bg);}
 
 /* ── EMPTY STATE ── */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;text-align:center;gap:14px;}
@@ -372,10 +389,84 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 /* utility */
 .hidden{display:none!important;}
 
+/* ══════════════════════════════════════
+   MOBILE / SMALL SCREEN OPTIMIZATION
+══════════════════════════════════════ */
+@media (max-width: 720px) {
+  /* Tighter horizontal padding throughout */
+  .hdr{padding:10px 12px;gap:8px;}
+  .legend{padding:12px 12px 0;gap:10px;}
+  .search-wrap{padding:12px 12px 0!important;}
+  .cards-wrap{padding:14px 12px 28px;}
+  .tl-wrap{padding:12px 0 0 12px;}
+  .drop-zone-wrap, .shared-schedule-banner, .upcoming-ts-wrap, .summary-section, .notes-section{margin-left:12px;margin-right:12px;}
+  .fb-banner{margin:10px 12px 0;}
+
+  /* Header: brand block shrinks, date/clock wrap below if needed */
+  .hdr-left{gap:0;}
+  .brand{font-size:11px;letter-spacing:.13em;}
+  .brand-sub{font-size:8px;letter-spacing:.1em;}
+  .hdr-date{font-size:13px;margin-left:12px;}
+  .hdr-clock{font-size:15px;margin-left:10px;}
+
+  /* hdr-right: wrap into a tidy row below the brand on narrow screens */
+  .hdr-right{width:100%;justify-content:flex-start;gap:6px;}
+  .sync-wrap, .initials-wrap{font-size:10px;padding:5px 8px;}
+  .view-switch{order:1;}
+  .vs-btn{padding:8px 12px;font-size:10px;}
+  .notif-btn, .print-btn, .theme-btn{font-size:10px;padding:7px 10px;}
+
+  /* Drop zone: stack vertically, full-width buttons */
+  .drop-zone{flex-wrap:wrap;padding:14px 16px;gap:10px;}
+  .drop-text{flex:1 1 100%;}
+  .drop-right{flex:1 1 100%;justify-content:stretch;}
+  .parse-btn, .clear-btn{flex:1;text-align:center;padding:10px;}
+
+  /* Shared schedule banner: stack label and button */
+  .shared-schedule-banner{flex-wrap:wrap;padding:10px 14px;font-size:11px;}
+  .reupload-btn{flex:1 1 100%;text-align:center;padding:8px;}
+
+  /* Cards: allow narrower single-column tiles */
+  .grid{grid-template-columns:1fr;gap:10px;}
+
+  /* Sign-off buttons: larger tap targets on touch devices */
+  .tech-signoff-btn{padding:13px 16px;font-size:12px;}
+  .tech-signoff-btn.signed{padding:12px 16px;font-size:17px;}
+
+  /* Detail modal: full-width sheet from the bottom */
+  .detail-modal-bg{padding:0;align-items:flex-end;}
+  .detail-modal{max-width:100%;width:100%;max-height:92vh;border-radius:14px 14px 0 0;animation:slideUpMobile .2s ease;}
+  @keyframes slideUpMobile{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .dm-close{font-size:24px;padding:6px 10px;}
+
+  /* Equipment summary: single column on narrow screens */
+  .summary-grid{grid-template-columns:1fr;}
+
+  /* Notes: full-width input row */
+  .notes-input-row{flex-wrap:wrap;}
+  .notes-input{flex:1 1 100%;}
+  .notes-add-btn{flex:1 1 100%;text-align:center;}
+
+  /* Timeline room labels narrower to leave more room for the grid */
+  .tl-rlabel{font-size:11px;padding:6px 8px;}
+  .tl-row{grid-template-columns:120px 1fr;}
+  .tl-hours{grid-template-columns:120px repeat(16,1fr)!important;}
+
+  /* Larger tap target for the now-line label and tooltip text */
+  .now-label{font-size:9px;}
+}
+
+@media (max-width: 420px) {
+  .brand-sub:nth-of-type(2){display:none;} /* hide "CALENDAR" line on very small screens, keep TECH/OPS */
+  .hdr-date{font-size:12px;margin-left:8px;}
+  .hdr-clock{font-size:13px;margin-left:8px;}
+  .vs-btn{padding:7px 9px;font-size:9px;}
+}
+
 /* ── PRINT VIEW ── */
 @media print {
   body{background:#fff;color:#000;font-size:11px;}
-  .hdr-right, .fb-banner, .drop-zone, .parse-status, .upcoming-ts-wrap,
+  .hdr-right, .fb-banner, .drop-zone-wrap, .shared-schedule-banner, .upcoming-ts-wrap,
   .legend, .scroll-hint, .search-wrap, .search-count, .cards-wrap,
   .notes-section, .empty-state, .tooltip, .modal-bg, .detail-modal-bg,
   .now-line, .now-label, .tl-techline {
@@ -493,19 +584,28 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 </div>
 
 <!-- DROP ZONE -->
-<div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-  <input type="file" id="file-input" accept=".pdf" style="display:none" onchange="onFileSelect(event)">
-  <div class="drop-icon">📄</div>
-  <div class="drop-text">
-    <div class="drop-label" id="drop-label">DROP PDF</div>
-    <div class="drop-sub"   id="drop-sub">Momentus Elite daily export</div>
-  </div>
-  <div class="drop-right">
-    <button class="parse-btn" id="parse-btn" onclick="handleBuild(event)">⚡ BUILD</button>
-    <button class="clear-btn" id="clear-btn" onclick="clearFile(event)">✕</button>
-  </div>
+<!-- SHARED SCHEDULE BANNER — shown when today's schedule auto-loaded from Firebase -->
+<div class="shared-schedule-banner hidden" id="shared-schedule-banner">
+  <span class="shared-icon">☁</span>
+  <span id="shared-schedule-label">Today's schedule loaded</span>
+  <button class="reupload-btn" onclick="showReuploadZone()">Re-upload</button>
 </div>
-<div class="parse-status" id="parse-status"></div>
+
+<div class="drop-zone-wrap" id="drop-zone-wrap">
+  <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+    <input type="file" id="file-input" accept=".pdf" style="display:none" onchange="onFileSelect(event)">
+    <div class="drop-icon">📄</div>
+    <div class="drop-text">
+      <div class="drop-label" id="drop-label">DROP PDF</div>
+      <div class="drop-sub"   id="drop-sub">Momentus Elite daily export — shares with your whole team</div>
+    </div>
+    <div class="drop-right">
+      <button class="parse-btn" id="parse-btn" onclick="handleBuild(event)">⚡ BUILD</button>
+      <button class="clear-btn" id="clear-btn" onclick="clearFile(event)">✕</button>
+    </div>
+  </div>
+  <div class="parse-status" id="parse-status"></div>
+</div>
 
 <!-- UPCOMING TECH STARTS -->
 <div class="upcoming-ts-wrap hidden" id="upcoming-ts-wrap">
@@ -517,7 +617,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 <div class="empty-state" id="empty-state">
   <div class="empty-icon">🗓</div>
   <div class="empty-label">No schedule loaded</div>
-  <div class="empty-sub">Drop a Momentus Elite daily export PDF above to build today's schedule.</div>
+  <div class="empty-sub">Drop a Momentus Elite daily export PDF above to build today's schedule — it'll automatically appear for your whole team.</div>
 </div>
 
 <!-- SCHEDULE -->
@@ -618,10 +718,70 @@ async function initFirebase() {
     setSyncStatus('connected');
     document.getElementById('fb-banner').classList.add('hidden');
     if (currentDateKey) attachListener();
+
+    // Check whether today's schedule has already been shared by someone
+    // on the team — if so, load it automatically with no PDF needed.
+    await loadSharedScheduleIfAvailable();
   } catch(e) {
     console.error('Firebase init failed', e);
     setSyncStatus('error');
   }
+}
+
+/* ── loadSharedScheduleIfAvailable ──
+   Checks Firebase for a schedule already uploaded today (by anyone on the
+   team) and renders it automatically. Returns true if a schedule was
+   found and loaded, false otherwise.
+*/
+async function loadSharedScheduleIfAvailable() {
+  if (!db) return false;
+  const key = todayKey();
+  try {
+    const snap = await db.ref('schedule/' + key).once('value');
+    const data = snap.val();
+    if (!data || !data.events || !data.events.length) return false;
+
+    currentDateKey = key;
+    document.getElementById('hdr-date').textContent = data.date || '';
+
+    fbListenerAttached = false;
+    notesListenerAttached = false;
+    attachListener();
+    attachNotesListener();
+    renderNotes();
+
+    document.getElementById('empty-state').classList.add('hidden');
+    document.getElementById('drop-zone-wrap').classList.add('hidden');
+    document.getElementById('schedule-wrap').classList.remove('hidden');
+
+    renderTimeline(data.events);
+    renderCards(data.events);
+    positionNowLine();
+    updateNextUp(data.events);
+
+    showSharedScheduleBanner(data.uploadedBy, data.uploadedAt);
+    return true;
+  } catch (err) {
+    console.error('Failed to check for shared schedule', err);
+    return false;
+  }
+}
+
+/* ── showSharedScheduleBanner ──
+   Displays a small banner indicating today's schedule was loaded
+   automatically, with who uploaded it and a re-upload option.
+*/
+function showSharedScheduleBanner(uploadedBy, uploadedAt) {
+  const banner = document.getElementById('shared-schedule-banner');
+  const label  = document.getElementById('shared-schedule-label');
+  if (!banner || !label) return;
+  label.textContent = `Today's schedule loaded — uploaded by ${uploadedBy || 'a teammate'}${uploadedAt ? ' at ' + uploadedAt : ''}`;
+  banner.classList.remove('hidden');
+}
+
+function showReuploadZone() {
+  document.getElementById('shared-schedule-banner').classList.add('hidden');
+  document.getElementById('drop-zone-wrap').classList.remove('hidden');
 }
 
 function loadScript(src) {
@@ -1232,6 +1392,20 @@ function parseDateString(raw) {
   return '';
 }
 
+/* ── todayKey ──
+   Returns a stable Firebase path key for "today", based on the device's
+   local date (YYYY-MM-DD). Used for the SHARED schedule storage so that
+   any team member's browser can find today's schedule regardless of
+   whether they were the one who uploaded the PDF.
+*/
+function todayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 /* ── cleanItem ──
    Extracts quantity and name, strips room code suffixes.
    Returns { qty, name } or null.
@@ -1568,20 +1742,38 @@ async function handleBuild(e) {
     document.getElementById('hdr-date').textContent = result.date || '';
     statusEl.textContent = `✓ ${result.events.length} events loaded`;
 
-    // Set date key for Firebase sign-off scoping
-    currentDateKey = result.date.replace(/[^a-zA-Z0-9]/g,'_');
+    // Use today's actual date as the shared Firebase key — this is what lets
+    // any team member's browser find this schedule without re-uploading.
+    currentDateKey = todayKey();
     fbListenerAttached = false;
     notesListenerAttached = false;
     if (db) { attachListener(); attachNotesListener(); }
     renderNotes();
 
     document.getElementById('empty-state').classList.add('hidden');
+    document.getElementById('shared-schedule-banner').classList.add('hidden');
     document.getElementById('schedule-wrap').classList.remove('hidden');
 
     renderTimeline(result.events);
     renderCards(result.events);
     positionNowLine();
     updateNextUp(result.events);
+
+    // Share this schedule with the team via Firebase
+    if (db) {
+      const now = new Date();
+      let h = now.getHours(), m = now.getMinutes();
+      const ap = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      const timeStr = h + ':' + String(m).padStart(2,'0') + ' ' + ap;
+      const uploaderInitials = myInitials || 'someone';
+      db.ref('schedule/' + currentDateKey).set({
+        date: result.date,
+        events: result.events,
+        uploadedBy: uploaderInitials,
+        uploadedAt: timeStr
+      }).catch(err => console.error('Failed to share schedule', err));
+    }
   } catch(err) {
     console.error(err);
     statusEl.textContent = '✗ ' + (err.message || 'Failed to parse PDF');
@@ -2177,8 +2369,12 @@ function positionNowLine() {
     return;
   }
   const grid = document.getElementById('tl-grid');
-  const cellsWidth = grid.offsetWidth - 180;
-  const px = 180 + (((h - TL_START) / TL_HOURS) * cellsWidth);
+  // Read the actual rendered width of the room-label column rather than
+  // assuming the desktop 180px — on mobile this column is narrower (120px).
+  const firstLabel = grid.querySelector('.tl-rlabel');
+  const labelWidth = firstLabel ? firstLabel.offsetWidth : 180;
+  const cellsWidth = grid.offsetWidth - labelWidth;
+  const px = labelWidth + (((h - TL_START) / TL_HOURS) * cellsWidth);
   line.style.left    = px + 'px';
   line.style.display = 'block';
   let hrs = now.getHours(), mins = now.getMinutes();
