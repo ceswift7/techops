@@ -734,12 +734,27 @@ async function initFirebase() {
    found and loaded, false otherwise.
 */
 async function loadSharedScheduleIfAvailable() {
-  if (!db) return false;
+  if (!db) { console.log('[shared schedule] no db connection'); return false; }
   const key = todayKey();
   try {
+    console.log('[shared schedule] checking schedule/' + key);
     const snap = await db.ref('schedule/' + key).once('value');
     const data = snap.val();
-    if (!data || !data.events || !data.events.length) return false;
+    console.log('[shared schedule] data found:', !!data, data ? `events: ${data.events ? (Array.isArray(data.events) ? data.events.length : Object.keys(data.events).length) : 'none'}` : '');
+    if (!data || !data.events) return false;
+
+    // Firebase Realtime Database drops empty arrays/objects on write, and
+    // can return arrays-with-gaps as a plain object keyed by index on read.
+    // Normalize both issues before rendering.
+    let events = data.events;
+    if (!Array.isArray(events)) {
+      events = Object.keys(events)
+        .sort((a,b) => Number(a) - Number(b))
+        .map(k => events[k]);
+    }
+    events = events.map(ev => normalizeEvent(ev));
+
+    if (!events.length) return false;
 
     currentDateKey = key;
     document.getElementById('hdr-date').textContent = data.date || '';
@@ -754,10 +769,10 @@ async function loadSharedScheduleIfAvailable() {
     document.getElementById('drop-zone-wrap').classList.add('hidden');
     document.getElementById('schedule-wrap').classList.remove('hidden');
 
-    renderTimeline(data.events);
-    renderCards(data.events);
+    renderTimeline(events);
+    renderCards(events);
     positionNowLine();
-    updateNextUp(data.events);
+    updateNextUp(events);
 
     showSharedScheduleBanner(data.uploadedBy, data.uploadedAt);
     return true;
@@ -765,6 +780,29 @@ async function loadSharedScheduleIfAvailable() {
     console.error('Failed to check for shared schedule', err);
     return false;
   }
+}
+
+/* ── normalizeEvent ──
+   Firebase Realtime Database omits empty arrays/objects entirely when
+   writing data. After reading an event back, this restores any missing
+   array fields to [] so rendering code (which calls .forEach/.length on
+   them) doesn't break.
+*/
+function normalizeEvent(ev) {
+  const arrayFields = [
+    'audio','audioLabor','video','videoLabor','lighting','lightingLabor',
+    'film','filmLabor','nontech','nontechLabor','nontechRental',
+    'gentech','gentechLabor','techRental','notes'
+  ];
+  const out = { ...ev };
+  arrayFields.forEach(f => {
+    if (!out[f]) out[f] = [];
+    else if (!Array.isArray(out[f])) {
+      // Firebase may return a sparse array as an object keyed by index
+      out[f] = Object.keys(out[f]).sort((a,b) => Number(a)-Number(b)).map(k => out[f][k]);
+    }
+  });
+  return out;
 }
 
 /* ── showSharedScheduleBanner ──
@@ -1767,12 +1805,23 @@ async function handleBuild(e) {
       h = h % 12 || 12;
       const timeStr = h + ':' + String(m).padStart(2,'0') + ' ' + ap;
       const uploaderInitials = myInitials || 'someone';
+
+      // JSON round-trip strips any `undefined` values, which Firebase
+      // Realtime Database otherwise rejects (and fails the entire write).
+      const safeEvents = JSON.parse(JSON.stringify(result.events));
+
       db.ref('schedule/' + currentDateKey).set({
         date: result.date,
-        events: result.events,
+        events: safeEvents,
         uploadedBy: uploaderInitials,
         uploadedAt: timeStr
-      }).catch(err => console.error('Failed to share schedule', err));
+      }).then(() => {
+        console.log('Schedule shared with team:', currentDateKey, safeEvents.length, 'events');
+        statusEl.textContent = `✓ ${result.events.length} events loaded — shared with your team`;
+      }).catch(err => {
+        console.error('Failed to share schedule', err);
+        statusEl.textContent = `✓ ${result.events.length} events loaded (local only — sharing failed: ${err.message})`;
+      });
     }
   } catch(err) {
     console.error(err);
