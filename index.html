@@ -661,7 +661,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   </div>
 
   <div class="cards-wrap">
-    <div class="cards-hdr">ALL EVENTS — SORTED BY START TIME</div>
+    <div class="cards-hdr">ALL EVENTS — SORTED BY START TIME <span id="cards-debug-count"></span></div>
     <div class="grid" id="card-grid"></div>
   </div>
 
@@ -736,12 +736,17 @@ async function initFirebase() {
 async function loadSharedScheduleIfAvailable() {
   if (!db) { console.log('[shared schedule] no db connection'); return false; }
   const key = todayKey();
+  const statusEl2 = document.getElementById('parse-status');
   try {
     console.log('[shared schedule] checking schedule/' + key);
     const snap = await db.ref('schedule/' + key).once('value');
     const data = snap.val();
-    console.log('[shared schedule] data found:', !!data, data ? `events: ${data.events ? (Array.isArray(data.events) ? data.events.length : Object.keys(data.events).length) : 'none'}` : '');
-    if (!data || !data.events) return false;
+    const rawCount = data && data.events ? (Array.isArray(data.events) ? data.events.length : Object.keys(data.events).length) : 0;
+    console.log('[shared schedule] data found:', !!data, 'raw event count:', rawCount);
+    if (!data || !data.events) {
+      if (statusEl2) statusEl2.textContent = `No shared schedule found for ${key} yet.`;
+      return false;
+    }
 
     // Firebase Realtime Database drops empty arrays/objects on write, and
     // can return arrays-with-gaps as a plain object keyed by index on read.
@@ -754,7 +759,10 @@ async function loadSharedScheduleIfAvailable() {
     }
     events = events.map(ev => normalizeEvent(ev));
 
-    if (!events.length) return false;
+    if (!events.length) {
+      if (statusEl2) statusEl2.textContent = `Shared schedule for ${key} has no events (raw count was ${rawCount}).`;
+      return false;
+    }
 
     currentDateKey = key;
     document.getElementById('hdr-date').textContent = data.date || '';
@@ -778,6 +786,8 @@ async function loadSharedScheduleIfAvailable() {
     return true;
   } catch (err) {
     console.error('Failed to check for shared schedule', err);
+    if (statusEl2) statusEl2.textContent = `Error loading shared schedule: ${err.message}`;
+    document.getElementById('drop-zone-wrap').classList.remove('hidden');
     return false;
   }
 }
@@ -796,11 +806,21 @@ function normalizeEvent(ev) {
   ];
   const out = { ...ev };
   arrayFields.forEach(f => {
-    if (!out[f]) out[f] = [];
-    else if (!Array.isArray(out[f])) {
-      // Firebase may return a sparse array as an object keyed by index
-      out[f] = Object.keys(out[f]).sort((a,b) => Number(a)-Number(b)).map(k => out[f][k]);
+    const val = out[f];
+    if (Array.isArray(val)) {
+      // Already a proper array — keep as-is.
+      return;
     }
+    if (val && typeof val === 'object') {
+      // Firebase returned a sparse array as an object keyed by index
+      // (e.g. {"0": {...}, "2": {...}}) — convert back to a dense array.
+      out[f] = Object.keys(val).sort((a,b) => Number(a)-Number(b)).map(k => val[k]);
+      return;
+    }
+    // val is null, undefined, or some other non-iterable (e.g. a stray
+    // boolean/string) — Firebase dropped the field or stored something
+    // unexpected. Default to an empty array either way.
+    out[f] = [];
   });
   return out;
 }
@@ -2167,6 +2187,11 @@ function renderCards(events) {
   const grid = document.getElementById('card-grid');
   grid.innerHTML = '';
   const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+
+  // Diagnostic: show how many events were passed in, so a blank calendar
+  // can be distinguished from "0 events received" vs a rendering failure.
+  const debugCount = document.getElementById('cards-debug-count');
+  if (debugCount) debugCount.textContent = `(${events.length} event${events.length === 1 ? '' : 's'})`;
 
   sorted.forEach((ev, i) => {
     const card = document.createElement('div');
