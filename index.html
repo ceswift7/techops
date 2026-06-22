@@ -89,6 +89,7 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;transition:background .2s,color .2s;}
 
 /* ── HEADER ── */
@@ -202,7 +203,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .tl-techline{position:absolute;top:0;bottom:0;width:2px;background:var(--techline);z-index:4;pointer-events:none;opacity:.95;}
 .tl-techline::after{content:'';position:absolute;top:-5px;left:-4px;width:10px;height:10px;border-radius:50%;background:var(--techline);}
 .now-line{position:absolute;bottom:0;width:2px;background:var(--nowline);z-index:20;pointer-events:none;display:none;top:20px;}
-.now-label{position:absolute;top:-20px;left:180px;font-family:'DM Mono',monospace;font-size:10px;color:var(--nowline);letter-spacing:.04em;pointer-events:none;display:none;white-space:nowrap;transform:translateX(-50%);text-align:center;font-weight:700;}
+.now-label{position:absolute;top:-20px;left:0;font-family:'DM Mono',monospace;font-size:10px;color:var(--nowline);letter-spacing:.04em;pointer-events:none;display:none;white-space:nowrap;transform:translateX(-50%);text-align:center;font-weight:700;}
 .now-ball{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:var(--nowline);animation:nowpulse 2s ease-in-out infinite;}
 @keyframes nowpulse{0%{box-shadow:0 0 0 0 rgba(255,51,80,.75);}60%{box-shadow:0 0 0 9px rgba(255,51,80,0);}100%{box-shadow:0 0 0 0 rgba(255,51,80,0);}}
 .scroll-hint{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:right;padding:5px 24px 2px;}
@@ -461,6 +462,28 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   .hdr-date{font-size:12px;margin-left:8px;}
   .hdr-clock{font-size:13px;margin-left:8px;}
   .vs-btn{padding:7px 9px;font-size:9px;}
+}
+
+/* ── MOBILE FONT SIZE NORMALIZATION ── */
+@media (max-width: 720px) {
+  /* Rein in the oversized evt-time (22px desktop → 18px mobile) */
+  .evt-time{font-size:18px;}
+  /* Keep evt-name and card-room consistent with body scale */
+  .evt-name{font-size:14px;}
+  .card-room{font-size:13px;}
+  /* Clock and date stay readable but don't dominate */
+  .hdr-clock{font-size:15px;}
+  /* Sign-off button in signed state — don't let it balloon */
+  .tech-signoff-btn.signed{font-size:14px;}
+  .dm-signoff-btn.signed{font-size:14px;}
+  /* Detail modal header */
+  .dm-name{font-size:16px;}
+  .dm-time{font-size:15px;}
+}
+@media (max-width: 420px) {
+  .evt-time{font-size:16px;}
+  .evt-name{font-size:13px;}
+  .card-room{font-size:12px;}
 }
 
 /* ── PRINT VIEW ── */
@@ -885,8 +908,8 @@ function writeSignoff(evKey, patch) {
 }
 
 function makeEventKey(ev) {
-  // Stable key from room + start time + name
-  return (ev.room + '_' + ev.startH + '_' + ev.name)
+  // Stable key from room + start time + end time + name
+  return (ev.room + '_' + ev.startH + '_' + ev.endH + '_' + ev.name)
     .replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 80);
 }
 
@@ -961,10 +984,19 @@ function doUndoSignoff(evKey, roomLabel) {
   if (!confirm(`Remove tech sign-off for ${roomLabel}?`)) return;
 
   if (db) {
-    db.ref(fbPath(evKey)).remove();
+    db.ref(fbPath(evKey)).remove()
+      .then(() => {
+        delete signoffCache[evKey];
+        removeSignoffFromUI(evKey);
+      })
+      .catch(err => {
+        console.error('Failed to remove sign-off', err);
+        alert('Could not remove sign-off — check your connection and try again.');
+      });
+  } else {
+    delete signoffCache[evKey];
+    removeSignoffFromUI(evKey);
   }
-  delete signoffCache[evKey];
-  removeSignoffFromUI(evKey);
 }
 
 function removeSignoffFromUI(evKey) {
@@ -974,7 +1006,9 @@ function removeSignoffFromUI(evKey) {
     const btn = card.querySelector('.tech-signoff-btn');
     if (btn) {
       const ev = allEvents.find(e => makeEventKey(e) === evKey);
-      btn.textContent = ev ? `TECH STARTS AT ${fmtH(ev.startH - 0.5)}` : 'TECH START';
+      const tsH = ev ? ev.startH - 0.5 : null;
+      const tsLabel = (tsH !== null && tsH < TL_START) ? 'TECH START AT OPEN' : (ev ? `TECH STARTS AT ${fmtH(tsH)}` : 'TECH START');
+      btn.textContent = tsLabel;
       btn.classList.remove('signed');
       btn.onclick = () => doSignoff(evKey);
     }
@@ -993,7 +1027,9 @@ function removeSignoffFromUI(evKey) {
   const dmBtn = document.querySelector(`.dm-signoff-btn[data-evkey="${CSS.escape(evKey)}"]`);
   if (dmBtn) {
     const ev = allEvents.find(e => makeEventKey(e) === evKey);
-    dmBtn.textContent = ev ? `TECH STARTS AT ${fmtH(ev.startH - 0.5)}` : 'TECH START';
+    const tsH = ev ? ev.startH - 0.5 : null;
+    const tsLabel = (tsH !== null && tsH < TL_START) ? 'TECH START AT OPEN' : (ev ? `TECH STARTS AT ${fmtH(tsH)}` : 'TECH START');
+    dmBtn.textContent = tsLabel;
     dmBtn.classList.remove('signed');
     dmBtn.onclick = () => doSignoff(evKey);
   }
@@ -1149,16 +1185,53 @@ function renderNotes() {
   entries.forEach(([id, n]) => {
     const entry = document.createElement('div');
     entry.className = 'note-entry';
-    entry.innerHTML = `
-      <span class="note-initials">${n.by || '—'}</span>
-      <div class="note-body">
-        <div class="note-text">${escapeHtml(n.text || '')}</div>
-        <div class="note-meta">${n.at || ''}</div>
-      </div>
-      <button class="note-delete" onclick="deleteNote('${id}')" title="Delete note">✕</button>
-    `;
+    const initSpan = document.createElement('span');
+    initSpan.className = 'note-initials';
+    initSpan.textContent = n.by || '—';
+    const bodyDiv = document.createElement('div');
+    bodyDiv.className = 'note-body';
+    const textDiv = document.createElement('div');
+    textDiv.className = 'note-text';
+    textDiv.textContent = n.text || '';
+    const metaDiv = document.createElement('div');
+    metaDiv.className = 'note-meta';
+    metaDiv.textContent = n.at || '';
+    bodyDiv.appendChild(textDiv);
+    bodyDiv.appendChild(metaDiv);
+    const delBtn = document.createElement('button');
+    delBtn.className = 'note-delete';
+    delBtn.title = 'Delete note';
+    delBtn.textContent = '✕';
+    delBtn.addEventListener('click', () => confirmDeleteNote(id, n.text || ''));
+    entry.appendChild(initSpan);
+    entry.appendChild(bodyDiv);
+    entry.appendChild(delBtn);
     list.appendChild(entry);
   });
+}
+
+function confirmDeleteNote(id, text) {
+  // Show inline undo toast instead of browser confirm()
+  const list = document.getElementById('notes-list');
+  const toast = document.createElement('div');
+  toast.className = 'note-delete-toast';
+  toast.style.cssText = 'display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:7px;margin-bottom:8px;font-family:"DM Mono",monospace;font-size:11px;color:var(--red-text);animation:up .18s ease both;';
+  const msg = document.createElement('span');
+  msg.style.flex = '1';
+  msg.textContent = `Delete "${text.substring(0,40)}${text.length>40?'…':''}"?`;
+  const undoBtn = document.createElement('button');
+  undoBtn.textContent = 'UNDO';
+  undoBtn.style.cssText = 'font-family:"DM Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:4px;cursor:pointer;border:1px solid var(--red-border);background:transparent;color:var(--red-text);';
+  const confirmBtn = document.createElement('button');
+  confirmBtn.textContent = 'DELETE';
+  confirmBtn.style.cssText = 'font-family:"DM Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:4px;cursor:pointer;border:none;background:var(--red);color:#fff;';
+  toast.appendChild(msg);
+  toast.appendChild(undoBtn);
+  toast.appendChild(confirmBtn);
+  list.insertBefore(toast, list.firstChild);
+  let timer = setTimeout(() => { toast.remove(); deleteNote(id); }, 5000);
+  undoBtn.addEventListener('click', () => { clearTimeout(timer); toast.remove(); });
+  confirmBtn.addEventListener('click', () => { clearTimeout(timer); toast.remove(); deleteNote(id); });
 }
 
 function escapeHtml(s) {
@@ -1826,6 +1899,19 @@ async function handleBuild(e) {
       const timeStr = h + ':' + String(m).padStart(2,'0') + ' ' + ap;
       const uploaderInitials = myInitials || 'someone';
 
+      // Check if a schedule already exists for today before overwriting
+      const existingSnap = await db.ref('schedule/' + currentDateKey + '/uploadedBy').once('value');
+      const existingUploader = existingSnap.val();
+      if (existingUploader) {
+        const existingAt = (await db.ref('schedule/' + currentDateKey + '/uploadedAt').once('value')).val() || '';
+        const ok = confirm(`A schedule for today was already uploaded by ${existingUploader}${existingAt ? ' at ' + existingAt : ''}.\n\nReplace it with this new upload?`);
+        if (!ok) {
+          statusEl.textContent = `✓ ${result.events.length} events loaded locally — shared schedule unchanged`;
+          parseBtn.disabled = false;
+          return;
+        }
+      }
+
       // JSON round-trip strips any `undefined` values, which Firebase
       // Realtime Database otherwise rejects (and fails the entire write).
       const safeEvents = JSON.parse(JSON.stringify(result.events));
@@ -1903,7 +1989,11 @@ function openDetailModal(ev, evKey) {
 
   // Badges row
   body += `<div class="dm-badges">`;
-  if (ev.hasTech && !ev.allDay) body += `<span class="dm-badge amber">⚙ TECH START ${fmtH(ev.startH - 0.5)}</span>`;
+  if (ev.hasTech && !ev.allDay) {
+    const tsH = ev.startH - 0.5;
+    const tsLabel = tsH < TL_START ? 'TECH START AT OPEN' : `TECH START ${fmtH(tsH)}`;
+    body += `<span class="dm-badge amber">⚙ ${tsLabel}</span>`;
+  }
   if (ev.hasFood) body += `<span class="dm-badge amber">🍽 CATERING</span>`;
   if (ev.allDay)  body += `<span class="dm-badge amber">ALL DAY</span>`;
   body += `</div>`;
@@ -1952,16 +2042,18 @@ function openDetailModal(ev, evKey) {
   // Notes
   if (ev.notes.length) {
     body += `<div class="dm-section-lbl">Notes</div><div class="dm-notes">`;
-    ev.notes.forEach(n => { body += `<div class="dm-note">${n}</div>`; });
+    ev.notes.forEach(n => { body += `<div class="dm-note">${escapeHtml(n)}</div>`; });
     body += `</div>`;
   }
 
   // Single sign-off button — only if event has tech needs
   if (ev.hasTech && !ev.allDay) {
+    const tsH = ev.startH - 0.5;
+    const tsLabel = tsH < TL_START ? 'TECH START AT OPEN' : `TECH STARTS AT ${fmtH(tsH)}`;
     if (state.ts) {
-      body += `<button class="dm-signoff-btn signed" data-evkey="${evKey}">${state.tsBy}  ·  ${state.tsAt}</button>`;
+      body += `<button class="dm-signoff-btn signed" data-evkey="${evKey}">${escapeHtml(state.tsBy)}  ·  ${escapeHtml(state.tsAt)}</button>`;
     } else {
-      body += `<button class="dm-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">TECH STARTS AT ${fmtH(ev.startH - 0.5)}</button>`;
+      body += `<button class="dm-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">${tsLabel}</button>`;
     }
   }
 
@@ -2096,6 +2188,12 @@ function renderTimeline(events) {
       el.dataset.hasTech    = ev.hasTech ? '1' : '0';
       el.dataset.hasNontech = hasNontech ? '1' : '0';
 
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', `${ev.name} · ${ev.room} · ${fmtRange(ev.startH, ev.endH)}`);
+      el.addEventListener('keydown', evt => {
+        if (evt.key === 'Enter' || evt.key === ' ') { evt.preventDefault(); openDetailModal(ev, evKey); }
+      });
       el.addEventListener('mouseenter', evt => showTooltip(ev, evKey, evt.clientX, evt.clientY));
       el.addEventListener('mousemove',  evt => { if (tooltipVisible) positionTooltip(evt.clientX, evt.clientY); });
       el.addEventListener('mouseleave', evt => { hideTooltipDelay(); });
@@ -2108,7 +2206,6 @@ function renderTimeline(events) {
         const t = evt.touches[0];
         el._touchStartX = t.clientX;
         el._touchStartY = t.clientY;
-        showTooltip(ev, evKey, t.clientX, t.clientY);
       }, { passive: true });
       el.addEventListener('touchend', evt => {
         evt.stopPropagation();
@@ -2171,11 +2268,10 @@ function makeTag(item, colorClass) {
 }
 
 /* Build a dept section if items exist */
-function deptSection(label, items, colorClass, maxHeight) {
+function deptSection(label, items, colorClass) {
   if (!items.length) return '';
-  const mh = maxHeight || Math.min(300, 50 + items.length * 30);
   let h = `<div class="dept-lbl" onclick="toggleSection(this)">${label}</div>`;
-  h += `<div class="dept-section tags" style="max-height:${mh}px;">`;
+  h += `<div class="dept-section tags">`;
   items.forEach(it => { h += makeTag(it, colorClass); });
   h += `</div>`;
   return h;
@@ -2212,7 +2308,7 @@ function renderCards(events) {
     card.dataset.searchText = (ev.room + ' ' + ev.name + ' ' + ev.type + ' ' +
       [...ev.audio, ...ev.video, ...ev.lighting, ...ev.nontech, ...ev.gentech,
        ...ev.audioLabor, ...ev.videoLabor, ...ev.nontechLabor, ...ev.techRental]
-      .map(it => it.name).join(' ')).toLowerCase();
+      .map(it => it.name).join(' ') + ' ' + ev.notes.join(' ')).toLowerCase();
 
     if (isEnded) card.classList.add('card-ended');
 
@@ -2267,7 +2363,7 @@ function renderCards(events) {
     // Notes
     if (ev.notes.length) {
       inner += `<div class="side-notes">`;
-      ev.notes.forEach(n => { inner += `<div class="side-note">${n}</div>`; });
+      ev.notes.forEach(n => { inner += `<div class="side-note">${escapeHtml(n)}</div>`; });
       inner += `</div>`;
     }
 
@@ -2276,10 +2372,12 @@ function renderCards(events) {
     // ── Single sign-off button — only if event has tech needs ──
     if (ev.hasTech && !ev.allDay) {
       const state = signoffCache[evKey] || {};
+      const tsH = ev.startH - 0.5;
+      const tsLabel = tsH < TL_START ? 'TECH START AT OPEN' : `TECH STARTS AT ${fmtH(tsH)}`;
       if (state.ts) {
-        inner += `<div class="signoff-bar"><button class="tech-signoff-btn signed" data-evkey="${evKey}">${state.tsBy}</button></div>`;
+        inner += `<div class="signoff-bar"><button class="tech-signoff-btn signed" data-evkey="${evKey}">${escapeHtml(state.tsBy)}</button></div>`;
       } else {
-        inner += `<div class="signoff-bar"><button class="tech-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">TECH STARTS AT ${fmtH(ev.startH - 0.5)}</button></div>`;
+        inner += `<div class="signoff-bar"><button class="tech-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">${tsLabel}</button></div>`;
       }
     }
 
@@ -2347,11 +2445,15 @@ function updateNextUp(events) {
   const wrap = document.getElementById('upcoming-ts-wrap');
   const list = document.getElementById('uts-list');
 
-  const upcoming = events
+  const allRemaining = events
     .filter(ev => ev.hasTech && !ev.allDay)
-    .map(ev => ({ ...ev, tsH: ev.startH - 0.5 }))
-    .filter(ev => ev.tsH > nowH && ev.tsH <= nowH + 4)
+    .map(ev => ({ ...ev, tsH: Math.max(ev.startH - 0.5, TL_START) }))
+    .filter(ev => ev.tsH > nowH)
     .sort((a,b) => a.tsH - b.tsH);
+
+  // Show 4-hour window; expand to all remaining if fewer than 3 in window
+  let upcoming = allRemaining.filter(ev => ev.tsH <= nowH + 4);
+  if (upcoming.length < 3) upcoming = allRemaining.slice(0, Math.max(upcoming.length, 5));
 
   if (!upcoming.length) { wrap.classList.add('hidden'); return; }
 
@@ -2361,7 +2463,8 @@ function updateNextUp(events) {
     const untilLabel = minsTo < 60 ? `in ${minsTo}m` : `in ${Math.floor(minsTo/60)}h${minsTo%60?' '+(minsTo%60)+'m':''}`;
     const entry = document.createElement('div');
     entry.className = 'uts-entry';
-    entry.innerHTML = `<div class="uts-dot"></div><span class="uts-time">${fmtH(ev.tsH)}</span><span class="uts-info">${ev.room} · ${ev.name}</span><span class="uts-until">${untilLabel}</span>`;
+    const timeLabel = ev.startH - 0.5 < TL_START ? `${fmtH(ev.tsH)} (open)` : fmtH(ev.tsH);
+    entry.innerHTML = `<div class="uts-dot"></div><span class="uts-time">${timeLabel}</span><span class="uts-info">${escapeHtml(ev.room)} · ${escapeHtml(ev.name)}</span><span class="uts-until">${untilLabel}</span>`;
     list.appendChild(entry);
   });
   wrap.classList.remove('hidden');
