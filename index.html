@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OSVES Tech Calendar</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800&family=Exo+2:wght@300;400;500;600;700&family=Special+Elite&family=Bitter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=Kalam:wght@400;700&family=PT+Sans:wght@400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800&family=Exo+2:wght@300;400;500;600;700&family=Special+Elite&family=Bitter:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&family=PT+Sans:wght@400;700&family=Courier+Prime:wght@400;700&family=JetBrains+Mono:wght@400;500;600;700&family=Titillium+Web:wght@300;400;600;700&family=Silkscreen&family=Chakra+Petch:wght@400;500;600;700&family=Comfortaa:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=Audiowide&family=Poppins:wght@300;400;500;600;700&family=Marcellus&display=swap" rel="stylesheet">
 <style>
 /* ── THEMES ── */
 [data-theme="dark"] {
@@ -162,45 +162,6 @@
   --font-mono:    'Special Elite', monospace;
   --font-sans:    'Bitter', serif;
 }
-/* Art Deco — black, gold, and deep emerald, geometric Gatsby-era elegance */
-[data-theme="artdeco"] {
-  --bg:           #0a0a0c;
-  --surface:      #121214;
-  --surface2:     #1c1a16;
-  --border:       #3a3226;
-  --border2:      #5a4c34;
-  --text:         #f0e6d2;
-  --text2:        #c8b896;
-  --muted:        #4a4030;
-  --muted2:       #8a7850;
-  --shadow:       rgba(0,0,0,.85);
-  --modal-bg:     rgba(10,10,12,.85);
-  --green:        #d4af37;
-  --green-bg:     rgba(212,175,55,.14);
-  --green-border: rgba(212,175,55,.45);
-  --green-text:   #f0d060;
-  --red:          #c73e3e;
-  --red-bg:       rgba(199,62,62,.14);
-  --red-border:   rgba(199,62,62,.42);
-  --red-text:     #e06868;
-  --amber:        #b87333;
-  --amber-bg:     rgba(184,115,51,.14);
-  --amber-border: rgba(184,115,51,.45);
-  --amber-text:   #d89a5c;
-  --purple:       #1f7a5c;
-  --purple-bg:    rgba(31,122,92,.14);
-  --purple-border:rgba(31,122,92,.4);
-  --purple-text:  #5cbf9a;
-  --techline:     #b87333;
-  --nowline:      #c73e3e;
-  --signoff-bg:   rgba(212,175,55,.2);
-  --signoff-bd:   rgba(212,175,55,.6);
-  --signoff-c:    #f0d060;
-  --ready-bg:     rgba(212,175,55,.08);
-  --ready-bd:     rgba(212,175,55,.3);
-  --font-mono:    'Cinzel', serif;
-  --font-sans:    'Josefin Sans', sans-serif;
-}
 /* Forest Ranger — deep forest at night, campfire amber, lake blue */
 [data-theme="forest"] {
   --bg:           #0d140e;
@@ -237,8 +198,203 @@
   --signoff-c:    #8fe08f;
   --ready-bg:     rgba(95,191,95,.08);
   --ready-bd:     rgba(95,191,95,.3);
-  --font-mono:    'Kalam', cursive;
+  --font-mono:    'Barlow Condensed', sans-serif;
   --font-sans:    'PT Sans', sans-serif;
+}
+/* Blueprint — technical drafting blue, cyan/white grid lines */
+[data-theme="blueprint"] {
+  --bg:           #0a1929;
+  --surface:      #0f2540;
+  --surface2:     #15304f;
+  --border:       #2a4d70;
+  --border2:      #3d6690;
+  --text:         #e8f2ff;
+  --text2:        #a8c8e8;
+  --muted:        #2a4560;
+  --muted2:       #6090b8;
+  --shadow:       rgba(0,0,0,.5);
+  --modal-bg:     rgba(10,25,41,.85);
+  --green:        #4fd8ff;
+  --green-bg:     rgba(79,216,255,.14);
+  --green-border: rgba(79,216,255,.45);
+  --green-text:   #8fe8ff;
+  --red:          #ff5c4d;
+  --red-bg:       rgba(255,92,77,.14);
+  --red-border:   rgba(255,92,77,.42);
+  --red-text:     #ff9082;
+  --amber:        #ffd23f;
+  --amber-bg:     rgba(255,210,63,.14);
+  --amber-border: rgba(255,210,63,.45);
+  --amber-text:   #ffe27a;
+  --purple:       #8f9fdc;
+  --purple-bg:    rgba(143,159,220,.14);
+  --purple-border:rgba(143,159,220,.4);
+  --purple-text:  #b8c4ec;
+  --techline:     #ffd23f;
+  --nowline:      #ff5c4d;
+  --signoff-bg:   rgba(79,216,255,.2);
+  --signoff-bd:   rgba(79,216,255,.6);
+  --signoff-c:    #8fe8ff;
+  --ready-bg:     rgba(79,216,255,.08);
+  --ready-bd:     rgba(79,216,255,.3);
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-sans:    'Titillium Web', sans-serif;
+}
+/* Retro Arcade — black cabinet, saturated cyan/magenta/yellow, pixel font */
+[data-theme="arcade"] {
+  --bg:           #000000;
+  --surface:      #0a0a14;
+  --surface2:     #14141f;
+  --border:       #3a1a5a;
+  --border2:      #5a2a8a;
+  --text:         #f0f0ff;
+  --text2:        #b8a8e0;
+  --muted:        #4a3a6a;
+  --muted2:       #8a6ac0;
+  --shadow:       rgba(0,0,0,.85);
+  --modal-bg:     rgba(0,0,0,.88);
+  --green:        #00f0ff;
+  --green-bg:     rgba(0,240,255,.16);
+  --green-border: rgba(0,240,255,.5);
+  --green-text:   #6ff8ff;
+  --red:          #ff2255;
+  --red-bg:       rgba(255,34,85,.14);
+  --red-border:   rgba(255,34,85,.42);
+  --red-text:     #ff7a9a;
+  --amber:        #ffee00;
+  --amber-bg:     rgba(255,238,0,.14);
+  --amber-border: rgba(255,238,0,.45);
+  --amber-text:   #fff685;
+  --purple:       #ff2fd4;
+  --purple-bg:    rgba(255,47,212,.14);
+  --purple-border:rgba(255,47,212,.4);
+  --purple-text:  #ff8fe8;
+  --techline:     #ffee00;
+  --nowline:      #ff2255;
+  --signoff-bg:   rgba(0,240,255,.2);
+  --signoff-bd:   rgba(0,240,255,.6);
+  --signoff-c:    #6ff8ff;
+  --ready-bg:     rgba(0,240,255,.08);
+  --ready-bd:     rgba(0,240,255,.3);
+  --font-mono:    'Silkscreen', monospace;
+  --font-sans:    'Chakra Petch', sans-serif;
+}
+/* Coffee Shop — dark roast brown, cream, caramel accent, cozy */
+[data-theme="coffee"] {
+  --bg:           #1a120b;
+  --surface:      #241a10;
+  --surface2:     #302316;
+  --border:       #4a3620;
+  --border2:      #6b4f30;
+  --text:         #f0e0c8;
+  --text2:        #c8a880;
+  --muted:        #4a3620;
+  --muted2:       #a07850;
+  --shadow:       rgba(0,0,0,.75);
+  --modal-bg:     rgba(20,14,8,.85);
+  --green:        #d98c3d;
+  --green-bg:     rgba(217,140,61,.16);
+  --green-border: rgba(217,140,61,.5);
+  --green-text:   #f0b06a;
+  --red:          #c0503a;
+  --red-bg:       rgba(192,80,58,.14);
+  --red-border:   rgba(192,80,58,.42);
+  --red-text:     #e08068;
+  --amber:        #e0b04a;
+  --amber-bg:     rgba(224,176,74,.14);
+  --amber-border: rgba(224,176,74,.45);
+  --amber-text:   #f0cc80;
+  --purple:       #8a7090;
+  --purple-bg:    rgba(138,112,144,.14);
+  --purple-border:rgba(138,112,144,.4);
+  --purple-text:  #b8a0c0;
+  --techline:     #e0b04a;
+  --nowline:      #c0503a;
+  --signoff-bg:   rgba(217,140,61,.2);
+  --signoff-bd:   rgba(217,140,61,.6);
+  --signoff-c:    #f0b06a;
+  --ready-bg:     rgba(217,140,61,.08);
+  --ready-bd:     rgba(217,140,61,.3);
+  --font-mono:    'Comfortaa', cursive;
+  --font-sans:    'Nunito', sans-serif;
+}
+/* Vaporwave — purple-black night, cyan and magenta neon, 80s/90s retro-digital */
+[data-theme="vaporwave"] {
+  --bg:           #1a0a2e;
+  --surface:      #241040;
+  --surface2:     #301652;
+  --border:       #4a2470;
+  --border2:      #6a3898;
+  --text:         #f0e8ff;
+  --text2:        #c8a8e8;
+  --muted:        #4a2870;
+  --muted2:       #9868c8;
+  --shadow:       rgba(0,0,0,.8);
+  --modal-bg:     rgba(20,10,35,.85);
+  --green:        #2fe8e0;
+  --green-bg:     rgba(47,232,224,.16);
+  --green-border: rgba(47,232,224,.5);
+  --green-text:   #7ff5f0;
+  --red:          #ff3d6b;
+  --red-bg:       rgba(255,61,107,.14);
+  --red-border:   rgba(255,61,107,.42);
+  --red-text:     #ff85ab;
+  --amber:        #ff9e6d;
+  --amber-bg:     rgba(255,158,109,.14);
+  --amber-border: rgba(255,158,109,.45);
+  --amber-text:   #ffc19e;
+  --purple:       #e838c8;
+  --purple-bg:    rgba(232,56,200,.14);
+  --purple-border:rgba(232,56,200,.4);
+  --purple-text:  #f588e0;
+  --techline:     #ff9e6d;
+  --nowline:      #ff3d6b;
+  --signoff-bg:   rgba(47,232,224,.2);
+  --signoff-bd:   rgba(47,232,224,.6);
+  --signoff-c:    #7ff5f0;
+  --ready-bg:     rgba(47,232,224,.08);
+  --ready-bd:     rgba(47,232,224,.3);
+  --font-mono:    'Audiowide', cursive;
+  --font-sans:    'Poppins', sans-serif;
+}
+/* Sakura — cherry blossom night: near-black with soft pink, minimal elegance */
+[data-theme="sakura"] {
+  --bg:           #120e10;
+  --surface:      #1c1518;
+  --surface2:     #261c20;
+  --border:       #3a2a30;
+  --border2:      #523c44;
+  --text:         #f5e8ec;
+  --text2:        #d0a8b8;
+  --muted:        #4a323c;
+  --muted2:       #b06888;
+  --shadow:       rgba(0,0,0,.8);
+  --modal-bg:     rgba(18,14,16,.85);
+  --green:        #ff8fb3;
+  --green-bg:     rgba(255,143,179,.16);
+  --green-border: rgba(255,143,179,.5);
+  --green-text:   #ffb3cc;
+  --red:          #e0435f;
+  --red-bg:       rgba(224,67,95,.14);
+  --red-border:   rgba(224,67,95,.42);
+  --red-text:     #f08098;
+  --amber:        #e8b06a;
+  --amber-bg:     rgba(232,176,106,.14);
+  --amber-border: rgba(232,176,106,.45);
+  --amber-text:   #f0cc98;
+  --purple:       #b09ad0;
+  --purple-bg:    rgba(176,154,208,.14);
+  --purple-border:rgba(176,154,208,.4);
+  --purple-text:  #d0c0e8;
+  --techline:     #e8b06a;
+  --nowline:      #e0435f;
+  --signoff-bg:   rgba(255,143,179,.2);
+  --signoff-bd:   rgba(255,143,179,.6);
+  --signoff-c:    #ffb3cc;
+  --ready-bg:     rgba(255,143,179,.08);
+  --ready-bd:     rgba(255,143,179,.3);
+  --font-mono:    'Marcellus', serif;
+  --font-sans:    'Nunito', sans-serif;
 }
 /* Noir Detective — black & white with one blood-red accent */
 [data-theme="noir"] {
@@ -319,92 +475,145 @@
 @keyframes term-blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
 
 /* Galaxy: starfield layer — precomputed static star positions, pure CSS,
-   no runtime JS/DOM manipulation involved at all. */
+   no runtime JS/DOM manipulation involved at all. Split into 4 layers with
+   different sizes/glow and independent timing so stars twinkle in a
+   staggered, organic way rather than all pulsing in unison. */
 #starfield{
   position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
   display:none;
 }
 [data-theme="galaxy"] #starfield{display:block;}
-#starfield::before, #starfield::after{
-  content:'';position:absolute;border-radius:50%;background:transparent;
-  width:1px;height:1px;
-}
-#starfield::before{
+.star-layer{position:absolute;inset:0;}
+.star-layer-1::before{
+  content:'';position:absolute;border-radius:50%;width:2px;height:2px;
   box-shadow:
-    81vw 14vh 0 #fff,
-    94vw 35vh 0 #fff,
-    54vw 4vh 0 #fff,
-    11vw 27vh 0 #fff,
-    64vw 77vh 0 #fff,
-    53vw 28vh 0 #fff,
-    75vw 35vh 0 #fff,
-    54vw 43vh 0 #fff,
-    19vw 27vh 0 #fff,
-    13vw 11vh 0 #fff,
-    12vw 45vh 0 #fff,
-    77vw 33vh 0 #fff,
-    15vw 48vh 0 #fff,
-    24vw 90vh 0 #fff,
-    5vw 84vh 0 #fff,
-    98vw 37vh 0 #fff,
-    29vw 12vh 0 #fff,
-    46vw 20vh 0 #fff,
-    93vw 31vh 0 #fff,
-    59vw 48vh 0 #fff,
-    28vw 87vh 0 #fff,
-    98vw 99vh 0 #fff,
-    29vw 4vh 0 #fff,
-    51vw 34vh 0 #fff,
-    58vw 18vh 0 #fff,
-    71vw 68vh 0 #fff,
-    95vw 74vh 0 #fff,
-    74vw 51vh 0 #fff,
-    63vw 11vh 0 #fff,
-    20vw 87vh 0 #fff,
-    76vw 8vh 0 #fff,
-    48vw 76vh 0 #fff,
-    43vw 14vh 0 #fff,
-    55vw 20vh 0 #fff;
-  animation:star-twinkle 3s ease-in-out infinite;
+    45.2vw 56.0vh 1px #fff,
+    45.2vw 85.5vh 0px #fff,
+    18.5vw 51.2vh 0px #fff,
+    9.4vw 30.3vh 0px #fff,
+    53.9vw 89.0vh 0px #fff,
+    59.5vw 39.6vh 1px #fff,
+    65.4vw 61.6vh 0px #fff,
+    62.3vw 83.2vh 0px #fff,
+    6.0vw 19.0vh 0px #fff,
+    60.0vw 77.8vh 1px #fff,
+    44.1vw 84.2vh 0px #fff,
+    64.0vw 50.0vh 0px #fff,
+    45.7vw 27.8vh 0px #fff,
+    70.8vw 31.5vh 0px #fff,
+    51.3vw 3.0vh 0px #fff,
+    40.0vw 84.7vh 1px #fff,
+    6.7vw 1.7vh 0px #fff,
+    21.4vw 92.7vh 0px #fff,
+    47.0vw 98.0vh 1px #fff,
+    42.0vw 56.6vh 0px #fff,
+    77.9vw 27.0vh 0px #fff,
+    31.1vw 1.5vh 1px #fff,
+    75.8vw 11.8vh 0px #fff,
+    70.7vw 1.1vh 1px #fff,
+    79.7vw 17.8vh 0px #fff,
+    44.7vw 19.1vh 0px #fff,
+    41.9vw 38.4vh 1px #fff,
+    42.1vw 21.3vh 1px #fff,
+    86.4vw 97.5vh 1px #fff,
+    99.8vw 2.0vh 0px #fff;
+  animation:star-twinkle 3.2s ease-in-out infinite;
 }
-#starfield::after{
+.star-layer-2::before{
+  content:'';position:absolute;border-radius:50%;width:2px;height:2px;
   box-shadow:
-    28vw 17vh 0 #fff,
-    13vw 86vh 0 #fff,
-    69vw 11vh 0 #fff,
-    71vw 25vh 0 #fff,
-    83vw 89vh 0 #fff,
-    97vw 20vh 0 #fff,
-    93vw 58vh 0 #fff,
-    70vw 37vh 0 #fff,
-    79vw 46vh 0 #fff,
-    35vw 58vh 0 #fff,
-    45vw 26vh 0 #fff,
-    34vw 89vh 0 #fff,
-    82vw 9vh 0 #fff,
-    81vw 21vh 0 #fff,
-    81vw 88vh 0 #fff,
-    27vw 72vh 0 #fff,
-    40vw 27vh 0 #fff,
-    63vw 50vh 0 #fff,
-    17vw 31vh 0 #fff,
-    28vw 17vh 0 #fff,
-    14vw 19vh 0 #fff,
-    67vw 32vh 0 #fff,
-    1vw 87vh 0 #fff,
-    14vw 87vh 0 #fff,
-    96vw 34vh 0 #fff,
-    0vw 92vh 0 #fff;
-  animation:star-twinkle 4s ease-in-out infinite reverse;
-  animation-delay:1.2s;
+    39.4vw 85.4vh 1px #fff,
+    4.2vw 14.6vh 2px #fff,
+    25.8vw 77.3vh 2px #fff,
+    83.0vw 38.6vh 1px #fff,
+    9.0vw 58.3vh 1px #fff,
+    1.6vw 36.9vh 2px #fff,
+    12.7vw 58.7vh 1px #fff,
+    86.7vw 18.3vh 1px #fff,
+    31.1vw 22.8vh 1px #fff,
+    72.5vw 15.8vh 1px #fff,
+    68.7vw 38.8vh 2px #fff,
+    60.4vw 42.1vh 1px #fff,
+    10.9vw 51.2vh 2px #fff,
+    23.8vw 70.5vh 2px #fff,
+    42.1vw 90.5vh 2px #fff,
+    29.3vw 17.5vh 1px #fff,
+    12.6vw 47.9vh 1px #fff,
+    28.0vw 91.7vh 1px #fff,
+    74.9vw 6.9vh 2px #fff,
+    44.6vw 6.0vh 1px #fff,
+    28.2vw 53.1vh 1px #fff,
+    9.2vw 13.8vh 2px #fff;
+  animation:star-twinkle 4.1s ease-in-out infinite;
+  animation-delay:.8s;
 }
-@keyframes star-twinkle{0%,100%{opacity:.15;}50%{opacity:1;}}
+.star-layer-3::before{
+  content:'';position:absolute;border-radius:50%;width:2px;height:2px;
+  box-shadow:
+    98.0vw 65.7vh 2px #fff,
+    59.0vw 92.4vh 3px #fff,
+    91.0vw 70.1vh 2px #fff,
+    2.1vw 63.6vh 3px #fff,
+    6.7vw 31.1vh 2px #fff,
+    99.9vw 7.5vh 3px #fff,
+    73.7vw 90.0vh 2px #fff,
+    79.3vw 91.5vh 3px #fff,
+    8.5vw 47.3vh 2px #fff,
+    87.1vw 41.7vh 2px #fff,
+    86.3vw 57.3vh 3px #fff,
+    37.9vw 1.2vh 2px #fff,
+    8.0vw 63.9vh 3px #fff,
+    88.0vw 72.8vh 3px #fff;
+  animation:star-twinkle 2.6s ease-in-out infinite;
+  animation-delay:1.6s;
+}
+.star-layer-4::before{
+  content:'';position:absolute;border-radius:50%;width:2px;height:2px;
+  box-shadow:
+    93.4vw 69.4vh 4px #fff,
+    44.1vw 83.8vh 3px #fff,
+    51.9vw 51.5vh 4px #fff,
+    60.1vw 48.1vh 3px #fff,
+    95.7vw 11.3vh 4px #fff,
+    25.6vw 1.1vh 4px #fff,
+    14.3vw 61.2vh 3px #fff,
+    75.4vw 34.3vh 4px #fff;
+  animation:star-twinkle 5s ease-in-out infinite;
+  animation-delay:.3s;
+}
+@keyframes star-twinkle{0%,100%{opacity:.35;}50%{opacity:1;}}
+
+/* Galaxy: a small starfighter silhouette that occasionally streaks across
+   the sky — a fun little Star Wars-inspired touch. Mostly hidden (opacity
+   0) for a long stretch, then briefly visible crossing the screen, so it
+   reads as a rare treat rather than a constant distraction. A generic
+   wing-shaped silhouette rather than any specific franchise ship design. */
+#starfighter{
+  position:fixed;top:0;left:0;z-index:-1;pointer-events:none;
+  width:26px;height:14px;
+  background:#cfd6e6;
+  clip-path:polygon(0% 50%, 35% 20%, 100% 0%, 78% 50%, 100% 100%, 35% 80%);
+  box-shadow:0 0 6px 2px rgba(207,214,230,.6), -14px 0 10px -4px rgba(120,200,255,.5);
+  opacity:0;
+  display:none;
+}
+[data-theme="galaxy"] #starfighter{
+  display:block;
+  animation:starfighter-flyby 50s linear infinite;
+}
+@keyframes starfighter-flyby{
+  0%    { transform:translate(-10vw, 85vh) rotate(-18deg) scale(1);   opacity:0; }
+  3%    { opacity:1; }
+  20%   { transform:translate(112vw, 8vh) rotate(-18deg) scale(1);    opacity:1; }
+  22%   { opacity:0; }
+  100%  { opacity:0; }
+}
 
 /* Galaxy: lightsaber-style glow on interactive hover */
 [data-theme="galaxy"] .day-tab:hover,
 [data-theme="galaxy"] .parse-btn:hover,
 [data-theme="galaxy"] .print-btn:hover,
-[data-theme="galaxy"] .theme-select:hover{
+[data-theme="galaxy"] .theme-btn:hover{
   box-shadow:0 0 12px var(--green-border),0 0 4px var(--green-border);
 }
 
@@ -414,7 +623,7 @@
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   transition:opacity .2s;
 }
-[data-theme="frontier"] .paper-grain{opacity:.05;}
+[data-theme="frontier"] .paper-grain{opacity:.14;}
 
 /* Frontier: wax-seal / ink-stamp treatment for the sign-off initials badge */
 [data-theme="frontier"] .tl-signoff .so-ts{
@@ -425,21 +634,6 @@
   transform:rotate(-6deg);
   padding:3px 8px;
   font-family:var(--font-mono);
-}
-
-/* Art Deco: subtle gold chevron/geometric wallpaper pattern, and a soft
-   gold glow on brand/headers for that gilded-marquee elegance */
-.artdeco-pattern{
-  position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;
-  background-image:
-    repeating-linear-gradient(45deg, rgba(212,175,55,.05) 0px, rgba(212,175,55,.05) 2px, transparent 2px, transparent 40px),
-    repeating-linear-gradient(-45deg, rgba(212,175,55,.05) 0px, rgba(212,175,55,.05) 2px, transparent 2px, transparent 40px);
-}
-[data-theme="artdeco"] .artdeco-pattern{opacity:1;}
-[data-theme="artdeco"] .brand,
-[data-theme="artdeco"] .cards-hdr,
-[data-theme="artdeco"] .tl-hlabel{
-  text-shadow:0 0 8px rgba(212,175,55,.35);
 }
 
 /* Forest: soft dappled-sunlight blobs drifting very slowly, like light through a canopy */
@@ -463,6 +657,293 @@
   background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%);
 }
 [data-theme="noir"] .noir-vignette{opacity:1;}
+
+
+/* Blueprint: technical graph-paper grid, like an architectural drawing */
+.blueprint-grid{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;
+  background-image:
+    linear-gradient(rgba(79,216,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,216,255,.06) 1px, transparent 1px);
+  background-size:40px 40px;
+}
+[data-theme="blueprint"] .blueprint-grid{opacity:1;}
+
+/* Retro Arcade: chunky chromatic-aberration "CRT cabinet" text shadow */
+[data-theme="arcade"] .brand,
+[data-theme="arcade"] .cards-hdr,
+[data-theme="arcade"] .tl-hlabel{
+  text-shadow:-2px 0 rgba(0,240,255,.7), 2px 0 rgba(255,47,212,.7);
+}
+
+/* Vaporwave: cyan/magenta glow, retro-digital marquee feel */
+[data-theme="vaporwave"] .brand,
+[data-theme="vaporwave"] .cards-hdr,
+[data-theme="vaporwave"] .tl-hlabel{
+  text-shadow:0 0 6px rgba(47,232,224,.5),0 0 14px rgba(232,56,200,.35);
+}
+
+/* Sakura: soft falling cherry-blossom petals, precomputed static positions */
+#sakura-petals{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+  display:none;
+}
+[data-theme="sakura"] #sakura-petals{display:block;}
+#sakura-petals::before{
+  content:'';position:absolute;border-radius:50% 0 50% 50%;
+  width:2px;height:2px;
+  box-shadow:
+    41vw 19vh 0 #ffb3cc,
+    50vw 83vh 0 #ffb3cc,
+    6vw 9vh 0 #ffb3cc,
+    68vw 12vh 0 #ffb3cc,
+    46vw 74vh 0 #ffb3cc,
+    7vw 64vh 0 #ffb3cc,
+    27vw 4vh 0 #ffb3cc,
+    11vw 55vh 0 #ffb3cc,
+    53vw 8vh 0 #ffb3cc,
+    30vw 11vh 0 #ffb3cc,
+    70vw 54vh 0 #ffb3cc,
+    7vw 72vh 0 #ffb3cc,
+    15vw 28vh 0 #ffb3cc,
+    80vw 80vh 0 #ffb3cc,
+    74vw 7vh 0 #ffb3cc,
+    73vw 74vh 0 #ffb3cc,
+    50vw 6vh 0 #ffb3cc,
+    28vw 5vh 0 #ffb3cc,
+    71vw 17vh 0 #ffb3cc,
+    37vw 53vh 0 #ffb3cc,
+    18vw 69vh 0 #ffb3cc,
+    15vw 73vh 0 #ffb3cc,
+    39vw 71vh 0 #ffb3cc,
+    87vw 23vh 0 #ffb3cc,
+    13vw 74vh 0 #ffb3cc,
+    73vw 81vh 0 #ffb3cc,
+    24vw 47vh 0 #ffb3cc,
+    12vw 70vh 0 #ffb3cc,
+    91vw 8vh 0 #ffb3cc,
+    72vw 7vh 0 #ffb3cc,
+    79vw 26vh 0 #ffb3cc,
+    63vw 87vh 0 #ffb3cc,
+    68vw 54vh 0 #ffb3cc,
+    99vw 40vh 0 #ffb3cc,
+    59vw 74vh 0 #ffb3cc,
+    58vw 46vh 0 #ffb3cc,
+    38vw 31vh 0 #ffb3cc,
+    23vw 89vh 0 #ffb3cc,
+    99vw 31vh 0 #ffb3cc,
+    10vw 73vh 0 #ffb3cc;
+  animation:petal-drift 18s linear infinite;
+}
+@keyframes petal-drift{
+  0%  {transform:translate(0,      -5vh);}
+  25% {transform:translate(1.2vw,  20vh);}
+  50% {transform:translate(-1.2vw, 50vh);}
+  75% {transform:translate(1.2vw,  80vh);}
+  100%{transform:translate(0,      105vh);}
+}
+
+
+/* ═══════════════════════════════
+   THEME FLOURISHES — batch 2
+   Every new element/animation here is pure CSS and hidden by default,
+   only activated for its matching theme, so nothing here can affect any
+   other theme or break page functionality.
+═══════════════════════════════ */
+
+/* Terminal: a small boot-sequence log, tucked in the corner, that replays
+   every time you switch to this theme (since switching display:none -> 
+   block naturally restarts CSS animations — no JS timing needed). */
+.terminal-boot{
+  position:fixed;top:78px;right:16px;z-index:2;pointer-events:none;
+  font-family:'Share Tech Mono',monospace;color:#39ff14;font-size:12px;
+  text-shadow:0 0 6px rgba(57,255,20,.55);line-height:1.7;
+  background:rgba(0,0,0,.55);border:1px solid rgba(57,255,20,.25);
+  border-radius:4px;padding:8px 12px;
+  display:none;
+  animation:boot-fade-out .5s ease 4s forwards;
+}
+[data-theme="terminal"] .terminal-boot{display:block;}
+.terminal-boot span{
+  display:block;overflow:hidden;white-space:nowrap;width:0;
+  animation:boot-type .6s steps(28,end) forwards;
+}
+.terminal-boot span:nth-child(1){animation-delay:.1s;}
+.terminal-boot span:nth-child(2){animation-delay:.9s;}
+.terminal-boot span:nth-child(3){animation-delay:1.7s;}
+@keyframes boot-type{from{width:0;}to{width:100%;}}
+@keyframes boot-fade-out{to{opacity:0;visibility:hidden;}}
+
+/* Terminal: blinking cursor at the end of each event name, like it's
+   being typed live */
+[data-theme="terminal"] .evt-name::after{
+  content:'_';
+  animation:term-blink 1s step-end infinite;
+}
+
+/* Frontier: a quick ink-bleed wobble when the wax-seal stamp is clicked */
+[data-theme="frontier"] .tl-signoff .so-ts:active{
+  animation:ink-wobble .3s ease;
+}
+@keyframes ink-wobble{
+  0%{transform:rotate(-6deg) scale(1);}
+  30%{transform:rotate(-11deg) scale(1.08);}
+  60%{transform:rotate(-2deg) scale(.96);}
+  100%{transform:rotate(-6deg) scale(1);}
+}
+
+/* Frontier: subtly irregular, torn-paper card edges instead of clean
+   rounded rectangles */
+[data-theme="frontier"] .card{
+  clip-path:polygon(
+    0% 2%, 3% 0%, 97% 1%, 100% 3%,
+    99% 97%, 96% 100%, 2% 99%, 0% 96%
+  );
+}
+
+/* Blueprint: a faint compass rose tucked in the corner of the screen */
+.blueprint-compass{
+  position:fixed;bottom:20px;right:20px;z-index:-1;pointer-events:none;
+  width:90px;height:90px;opacity:0;transition:opacity .3s;
+  background-repeat:no-repeat;background-size:contain;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%234fd8ff' stroke-width='1'/%3E%3Cline x1='50' y1='5' x2='50' y2='95' stroke='%234fd8ff' stroke-width='1'/%3E%3Cline x1='5' y1='50' x2='95' y2='50' stroke='%234fd8ff' stroke-width='1'/%3E%3Cpolygon points='50,15 55,50 50,45 45,50' fill='%234fd8ff'/%3E%3Ctext x='50' y='11' font-size='8' fill='%234fd8ff' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E");
+}
+[data-theme="blueprint"] .blueprint-compass{opacity:.3;}
+
+/* Arcade: a little "high score" flourish pop when a sign-off lands —
+   applies to both the card button and the timeline badge, since most
+   people primarily interact with the card view. */
+[data-theme="arcade"] .tl-signoff .so-ts,
+[data-theme="arcade"] .tech-signoff-btn.signed{
+  animation:arcade-score-pop .5s ease;
+}
+@keyframes arcade-score-pop{
+  0%{transform:scale(.4);opacity:0;}
+  50%{transform:scale(1.3);}
+  70%{transform:scale(.9);}
+  100%{transform:scale(1);opacity:1;}
+}
+/* Arcade: chunky "INSERT COIN"-style blinking block after status text */
+[data-theme="arcade"] #parse-status:not(:empty)::after{
+  content:'\25AE';margin-left:5px;
+  animation:arcade-blink .5s step-end infinite;
+}
+@keyframes arcade-blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
+
+/* Coffee Shop: wisps of steam rising in the corner — a standalone
+   element rather than attached to .brand, so it's clearly visible
+   regardless of exact header layout. Positioned below the header/day
+   switcher, same safe zone as Terminal's boot log but on the left side. */
+.coffee-steam{
+  position:fixed;top:78px;left:16px;z-index:2;pointer-events:none;
+  width:40px;height:36px;opacity:0;
+}
+[data-theme="coffee"] .coffee-steam{opacity:1;}
+.coffee-steam span{
+  position:absolute;bottom:0;width:4px;height:22px;border-radius:3px;
+  background:linear-gradient(to top, transparent, var(--amber));
+  opacity:0;
+  animation:steam-rise 3.2s ease-in infinite;
+}
+.coffee-steam span:nth-child(1){left:2px; animation-delay:0s;}
+.coffee-steam span:nth-child(2){left:14px;animation-delay:1.1s;}
+.coffee-steam span:nth-child(3){left:26px;animation-delay:2.2s;}
+@keyframes steam-rise{
+  0%{transform:translateY(0) translateX(0) scaleY(1);opacity:0;}
+  25%{opacity:.75;}
+  100%{transform:translateY(-34px) translateX(6px) scaleY(1.6);opacity:0;}
+}
+
+/* Vaporwave: a scrolling synthwave grid-horizon along the bottom edge.
+   Uses a flat grid with a gradient mask (fading toward the top) instead
+   of a true 3D perspective transform — animating background-position
+   under a rotateX transform triggers compositing flicker in some
+   browsers, so this avoids that combination entirely. */
+.vaporwave-grid{
+  position:fixed;bottom:0;left:0;right:0;height:30vh;z-index:-1;pointer-events:none;
+  opacity:0;transition:opacity .3s;overflow:hidden;
+  background-image:
+    linear-gradient(rgba(232,56,200,.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,56,200,.4) 1px, transparent 1px);
+  background-size:50px 50px;
+  mask-image:linear-gradient(to top, black 15%, transparent 95%);
+  -webkit-mask-image:linear-gradient(to top, black 15%, transparent 95%);
+  animation:grid-scroll 2.5s linear infinite;
+}
+[data-theme="vaporwave"] .vaporwave-grid{opacity:.4;}
+@keyframes grid-scroll{
+  from{background-position:0 0, 0 0;}
+  to{background-position:0 50px, 0 0;}
+}
+/* Vaporwave: brief VHS-style glitch flicker, triggered once from JS the
+   moment you switch into this theme (not a JS-driven loop — just a class
+   toggle that a plain CSS keyframe animation handles) */
+.vhs-glitch-active{animation:vhs-glitch .4s steps(2,end) 1;}
+@keyframes vhs-glitch{
+  0%{filter:none;transform:translate(0,0);}
+  20%{filter:hue-rotate(15deg);transform:translate(-2px,1px);}
+  40%{filter:hue-rotate(-15deg);transform:translate(2px,-1px);}
+  60%{filter:hue-rotate(10deg);transform:translate(-1px,0);}
+  80%{filter:hue-rotate(-5deg);transform:translate(1px,0);}
+  100%{filter:none;transform:translate(0,0);}
+}
+
+/* Noir: a "pinned to the board" red-string look on card hover. Both the
+   pin and the border stay fully INSIDE the card's own box — the card has
+   overflow:hidden (for its rounded corners), which clips anything drawn
+   outside that boundary, including outlines on the same element. */
+[data-theme="noir"] .card{position:relative;}
+[data-theme="noir"] .card:hover::before{
+  content:'';position:absolute;top:6px;left:10px;z-index:2;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 4px var(--green-border);
+  pointer-events:none;
+}
+[data-theme="noir"] .card:hover{
+  box-shadow:inset 0 0 0 1.5px var(--red-border);
+}
+/* Noir: a quick typewriter "clack" pulse as each card first appears */
+[data-theme="noir"] .card{animation:noir-clack .15s ease;}
+@keyframes noir-clack{
+  0%{opacity:.7;transform:translateX(-1px);}
+  100%{opacity:1;transform:translateX(0);}
+}
+
+/* Forest: a scatter of slow-drifting, glowing fireflies */
+#forest-fireflies{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+  display:none;
+}
+[data-theme="forest"] #forest-fireflies{display:block;}
+#forest-fireflies::before{
+  content:'';position:absolute;border-radius:50%;width:1px;height:1px;
+  box-shadow:
+    90.8vw 93.1vh 2px #ffdd66,
+    87.7vw 10.0vh 2px #ffdd66,
+    58.8vw 42.7vh 2px #ffdd66,
+    52.9vw 14.5vh 2px #ffdd66,
+    20.4vw 44.7vh 2px #ffdd66,
+    23.2vw 45.7vh 2px #ffdd66,
+    4.4vw 10.2vh 2px #ffdd66,
+    70.2vw 42.4vh 2px #ffdd66,
+    51.2vw 72.5vh 2px #ffdd66,
+    36.5vw 7.5vh 2px #ffdd66,
+    77.2vw 58.6vh 2px #ffdd66,
+    65.2vw 61.6vh 2px #ffdd66,
+    95.2vw 36.8vh 2px #ffdd66,
+    74.9vw 37.4vh 2px #ffdd66,
+    56.9vw 65.4vh 2px #ffdd66,
+    32.2vw 10.2vh 2px #ffdd66;
+  animation:firefly-drift 9s ease-in-out infinite, firefly-glow 2.6s ease-in-out infinite;
+}
+@keyframes firefly-glow{0%,100%{opacity:.15;}50%{opacity:1;}}
+@keyframes firefly-drift{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(1.5vw,-2vh);}
+  50%{transform:translate(-1.5vw,1.5vh);}
+  75%{transform:translate(2vw,1vh);}
+  100%{transform:translate(0,0);}
+}
 
 /* Per-theme scrollbar colors */
 ::-webkit-scrollbar{width:10px;height:10px;}
@@ -493,8 +974,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .initials-label{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.05em;}
 .initials-val{font-family:var(--font-mono);font-size:13px;color:var(--amber-text);font-weight:700;letter-spacing:.1em;}
 
-.theme-select{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;padding:7px 10px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;-webkit-appearance:none;appearance:none;}
-.theme-select:hover{border-color:var(--green-border);color:var(--text);}
+.theme-menu-wrap{position:relative;}
+.theme-btn{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.theme-btn:hover{border-color:var(--green-border);color:var(--text);}
+.surprise-btn{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.surprise-btn:hover{border-color:var(--amber-border);color:var(--amber-text);}
+.theme-menu{
+  position:absolute;top:calc(100% + 6px);right:0;z-index:400;min-width:170px;
+  background:var(--surface);border:1px solid var(--border2);border-radius:8px;
+  box-shadow:0 12px 32px var(--shadow);padding:6px;
+  display:flex;flex-direction:column;gap:2px;max-height:70vh;overflow-y:auto;
+}
+.theme-menu-item{
+  font-family:var(--font-mono);font-size:12px;text-align:left;
+  padding:8px 10px;border-radius:5px;cursor:pointer;border:none;background:transparent;
+  color:var(--text2);transition:background .12s,color .12s;white-space:nowrap;
+}
+.theme-menu-item:hover{background:var(--surface2);color:var(--text);}
+.theme-menu-item.active{background:var(--green-bg);color:var(--green-text);}
 .clear-data-btn{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--red-border);background:transparent;color:var(--red);transition:all .15s;}
 .clear-data-btn:hover{background:var(--red-bg);}
 
@@ -689,7 +1186,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .tag.ta{color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);}
 .tag.tp{color:var(--purple-text);border-color:var(--purple-border);background:var(--purple-bg);}
 .no-needs-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.07em;color:var(--muted);display:block;margin-top:9px;padding:2px 0;}
-.side-notes{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}
+.side-notes{padding-top:2px;}
 .side-note{font-size:11px;color:var(--muted2);line-height:1.65;padding:4px 0;}
 .side-note+.side-note{border-top:1px solid var(--border);}
 .food-emoji{font-size:16px;float:right;margin-left:8px;line-height:1;opacity:.85;}
@@ -820,7 +1317,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   /* hdr-right: wrap into a tidy row below the brand on narrow screens */
   .hdr-right{width:100%;justify-content:flex-start;gap:6px;}
   .sync-wrap, .initials-wrap{font-size:10px;padding:5px 8px;}
-  .notif-btn, .print-btn, .theme-select, .clear-data-btn{font-size:10px;padding:7px 10px;}
+  .notif-btn, .print-btn, .theme-btn, .surprise-btn, .clear-data-btn{font-size:10px;padding:7px 10px;}
 
   /* Drop zone: stack vertically, full-width buttons */
   .drop-zone{flex-wrap:wrap;padding:14px 16px;gap:10px;}
@@ -874,7 +1371,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   .hdr-right, .fb-banner, .drop-zone-wrap, .shared-schedule-banner, .upcoming-ts-wrap,
   .legend, .scroll-hint, .search-wrap, .search-count, .cards-wrap,
   .notes-section, .empty-state, .tooltip, .modal-bg, .detail-modal-bg,
-  .now-line, .now-label, .tl-techline {
+  .now-line, .now-label, .tl-techline,
+  .crt-scanlines, .paper-grain, #starfield, #starfighter, .canopy-dapple, .noir-vignette,
+  .blueprint-grid, #sakura-petals, .terminal-boot, .blueprint-compass, .vaporwave-grid, #forest-fireflies, .coffee-steam,
+  .day-switch-wrap {
     display:none!important;
   }
   .hdr{position:static;border-bottom:2px solid #000;padding:0 0 10px;}
@@ -928,10 +1428,30 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 <!-- THEME ATMOSPHERE LAYERS — decorative only, shown/hidden per theme via CSS -->
 <div class="crt-scanlines"></div>
 <div class="paper-grain"></div>
-<div id="starfield"></div>
+<div id="starfield">
+  <div class="star-layer star-layer-1"></div>
+  <div class="star-layer star-layer-2"></div>
+  <div class="star-layer star-layer-3"></div>
+  <div class="star-layer star-layer-4"></div>
+</div>
+<div id="starfighter"></div>
 <div class="canopy-dapple"></div>
 <div class="noir-vignette"></div>
-<div class="artdeco-pattern"></div>
+<div class="blueprint-grid"></div>
+<div id="sakura-petals"></div>
+<div class="terminal-boot">
+  <span>INITIALIZING SONAR ARRAY...</span>
+  <span>CONTACT: TECH EVENTS DETECTED</span>
+  <span>STANDING BY_</span>
+</div>
+<div class="blueprint-compass"></div>
+<div class="vaporwave-grid"></div>
+<div id="forest-fireflies"></div>
+<div class="coffee-steam">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
 
 <!-- INITIALS MODAL -->
 <div class="modal-bg hidden" id="modal-bg">
@@ -981,15 +1501,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
       <span class="initials-val" id="initials-display">SET</span>
     </div>
     <button class="print-btn" id="print-btn" onclick="printSchedule()">🖨 PRINT</button>
-    <select class="theme-select" id="theme-select" onchange="setTheme(this.value)" title="Theme">
-      <option value="dark">🌙 DARK</option>
-      <option value="terminal">🖥 TERMINAL</option>
-      <option value="galaxy">✨ GALAXY</option>
-      <option value="frontier">🤠 FRONTIER</option>
-      <option value="artdeco">🥂 ART DECO</option>
-      <option value="forest">🌲 FOREST</option>
-      <option value="noir">🕵 NOIR</option>
-    </select>
+    <button class="surprise-btn" id="surprise-btn" onclick="surpriseTheme()" title="Pick a random theme">🎲 SURPRISE</button>
+    <div class="theme-menu-wrap" id="theme-menu-wrap">
+      <button class="theme-btn" id="theme-menu-btn" onclick="toggleThemeMenu()">🎨 THEMES</button>
+      <div class="theme-menu hidden" id="theme-menu"></div>
+    </div>
     <button class="clear-data-btn" id="clear-data-btn" onclick="confirmClearSharedData()" title="Permanently delete every shared schedule, sign-off, and note for the whole team">🗑 CLEAR ALL</button>
   </div>
 </div>
@@ -1146,6 +1662,11 @@ async function initFirebase() {
     setSyncStatus('connected');
     document.getElementById('fb-banner').classList.add('hidden');
     if (currentDateKey) attachListener();
+
+    // If this person already has initials set (a returning user), pull
+    // their saved theme preference so it follows them across devices —
+    // otherwise it'll get bootstrapped the first time they set initials.
+    await loadThemePrefFromFirebase();
 
     // Rebuild the day-switcher from the shared index of every date anyone
     // has uploaded a schedule for. Without this, a page refresh only ever
@@ -1576,6 +2097,10 @@ function confirmModal() {
   localStorage.setItem('osves_initials', val);
   updateInitialsDisplay();
   document.getElementById('modal-bg').classList.add('hidden');
+  // Newly set (or changed) initials — check whether this identity already
+  // has a saved theme preference in Firebase (from another device/browser)
+  // and adopt it; otherwise this becomes their preference going forward.
+  loadThemePrefFromFirebase();
   if (modalResolve) { modalResolve(val); modalResolve = null; }
 }
 
@@ -1714,36 +2239,37 @@ function showFirebaseSetup() {
 /* ═══════════════════════════════
    THEME
 ═══════════════════════════════ */
-const VALID_THEMES = ['dark', 'terminal', 'galaxy', 'frontier', 'artdeco', 'forest', 'noir'];
+const VALID_THEMES = ['dark', 'terminal', 'galaxy', 'frontier', 'forest',
+  'blueprint', 'arcade', 'coffee', 'vaporwave', 'sakura', 'noir'];
 
-// Small, purely-decorative flavor text for the "nothing loaded yet" state —
-// kept to just the icon/label (not the instructional sub-text below it, or
-// any functional status/error messages) so the fun never gets in the way
-// of the actual work.
-const THEME_FLAVOR = {
-  dark:      { icon: '🗓', label: 'No schedule loaded' },
-  terminal:  { icon: '📡', label: 'No contacts on sonar' },
-  galaxy:    { icon: '🌌', label: 'No transmissions received' },
-  frontier:  { icon: '🤠', label: 'Nothin\u2019 on the horizon' },
-  artdeco:   { icon: '🥂', label: 'The floor is quiet tonight' },
-  forest:    { icon: '🌲', label: 'No sightings logged today' },
-  noir:      { icon: '🕵', label: 'The case is cold' },
+// Single source of truth for each theme's menu label, empty-state flavor
+// (icon/label only — never functional status/error text), and favicon color.
+const THEME_META = {
+  dark:      { label: '🌙 Classic',    icon: '🗓', flavor: 'No schedule loaded',              favicon: '#00cfbe' },
+  terminal:  { label: '🖥 Terminal',    icon: '📡', flavor: 'No contacts on sonar',            favicon: '#39ff14' },
+  galaxy:    { label: '✨ Galaxy',      icon: '🌌', flavor: 'No transmissions received',       favicon: '#ffe81f' },
+  frontier:  { label: '🤠 Frontier',    icon: '🤠', flavor: 'Nothin\u2019 on the horizon',      favicon: '#8b1a1a' },
+  forest:    { label: '🌲 Forest',      icon: '🌲', flavor: 'No sightings logged today',       favicon: '#5fbf5f' },
+  blueprint: { label: '🗺 Blueprint',   icon: '📐', flavor: 'No specs on the board',           favicon: '#4fd8ff' },
+  arcade:    { label: '👾 Arcade',      icon: '🕹', flavor: 'INSERT COIN TO CONTINUE',         favicon: '#00f0ff' },
+  coffee:    { label: '☕ Coffee Shop', icon: '☕', flavor: 'The shop is quiet right now',      favicon: '#d98c3d' },
+  vaporwave: { label: '🌴 Vaporwave',   icon: '🌆', flavor: 'Nothing on the grid',             favicon: '#2fe8e0' },
+  sakura:    { label: '🌸 Sakura',      icon: '🌸', flavor: 'The garden is still',             favicon: '#ff8fb3' },
+  noir:      { label: '🕵 Noir',        icon: '🕵', flavor: 'The case is cold',                favicon: '#ff1a3d' },
 };
+
 function applyThemeFlavor(name) {
-  const flavor = THEME_FLAVOR[name] || THEME_FLAVOR.dark;
+  const meta = THEME_META[name] || THEME_META.dark;
   const iconEl = document.getElementById('empty-icon');
   const labelEl = document.getElementById('empty-label');
-  if (iconEl) iconEl.textContent = flavor.icon;
-  if (labelEl) labelEl.textContent = flavor.label;
+  if (iconEl) iconEl.textContent = meta.icon;
+  if (labelEl) labelEl.textContent = meta.flavor;
 }
 
 // Swap the browser-tab favicon to match the active theme's accent color.
-const THEME_FAVICON_COLOR = {
-  dark: '#00cfbe', terminal: '#39ff14', galaxy: '#ffe81f', frontier: '#8b1a1a',
-  artdeco: '#d4af37', forest: '#5fbf5f', noir: '#ff1a3d',
-};
 function applyThemeFavicon(name) {
-  const color = THEME_FAVICON_COLOR[name] || THEME_FAVICON_COLOR.dark;
+  const meta = THEME_META[name] || THEME_META.dark;
+  const color = meta.favicon;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="${color}"/></svg>`;
   let link = document.querySelector('link[rel="icon"]');
   if (!link) {
@@ -1759,20 +2285,126 @@ function applyThemeFavicon(name) {
 // page — each piece is wrapped defensively so a failure in one (e.g. an
 // unexpected DOM state) can't halt script execution and leave later code
 // (event handlers, Firebase init, etc.) from ever running.
-function setTheme(name) {
+//
+// syncToFirebase defaults to true (a person actively picking a theme should
+// be remembered), but is set to false for the initial local-only restore on
+// page load and for applying a value we just READ from Firebase — neither
+// of those should immediately write back.
+function setTheme(name, opts) {
+  opts = opts || {};
   if (!VALID_THEMES.includes(name)) name = 'dark';
   document.documentElement.setAttribute('data-theme', name);
-  const sel = document.getElementById('theme-select');
-  if (sel) sel.value = name;
+  try { updateThemeMenuActiveState(name); } catch (e) { console.error('setTheme: updateThemeMenuActiveState failed', e); }
   try { localStorage.setItem('osves_theme', name); } catch (e) { console.error('setTheme: localStorage failed', e); }
   try { applyThemeFlavor(name); } catch (e) { console.error('setTheme: applyThemeFlavor failed', e); }
   try { applyThemeFavicon(name); } catch (e) { console.error('setTheme: applyThemeFavicon failed', e); }
+  if (name === 'vaporwave') { try { triggerVhsGlitch(); } catch (e) { console.error('setTheme: triggerVhsGlitch failed', e); } }
+  if (opts.syncToFirebase !== false) {
+    try { saveThemePrefToFirebase(name); } catch (e) { console.error('setTheme: saveThemePrefToFirebase failed', e); }
+  }
+}
+// A brief, one-shot VHS-style flicker on the whole page when switching to
+// Vaporwave — a plain CSS keyframe animation does all the actual work,
+// this just toggles the class that triggers it and removes it afterward.
+function triggerVhsGlitch() {
+  document.body.classList.remove('vhs-glitch-active');
+  void document.body.offsetWidth; // force reflow so re-adding the class restarts the animation if it's already mid-play
+  document.body.classList.add('vhs-glitch-active');
+  setTimeout(() => document.body.classList.remove('vhs-glitch-active'), 450);
 }
 (function restoreTheme() {
   let saved = null;
   try { saved = localStorage.getItem('osves_theme'); } catch (e) { console.error('restoreTheme: localStorage failed', e); }
-  setTheme(VALID_THEMES.includes(saved) ? saved : 'dark');
+  // Local-only on initial load — Firebase (the per-person preference, keyed
+  // by initials) gets checked separately once the connection is up, and
+  // will override this if the signed-in person has a saved preference.
+  setTheme(VALID_THEMES.includes(saved) ? saved : 'dark', { syncToFirebase: false });
 })();
+
+/* ── Theme menu (button + dropdown, not a native <select>) ──
+   Built once from THEME_META so the button can show a fixed "🎨 THEMES"
+   label instead of the currently-selected value. */
+function renderThemeMenu() {
+  const menu = document.getElementById('theme-menu');
+  if (!menu) return;
+  menu.innerHTML = '';
+  VALID_THEMES.forEach(key => {
+    const meta = THEME_META[key] || {};
+    const btn = document.createElement('button');
+    btn.className = 'theme-menu-item';
+    btn.textContent = meta.label || key;
+    btn.dataset.themeKey = key;
+    btn.onclick = () => chooseTheme(key);
+    menu.appendChild(btn);
+  });
+  updateThemeMenuActiveState(document.documentElement.getAttribute('data-theme'));
+}
+function updateThemeMenuActiveState(name) {
+  document.querySelectorAll('.theme-menu-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.themeKey === name);
+  });
+}
+function chooseTheme(name) {
+  setTheme(name);
+  closeThemeMenu();
+}
+function toggleThemeMenu() {
+  const menu = document.getElementById('theme-menu');
+  if (!menu) return;
+  if (menu.classList.contains('hidden')) {
+    menu.classList.remove('hidden');
+    // Deferred so the click that just opened the menu doesn't immediately
+    // bubble into this same listener and close it again.
+    setTimeout(() => document.addEventListener('click', closeThemeMenuOnOutsideClick), 0);
+  } else {
+    closeThemeMenu();
+  }
+}
+function closeThemeMenu() {
+  const menu = document.getElementById('theme-menu');
+  if (menu) menu.classList.add('hidden');
+  document.removeEventListener('click', closeThemeMenuOnOutsideClick);
+}
+function closeThemeMenuOnOutsideClick(e) {
+  const wrap = document.getElementById('theme-menu-wrap');
+  if (wrap && !wrap.contains(e.target)) closeThemeMenu();
+}
+renderThemeMenu();
+
+// Picks a different random theme from the current one and applies it.
+function surpriseTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const choices = VALID_THEMES.filter(t => t !== current);
+  const pick = choices[Math.floor(Math.random() * choices.length)];
+  setTheme(pick);
+  closeThemeMenu();
+}
+
+/* ── Per-person theme preference, synced via Firebase ──
+   Keyed by the person's initials (the same identity already used for
+   sign-offs) so their theme choice follows them across devices/browsers,
+   not just the one browser's localStorage. */
+function saveThemePrefToFirebase(name) {
+  if (!db || !myInitials) return;
+  db.ref('userPrefs/' + myInitials + '/theme').set(name)
+    .catch(e => console.error('Failed to save theme preference', e));
+}
+async function loadThemePrefFromFirebase() {
+  if (!db || !myInitials) return;
+  try {
+    const snap = await db.ref('userPrefs/' + myInitials + '/theme').once('value');
+    const saved = snap.val();
+    if (saved && VALID_THEMES.includes(saved)) {
+      setTheme(saved, { syncToFirebase: false }); // just applying what we read — no need to write it right back
+    } else {
+      // First time this identity has been seen — adopt whatever theme is
+      // currently showing as their baseline preference going forward.
+      saveThemePrefToFirebase(document.documentElement.getAttribute('data-theme'));
+    }
+  } catch (e) {
+    console.error('Failed to load theme preference', e);
+  }
+}
 
 /* ═══════════════════════════════
    CARD FILTERING (search only — every event shown already has tech)
@@ -3197,11 +3829,15 @@ function renderCards(events) {
       inner += `<div class="no-needs-label">No Technical Needs</div>`;
     }
 
-    // Notes
+    // Notes — collapsed by default so a chatty note doesn't blow up card
+    // height; click to expand. Uses the same collapsible pattern as the
+    // equipment dept sections above, just starting in the collapsed state.
     if (ev.notes.length) {
+      inner += `<div class="dept-lbl collapsed" onclick="toggleSection(this)">📝 Notes (${ev.notes.length})</div>`;
+      inner += `<div class="dept-section collapsed">`;
       inner += `<div class="side-notes">`;
       ev.notes.forEach(n => { inner += `<div class="side-note">${n}</div>`; });
-      inner += `</div>`;
+      inner += `</div></div>`;
     }
 
     inner += `</div>`; // .evt
