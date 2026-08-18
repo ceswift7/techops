@@ -480,6 +480,7 @@
    staggered, organic way rather than all pulsing in unison. */
 #starfield{
   position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+  contain:strict;will-change:opacity;
   display:none;
 }
 [data-theme="galaxy"] #starfield{display:block;}
@@ -583,23 +584,33 @@
 }
 @keyframes star-twinkle{0%,100%{opacity:.35;}50%{opacity:1;}}
 
-/* Galaxy: a small starfighter silhouette that occasionally streaks across
-   the sky — a fun little Star Wars-inspired touch. Mostly hidden (opacity
-   0) for a long stretch, then briefly visible crossing the screen, so it
-   reads as a rare treat rather than a constant distraction. A generic
-   wing-shaped silhouette rather than any specific franchise ship design. */
+/* Galaxy: a small X-wing-inspired starfighter silhouette that occasionally
+   streaks across the sky — a fun little Star Wars-inspired touch. Mostly
+   hidden for a long stretch, then briefly visible crossing the screen, so
+   it reads as a rare treat rather than a constant distraction. A generic
+   reinterpretation of the silhouette (fuselage, nose cannons, rear wing
+   pair, glowing wingtip engines) rather than a reproduction of the
+   licensed design. pointer-events is intentionally "auto" (not "none")
+   so hovering it can trigger the speed-up below — it's tiny and only
+   ever rendered behind normal content (z-index:-1), so it can only be
+   caught in genuinely empty background space, never over real UI. */
 #starfighter{
-  position:fixed;top:0;left:0;z-index:-1;pointer-events:none;
-  width:26px;height:14px;
-  background:#cfd6e6;
-  clip-path:polygon(0% 50%, 35% 20%, 100% 0%, 78% 50%, 100% 100%, 35% 80%);
-  box-shadow:0 0 6px 2px rgba(207,214,230,.6), -14px 0 10px -4px rgba(120,200,255,.5);
+  position:fixed;top:0;left:0;z-index:-1;pointer-events:auto;
+  width:46px;height:28px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Cpolygon points='0,30 55,24 95,28 95,32 55,36' fill='%23d8dde8'/%3E%3Cline x1='88' y1='24' x2='100' y2='20' stroke='%23d8dde8' stroke-width='2'/%3E%3Cline x1='88' y1='36' x2='100' y2='40' stroke='%23d8dde8' stroke-width='2'/%3E%3Cellipse cx='42' cy='27' rx='6' ry='3' fill='%238fb8ff'/%3E%3Cpolygon points='35,27 12,4 20,4 45,25' fill='%23c8ced8'/%3E%3Cpolygon points='35,33 12,56 20,56 45,35' fill='%23c8ced8'/%3E%3Ccircle cx='14' cy='6' r='2.6' fill='%237fd8ff'/%3E%3Ccircle cx='14' cy='54' r='2.6' fill='%237fd8ff'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-size:contain;
+  filter:drop-shadow(0 0 4px rgba(207,214,230,.6)) drop-shadow(-10px 0 8px rgba(120,200,255,.45));
   opacity:0;
   display:none;
+  transition:filter .2s;
 }
 [data-theme="galaxy"] #starfighter{
   display:block;
   animation:starfighter-flyby 50s linear infinite;
+}
+#starfighter:hover{
+  filter:drop-shadow(0 0 8px rgba(207,214,230,.9)) drop-shadow(-22px 0 16px rgba(120,200,255,.75));
+  animation-duration:22s; /* noticeably faster pass while you're watching it */
 }
 @keyframes starfighter-flyby{
   0%    { transform:translate(-10vw, 85vh) rotate(-18deg) scale(1);   opacity:0; }
@@ -620,10 +631,11 @@
 /* Frontier: aged-paper grain texture, layered under the content */
 .paper-grain{
   position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.012'%20numOctaves='4'%20seed='7'%20stitchTiles='stitch'%20result='big'/%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.35'%20numOctaves='2'%20seed='3'%20stitchTiles='stitch'%20result='fine'/%3E%3CfeBlend%20in='big'%20in2='fine'%20mode='multiply'%20result='blend'/%3E%3CfeColorMatrix%20in='blend'%20type='matrix'%20values='0.4%200%200%200%200.32%200.32%200%200%200%200.25%200.18%200%200%200%200.12%200%200%200%200.55%200'/%3E%3C/filter%3E%3Crect%20width='100%'%20height='100%'%20filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
   transition:opacity .2s;
 }
-[data-theme="frontier"] .paper-grain{opacity:.14;}
+[data-theme="frontier"] .paper-grain{opacity:.55;}
 
 /* Frontier: wax-seal / ink-stamp treatment for the sign-off initials badge */
 [data-theme="frontier"] .tl-signoff .so-ts{
@@ -669,23 +681,37 @@
 }
 [data-theme="blueprint"] .blueprint-grid{opacity:1;}
 
-/* Retro Arcade: chunky chromatic-aberration "CRT cabinet" text shadow */
-[data-theme="arcade"] .brand,
-[data-theme="arcade"] .cards-hdr,
-[data-theme="arcade"] .tl-hlabel{
+/* Retro Arcade: chunky chromatic-aberration "CRT cabinet" text shadow —
+   kept to the big brand title only. The same double-offset effect on
+   small, dense UI text (calendar time labels, section headers) reads as
+   doubled/blurry rather than stylish. */
+[data-theme="arcade"] .brand{
   text-shadow:-2px 0 rgba(0,240,255,.7), 2px 0 rgba(255,47,212,.7);
 }
+/* Retro Arcade: --muted is very low-contrast by design — brighten the
+   card-grid section header so it's actually readable on this background. */
+[data-theme="arcade"] .cards-hdr{
+  color:#8a7ac0;
+}
 
-/* Vaporwave: cyan/magenta glow, retro-digital marquee feel */
-[data-theme="vaporwave"] .brand,
-[data-theme="vaporwave"] .cards-hdr,
-[data-theme="vaporwave"] .tl-hlabel{
+/* Vaporwave: cyan/magenta glow, retro-digital marquee feel — kept to the
+   big brand title only. A heavy multi-layer blur glow on small, dense UI
+   text (section headers, calendar time labels) reads as "foggy"/smudged
+   rather than stylish, so those stay crisp instead. */
+[data-theme="vaporwave"] .brand{
   text-shadow:0 0 6px rgba(47,232,224,.5),0 0 14px rgba(232,56,200,.35);
+}
+/* Vaporwave: the card-grid section header defaults to --muted (very low
+   contrast by design, meant to be a quiet label) — bright enough here to
+   actually read against this theme's saturated background. */
+[data-theme="vaporwave"] .cards-hdr{
+  color:#c8b8ff;
 }
 
 /* Sakura: soft falling cherry-blossom petals, precomputed static positions */
 #sakura-petals{
   position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+  contain:strict;will-change:opacity;
   display:none;
 }
 [data-theme="sakura"] #sakura-petals{display:block;}
@@ -754,18 +780,26 @@
 /* Terminal: a small boot-sequence log, tucked in the corner, that replays
    every time you switch to this theme (since switching display:none -> 
    block naturally restarts CSS animations — no JS timing needed). */
+/* Terminal: a small boot-sequence "logging in" modal, centered on screen,
+   that plays every time you switch to this theme (since switching
+   display:none -> block naturally restarts CSS animations — no JS timing
+   needed) and disappears automatically once the sequence finishes. Uses a
+   responsive width so it can never get cut off on a narrow mobile screen
+   the way the old corner-positioned version could. */
 .terminal-boot{
-  position:fixed;top:78px;right:16px;z-index:2;pointer-events:none;
-  font-family:'Share Tech Mono',monospace;color:#39ff14;font-size:12px;
-  text-shadow:0 0 6px rgba(57,255,20,.55);line-height:1.7;
-  background:rgba(0,0,0,.55);border:1px solid rgba(57,255,20,.25);
-  border-radius:4px;padding:8px 12px;
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  z-index:600;pointer-events:none;
+  width:min(90vw, 340px);box-sizing:border-box;
+  font-family:'Share Tech Mono',monospace;color:#39ff14;font-size:13px;
+  text-shadow:0 0 6px rgba(57,255,20,.55);line-height:1.9;
+  background:rgba(0,0,0,.85);border:1px solid rgba(57,255,20,.3);
+  border-radius:6px;padding:18px 20px;
   display:none;
   animation:boot-fade-out .5s ease 4s forwards;
 }
 [data-theme="terminal"] .terminal-boot{display:block;}
 .terminal-boot span{
-  display:block;overflow:hidden;white-space:nowrap;width:0;
+  display:block;overflow:hidden;white-space:nowrap;width:0;max-width:100%;
   animation:boot-type .6s steps(28,end) forwards;
 }
 .terminal-boot span:nth-child(1){animation-delay:.1s;}
@@ -792,15 +826,6 @@
   100%{transform:rotate(-6deg) scale(1);}
 }
 
-/* Frontier: subtly irregular, torn-paper card edges instead of clean
-   rounded rectangles */
-[data-theme="frontier"] .card{
-  clip-path:polygon(
-    0% 2%, 3% 0%, 97% 1%, 100% 3%,
-    99% 97%, 96% 100%, 2% 99%, 0% 96%
-  );
-}
-
 /* Blueprint: a faint compass rose tucked in the corner of the screen */
 .blueprint-compass{
   position:fixed;bottom:20px;right:20px;z-index:-1;pointer-events:none;
@@ -810,19 +835,6 @@
 }
 [data-theme="blueprint"] .blueprint-compass{opacity:.3;}
 
-/* Arcade: a little "high score" flourish pop when a sign-off lands —
-   applies to both the card button and the timeline badge, since most
-   people primarily interact with the card view. */
-[data-theme="arcade"] .tl-signoff .so-ts,
-[data-theme="arcade"] .tech-signoff-btn.signed{
-  animation:arcade-score-pop .5s ease;
-}
-@keyframes arcade-score-pop{
-  0%{transform:scale(.4);opacity:0;}
-  50%{transform:scale(1.3);}
-  70%{transform:scale(.9);}
-  100%{transform:scale(1);opacity:1;}
-}
 /* Arcade: chunky "INSERT COIN"-style blinking block after status text */
 [data-theme="arcade"] #parse-status:not(:empty)::after{
   content:'\25AE';margin-left:5px;
@@ -830,12 +842,60 @@
 }
 @keyframes arcade-blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
 
+/* Arcade: Pac-Man occasionally travels across the screen with a couple of
+   turns rather than a straight line. Built with two pseudo-elements —
+   ::before is the yellow body, ::after is a black wedge (matching this
+   theme's solid black background exactly) that scales to fake a chomping
+   mouth. The whole element rotates at each turn, so the mouth always
+   faces the current direction of travel. */
+#pacman{
+  position:fixed;top:0;left:0;z-index:-1;pointer-events:none;
+  width:26px;height:26px;
+  display:none;
+}
+[data-theme="arcade"] #pacman{
+  display:block;
+  animation:pacman-travel 42s linear infinite;
+}
+#pacman::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:#ffee00;
+  box-shadow:0 0 6px rgba(255,238,0,.6);
+}
+#pacman::after{
+  content:'';position:absolute;top:50%;right:-2px;
+  width:0;height:0;
+  border-style:solid;border-width:9px 13px 9px 0;
+  border-color:transparent #000 transparent transparent;
+  transform-origin:0% 50%;
+  animation:pacman-chomp .3s ease-in-out infinite;
+}
+@keyframes pacman-chomp{
+  0%,100%{transform:translateY(-50%) scaleY(1);}
+  50%{transform:translateY(-50%) scaleY(.15);}
+}
+@keyframes pacman-travel{
+  0%   { transform:translate(-8vw, 70vh) rotate(0deg);   opacity:0; }
+  3%   { opacity:1; }
+  14%  { transform:translate(20vw, 70vh) rotate(0deg); }
+  16%  { transform:translate(20vw, 68vh) rotate(-90deg); }
+  26%  { transform:translate(20vw, 30vh) rotate(-90deg); }
+  28%  { transform:translate(22vw, 30vh) rotate(0deg); }
+  40%  { transform:translate(60vw, 30vh) rotate(0deg); }
+  42%  { transform:translate(60vw, 32vh) rotate(90deg); }
+  50%  { transform:translate(60vw, 60vh) rotate(90deg); }
+  52%  { transform:translate(62vw, 60vh) rotate(0deg); }
+  65%  { transform:translate(105vw, 60vh) rotate(0deg); opacity:1; }
+  67%  { opacity:0; }
+  100% { opacity:0; }
+}
+
 /* Coffee Shop: wisps of steam rising in the corner — a standalone
    element rather than attached to .brand, so it's clearly visible
    regardless of exact header layout. Positioned below the header/day
    switcher, same safe zone as Terminal's boot log but on the left side. */
 .coffee-steam{
-  position:fixed;top:78px;left:16px;z-index:2;pointer-events:none;
+  position:fixed;top:78px;left:16px;z-index:301;pointer-events:none;
   width:40px;height:36px;opacity:0;
 }
 [data-theme="coffee"] .coffee-steam{opacity:1;}
@@ -854,26 +914,30 @@
   100%{transform:translateY(-34px) translateX(6px) scaleY(1.6);opacity:0;}
 }
 
-/* Vaporwave: a scrolling synthwave grid-horizon along the bottom edge.
-   Uses a flat grid with a gradient mask (fading toward the top) instead
-   of a true 3D perspective transform — animating background-position
-   under a rotateX transform triggers compositing flicker in some
-   browsers, so this avoids that combination entirely. */
-.vaporwave-grid{
-  position:fixed;bottom:0;left:0;right:0;height:30vh;z-index:-1;pointer-events:none;
-  opacity:0;transition:opacity .3s;overflow:hidden;
-  background-image:
-    linear-gradient(rgba(232,56,200,.4) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(232,56,200,.4) 1px, transparent 1px);
-  background-size:50px 50px;
-  mask-image:linear-gradient(to top, black 15%, transparent 95%);
-  -webkit-mask-image:linear-gradient(to top, black 15%, transparent 95%);
-  animation:grid-scroll 2.5s linear infinite;
+/* Vaporwave: a small pink car that occasionally drives across the bottom
+   of the screen — replaces the old scrolling grid (which had compositing
+   flicker issues). Mostly hidden for a long stretch, then a brief pass,
+   matching the same "rare treat, not a constant distraction" pattern as
+   Galaxy's starfighter. */
+#vaporwave-car{
+  position:fixed;bottom:14px;left:0;z-index:-1;pointer-events:none;
+  width:70px;height:28px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40'%3E%3Crect x='5' y='18' width='90' height='14' rx='4' fill='%23ff2fd4'/%3E%3Cpath d='M22,18 L32,6 L68,6 L80,18 Z' fill='%23ff2fd4'/%3E%3Crect x='35' y='9' width='30' height='9' fill='%231a0a2e' opacity='0.55'/%3E%3Ccircle cx='26' cy='33' r='7' fill='%23150818'/%3E%3Ccircle cx='26' cy='33' r='3' fill='%237ff5f0'/%3E%3Ccircle cx='74' cy='33' r='7' fill='%23150818'/%3E%3Ccircle cx='74' cy='33' r='3' fill='%237ff5f0'/%3E%3Crect x='0' y='21' width='6' height='4' rx='1' fill='%23fff685'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-size:contain;
+  filter:drop-shadow(0 0 6px rgba(255,47,212,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.4));
+  opacity:0;
+  display:none;
 }
-[data-theme="vaporwave"] .vaporwave-grid{opacity:.4;}
-@keyframes grid-scroll{
-  from{background-position:0 0, 0 0;}
-  to{background-position:0 50px, 0 0;}
+[data-theme="vaporwave"] #vaporwave-car{
+  display:block;
+  animation:vaporwave-car-drive 46s linear infinite;
+}
+@keyframes vaporwave-car-drive{
+  0%   { transform:translateX(-15vw) scaleX(1);   opacity:0; }
+  4%   { opacity:1; }
+  46%  { transform:translateX(115vw) scaleX(1);   opacity:1; }
+  48%  { opacity:0; }
+  100% { opacity:0; }
 }
 /* Vaporwave: brief VHS-style glitch flicker, triggered once from JS the
    moment you switch into this theme (not a JS-driven loop — just a class
@@ -888,20 +952,27 @@
   100%{filter:none;transform:translate(0,0);}
 }
 
-/* Noir: a "pinned to the board" red-string look on card hover. Both the
-   pin and the border stay fully INSIDE the card's own box — the card has
-   overflow:hidden (for its rounded corners), which clips anything drawn
-   outside that boundary, including outlines on the same element. */
-[data-theme="noir"] .card{position:relative;}
-[data-theme="noir"] .card:hover::before{
-  content:'';position:absolute;top:6px;left:10px;z-index:2;
-  width:7px;height:7px;border-radius:50%;
-  background:var(--green);box-shadow:0 0 4px var(--green-border);
-  pointer-events:none;
+/* Galaxy: a quick hyperspace-jump flash — streaking star-lines that blur
+   outward and a bright white flash, classic "jump to lightspeed" feel.
+   Triggered from JS on switching either into or out of Galaxy. Kept short
+   (under half a second) so it never delays actually navigating/reading
+   the new theme. */
+#hyperspace-flash{
+  position:fixed;inset:0;z-index:950;pointer-events:none;
+  opacity:0;
+  background:
+    repeating-conic-gradient(from 0deg, rgba(255,255,255,.9) 0deg 1deg, transparent 1deg 6deg),
+    radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(200,220,255,.5) 35%, transparent 70%);
 }
-[data-theme="noir"] .card:hover{
-  box-shadow:inset 0 0 0 1.5px var(--red-border);
+#hyperspace-flash.active{
+  animation:hyperspace-burst .5s ease-out forwards;
 }
+@keyframes hyperspace-burst{
+  0%{opacity:0;transform:scale(.2);}
+  35%{opacity:1;transform:scale(1.4);}
+  100%{opacity:0;transform:scale(2.4);}
+}
+
 /* Noir: a quick typewriter "clack" pulse as each card first appears */
 [data-theme="noir"] .card{animation:noir-clack .15s ease;}
 @keyframes noir-clack{
@@ -912,6 +983,7 @@
 /* Forest: a scatter of slow-drifting, glowing fireflies */
 #forest-fireflies{
   position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+  contain:strict;will-change:opacity;
   display:none;
 }
 [data-theme="forest"] #forest-fireflies{display:block;}
@@ -945,6 +1017,47 @@
   100%{transform:translate(0,0);}
 }
 
+/* Forest: a small owl perched on top of the calendar. Hovering it shows
+   the next upcoming tech start in a speech bubble — lightweight, no
+   periodic popups, purely opt-in by hovering. .tl-owl-anchor is a plain
+   sibling wrapper (not nested inside .tl-wrap) specifically so the owl
+   isn't clipped by .tl-wrap's own overflow-x:auto, which forces overflow-y
+   to clip too per the CSS spec — the same trap that hid Noir's red string
+   earlier. */
+.tl-owl-anchor{position:relative;}
+.forest-owl{
+  position:absolute;top:-14px;right:26px;z-index:5;
+  display:none;cursor:pointer;
+}
+[data-theme="forest"] .forest-owl{display:block;}
+.owl-body{
+  display:inline-block;font-size:26px;
+  animation:owl-life 6s ease-in-out infinite;
+  filter:drop-shadow(0 0 4px rgba(255,221,102,.35));
+}
+@keyframes owl-life{
+  0%,100%{transform:translateY(0) scaleY(1);}
+  25%{transform:translateY(-3px) scaleY(1);}
+  50%{transform:translateY(0) scaleY(1);}
+  94%{transform:translateY(-1px) scaleY(1);}
+  96%{transform:translateY(-1px) scaleY(.15);}
+  98%{transform:translateY(-1px) scaleY(1);}
+}
+.owl-speech{
+  position:absolute;bottom:100%;right:0;margin-bottom:10px;
+  min-width:170px;max-width:240px;background:var(--surface);border:1px solid var(--border2);
+  border-radius:8px;padding:9px 11px;font-family:var(--font-mono);font-size:11px;
+  color:var(--text2);box-shadow:0 6px 18px var(--shadow);line-height:1.5;
+  opacity:0;visibility:hidden;transform:translateY(6px);
+  transition:opacity .18s,transform .18s,visibility .18s;
+  pointer-events:none;
+}
+.forest-owl:hover .owl-speech{opacity:1;visibility:visible;transform:translateY(0);}
+.owl-speech::after{
+  content:'';position:absolute;top:100%;right:18px;
+  border:6px solid transparent;border-top-color:var(--border2);
+}
+
 /* Per-theme scrollbar colors */
 ::-webkit-scrollbar{width:10px;height:10px;}
 ::-webkit-scrollbar-track{background:var(--surface);}
@@ -966,18 +1079,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:5px;transition:background .3s;flex-shrink:0;}
 .sync-dot.connected{background:var(--green);box-shadow:0 0 6px rgba(0,207,190,.55);}
 .sync-dot.error{background:var(--red);}
-.sync-label{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.05em;}
+.sync-label{font-family:'DM Mono',monospace;line-height:1.3;font-size:10px;color:var(--muted2);letter-spacing:.05em;}
 .sync-wrap{display:flex;align-items:center;padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);}
 
 .initials-wrap{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);cursor:pointer;transition:all .15s;}
 .initials-wrap:hover{border-color:var(--amber);color:var(--amber-text);}
-.initials-label{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.05em;}
-.initials-val{font-family:var(--font-mono);font-size:13px;color:var(--amber-text);font-weight:700;letter-spacing:.1em;}
+.initials-label{font-family:'DM Mono',monospace;line-height:1.3;font-size:10px;color:var(--muted2);letter-spacing:.05em;}
+.initials-val{font-family:'DM Mono',monospace;line-height:1.3;font-size:13px;color:var(--amber-text);font-weight:700;letter-spacing:.1em;}
 
 .theme-menu-wrap{position:relative;}
-.theme-btn{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.theme-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
 .theme-btn:hover{border-color:var(--green-border);color:var(--text);}
-.surprise-btn{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.surprise-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
 .surprise-btn:hover{border-color:var(--amber-border);color:var(--amber-text);}
 .theme-menu{
   position:absolute;top:calc(100% + 6px);right:0;z-index:400;min-width:170px;
@@ -986,13 +1099,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   display:flex;flex-direction:column;gap:2px;max-height:70vh;overflow-y:auto;
 }
 .theme-menu-item{
-  font-family:var(--font-mono);font-size:12px;text-align:left;
+  font-family:'DM Mono',monospace;font-size:12px;text-align:left;line-height:1.3;
   padding:8px 10px;border-radius:5px;cursor:pointer;border:none;background:transparent;
   color:var(--text2);transition:background .12s,color .12s;white-space:nowrap;
 }
 .theme-menu-item:hover{background:var(--surface2);color:var(--text);}
 .theme-menu-item.active{background:var(--green-bg);color:var(--green-text);}
-.clear-data-btn{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--red-border);background:transparent;color:var(--red);transition:all .15s;}
+.clear-data-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--red-border);background:transparent;color:var(--red);transition:all .15s;}
 .clear-data-btn:hover{background:var(--red-bg);}
 
 /* ── DROP ZONE ── */
@@ -1028,31 +1141,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 }
 .reupload-btn:hover{background:var(--green-bg);}
 
-/* ── DAY SWITCHER ── */
+/* ── DAY SWITCHER ──
+   Horizontally scrollable on narrow screens rather than wrapping, so the
+   row always stays on one line. */
 .day-switch-wrap{
-  margin:16px 24px 0;display:flex;align-items:center;justify-content:space-between;
-  gap:12px;flex-wrap:wrap;
+  margin:16px 24px 0;
 }
-.day-switch-tabs{display:flex;gap:6px;flex-wrap:wrap;}
+.day-switch-tabs{
+  display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;scrollbar-width:thin;
+  padding-bottom:4px; /* room for the scrollbar so it doesn't sit flush against the tabs */
+}
 .day-tab{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;
-  padding:7px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;
+  font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.05em;
+  padding:7px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;flex-shrink:0;
   border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);
   transition:all .15s;
 }
 .day-tab:hover{border-color:var(--green-border);color:var(--text);}
 .day-tab.active{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
-.day-jump{display:flex;align-items:center;gap:6px;}
-.day-jump-input{
-  font-family:var(--font-mono);font-size:11px;padding:6px 8px;border-radius:6px;
-  border:1px solid var(--border2);background:var(--surface2);color:var(--text);
-}
-.day-jump-btn{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;font-weight:700;
-  padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);
-  background:transparent;color:var(--muted2);transition:all .15s;
-}
-.day-jump-btn:hover{border-color:var(--green-border);color:var(--green-text);}
 
 /* ── EMPTY STATE ── */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;text-align:center;gap:14px;}
@@ -1140,9 +1247,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .uts-list{display:flex;flex-direction:column;gap:7px;}
 .uts-entry{display:flex;align-items:center;gap:12px;}
 .uts-dot{width:8px;height:8px;border-radius:50%;background:var(--techline);flex-shrink:0;animation:nowpulse 2s ease-in-out infinite;}
-.uts-time{font-family:var(--font-mono);font-size:14px;color:var(--amber-text);font-weight:700;min-width:80px;}
-.uts-info{font-family:var(--font-mono);font-size:12px;color:var(--muted2);}
-.uts-until{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-left:auto;}
+.uts-time{font-family:var(--font-mono);font-size:14px;color:var(--amber-text);font-weight:700;width:76px;flex-shrink:0;}
+.uts-info{font-family:var(--font-mono);font-size:12px;color:var(--muted2);flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.uts-until{font-family:var(--font-mono);font-size:11px;color:var(--muted);width:56px;flex-shrink:0;text-align:right;}
 
 /* ── CARDS ── */
 .cards-wrap{padding:20px 24px 36px;}
@@ -1373,7 +1480,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   .notes-section, .empty-state, .tooltip, .modal-bg, .detail-modal-bg,
   .now-line, .now-label, .tl-techline,
   .crt-scanlines, .paper-grain, #starfield, #starfighter, .canopy-dapple, .noir-vignette,
-  .blueprint-grid, #sakura-petals, .terminal-boot, .blueprint-compass, .vaporwave-grid, #forest-fireflies, .coffee-steam,
+  .blueprint-grid, #sakura-petals, .terminal-boot, .blueprint-compass, #vaporwave-car, #pacman, #forest-fireflies, .coffee-steam, #hyperspace-flash, .forest-owl,
   .day-switch-wrap {
     display:none!important;
   }
@@ -1418,7 +1525,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   }
   .tl-evt:hover{transform:none;box-shadow:none;filter:none;}
 }
-.print-btn{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.print-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
 .print-btn:hover{border-color:var(--green);color:var(--green-text);}
 
 </style>
@@ -1445,13 +1552,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   <span>STANDING BY_</span>
 </div>
 <div class="blueprint-compass"></div>
-<div class="vaporwave-grid"></div>
+<div id="vaporwave-car"></div>
+<div id="pacman"></div>
 <div id="forest-fireflies"></div>
 <div class="coffee-steam">
   <span></span>
   <span></span>
   <span></span>
 </div>
+<div id="hyperspace-flash"></div>
 
 <!-- INITIALS MODAL -->
 <div class="modal-bg hidden" id="modal-bg">
@@ -1512,14 +1621,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 
 <!-- DAY SWITCHER — sits right below the header so it's visible immediately.
      Shows TODAY/TOMORROW (or a date label for other days) for every day
-     found in the loaded PDF, plus a jump-to-date picker that checks
-     Firebase for any previously-shared schedule. -->
+     found in the loaded PDF. Horizontally scrollable on narrow screens. -->
 <div class="day-switch-wrap hidden" id="day-switch-wrap">
   <div class="day-switch-tabs" id="day-switch-tabs"></div>
-  <div class="day-jump">
-    <input type="date" id="day-jump-input" class="day-jump-input">
-    <button class="day-jump-btn" onclick="jumpToDate()">Go</button>
-  </div>
 </div>
 
 <!-- FIREBASE CONFIG BANNER -->
@@ -1575,9 +1679,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
     <div class="li"><div class="ld" style="background:var(--nowline)"></div>NOW</div>
   </div>
 
-  <div class="tl-wrap">
-    <div class="tl-header-row">
-      <div class="tl-title">TIMELINE 7 AM – 11 PM</div>
+  <div class="tl-owl-anchor">
+    <div class="forest-owl" id="forest-owl">
+      <span class="owl-body">🦉</span>
+      <div class="owl-speech" id="owl-speech"></div>
+    </div>
+    <div class="tl-wrap">
+      <div class="tl-header-row">
+        <div class="tl-title">TIMELINE 7 AM – 11 PM</div>
     </div>
     <div class="tl-grid" id="tl-grid">
       <div class="tl-hours" id="tl-hours">
@@ -1594,6 +1703,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
       <div id="tl-rows"></div>
       <div class="now-line"  id="now-line"></div>
       <div class="now-label" id="now-label"></div>
+    </div>
     </div>
   </div>
   <div class="scroll-hint">← scroll →</div>
@@ -1877,9 +1987,6 @@ function renderDaySwitcher() {
     });
   }
   wrap.classList.remove('hidden');
-
-  const jumpInput = document.getElementById('day-jump-input');
-  if (jumpInput && currentDateKey) jumpInput.value = currentDateKey;
 }
 
 // Switch the visible day. Checks in-memory parsed data first (instant —
@@ -1900,12 +2007,6 @@ async function selectDay(dateKey) {
   if (!found && statusEl2) {
     statusEl2.textContent = `No schedule found for ${dateKey} — upload a Setup Worksheet PDF that covers that date.`;
   }
-}
-
-function jumpToDate() {
-  const input = document.getElementById('day-jump-input');
-  if (!input || !input.value) return;
-  selectDay(input.value); // <input type="date"> value is already "YYYY-MM-DD"
 }
 
 /* ── normalizeEvent ──
@@ -2290,18 +2391,43 @@ function applyThemeFavicon(name) {
 // be remembered), but is set to false for the initial local-only restore on
 // page load and for applying a value we just READ from Firebase — neither
 // of those should immediately write back.
+// Invalidates any in-flight loadThemePrefFromFirebase() fetch — bumped
+// whenever the user actually picks a theme themselves, so a slow Firebase
+// read that resolves afterward can't silently overwrite their choice.
+// This was the actual cause of "theme switching intermittently doesn't
+// work, refresh fixes it": without this guard, clicking a new theme while
+// the initial preference fetch was still in flight would work briefly,
+// then get reverted the moment that stale fetch resolved.
+let themeActionToken = 0;
+
 function setTheme(name, opts) {
   opts = opts || {};
   if (!VALID_THEMES.includes(name)) name = 'dark';
+  if (opts.syncToFirebase !== false) themeActionToken++;
+  const previousTheme = document.documentElement.getAttribute('data-theme');
   document.documentElement.setAttribute('data-theme', name);
   try { updateThemeMenuActiveState(name); } catch (e) { console.error('setTheme: updateThemeMenuActiveState failed', e); }
   try { localStorage.setItem('osves_theme', name); } catch (e) { console.error('setTheme: localStorage failed', e); }
   try { applyThemeFlavor(name); } catch (e) { console.error('setTheme: applyThemeFlavor failed', e); }
   try { applyThemeFavicon(name); } catch (e) { console.error('setTheme: applyThemeFavicon failed', e); }
   if (name === 'vaporwave') { try { triggerVhsGlitch(); } catch (e) { console.error('setTheme: triggerVhsGlitch failed', e); } }
+  if ((name === 'galaxy' || previousTheme === 'galaxy') && name !== previousTheme) {
+    try { triggerHyperspaceJump(); } catch (e) { console.error('setTheme: triggerHyperspaceJump failed', e); }
+  }
   if (opts.syncToFirebase !== false) {
     try { saveThemePrefToFirebase(name); } catch (e) { console.error('setTheme: saveThemePrefToFirebase failed', e); }
   }
+}
+// A brief hyperspace-jump flash when switching to or from Galaxy — a plain
+// CSS keyframe animation does the actual visual work, this just toggles
+// the class that triggers it and removes it afterward.
+function triggerHyperspaceJump() {
+  const el = document.getElementById('hyperspace-flash');
+  if (!el) return;
+  el.classList.remove('active');
+  void el.offsetWidth; // force reflow so re-adding the class restarts the animation if it's already mid-play
+  el.classList.add('active');
+  setTimeout(() => el.classList.remove('active'), 550);
 }
 // A brief, one-shot VHS-style flicker on the whole page when switching to
 // Vaporwave — a plain CSS keyframe animation does all the actual work,
@@ -2391,8 +2517,10 @@ function saveThemePrefToFirebase(name) {
 }
 async function loadThemePrefFromFirebase() {
   if (!db || !myInitials) return;
+  const myToken = themeActionToken;
   try {
     const snap = await db.ref('userPrefs/' + myInitials + '/theme').once('value');
+    if (themeActionToken !== myToken) return; // the person picked a theme manually while this was in flight — don't clobber it
     const saved = snap.val();
     if (saved && VALID_THEMES.includes(saved)) {
       setTheme(saved, { syncToFirebase: false }); // just applying what we read — no need to write it right back
@@ -3940,6 +4068,42 @@ function updateNextUp(events) {
   });
   wrap.classList.remove('hidden');
 }
+
+/* ── Forest owl ──
+   Hovering the owl (perched on top of the timeline) shows the next
+   upcoming tech start in a speech bubble. Computed fresh on every hover
+   rather than polled on a timer — lightweight, purely opt-in. */
+function updateOwlSpeech() {
+  const bubble = document.getElementById('owl-speech');
+  if (!bubble) return;
+  try {
+    if (currentDateKey !== todayKey() || !allEvents || !allEvents.length) {
+      bubble.textContent = "Nothing on the horizon right now.";
+      return;
+    }
+    const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+    const upcoming = allEvents
+      .filter(ev => ev.hasTech && !ev.allDay)
+      .map(ev => ({ ...ev, tsH: ev.startH - 0.5 }))
+      .filter(ev => ev.tsH > nowH)
+      .sort((a,b) => a.tsH - b.tsH);
+    if (!upcoming.length) {
+      bubble.textContent = "No more tech starts today.";
+      return;
+    }
+    const next = upcoming[0];
+    const minsTo = Math.round((next.tsH - nowH) * 60);
+    const untilLabel = minsTo < 60 ? `${minsTo}m` : `${Math.floor(minsTo/60)}h${minsTo%60 ? ' '+(minsTo%60)+'m' : ''}`;
+    bubble.textContent = `Tech starts in ${untilLabel} — ${next.room} · ${next.name}`;
+  } catch (e) {
+    console.error('updateOwlSpeech failed', e);
+    bubble.textContent = "Hoo? Something went wrong.";
+  }
+}
+(function initOwl() {
+  const owl = document.getElementById('forest-owl');
+  if (owl) owl.addEventListener('mouseenter', updateOwlSpeech);
+})();
 
 /* ═══════════════════════════════
    COUNTDOWN REFRESH
