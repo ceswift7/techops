@@ -1145,10 +1145,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
    Horizontally scrollable on narrow screens rather than wrapping, so the
    row always stays on one line. */
 .day-switch-wrap{
-  margin:16px 24px 0;
+  margin:16px 24px 0;display:flex;align-items:center;gap:10px;
 }
 .day-switch-tabs{
-  display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;
+  display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;flex:1;min-width:0;
   -webkit-overflow-scrolling:touch;scrollbar-width:thin;
   padding-bottom:4px; /* room for the scrollbar so it doesn't sit flush against the tabs */
 }
@@ -1160,6 +1160,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 }
 .day-tab:hover{border-color:var(--green-border);color:var(--text);}
 .day-tab.active{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
+.view-pdf-btn{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.05em;
+  padding:7px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;flex-shrink:0;
+  border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);
+  transition:all .15s;
+}
+.view-pdf-btn:hover{border-color:var(--green-border);color:var(--text);}
 
 /* ── EMPTY STATE ── */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;text-align:center;gap:14px;}
@@ -1294,6 +1301,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .tag.tp{color:var(--purple-text);border-color:var(--purple-border);background:var(--purple-bg);}
 .no-needs-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.07em;color:var(--muted);display:block;margin-top:9px;padding:2px 0;}
 .side-notes{padding-top:2px;}
+.raw-source{
+  font-family:'DM Mono',monospace;font-size:10.5px;line-height:1.6;
+  color:var(--muted2);background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;padding:10px 12px;margin-top:2px;
+  white-space:pre-wrap;word-break:break-word;max-height:280px;overflow-y:auto;
+}
 .side-note{font-size:11px;color:var(--muted2);line-height:1.65;padding:4px 0;}
 .side-note+.side-note{border-top:1px solid var(--border);}
 .food-emoji{font-size:16px;float:right;margin-left:8px;line-height:1;opacity:.85;}
@@ -1624,6 +1637,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
      found in the loaded PDF. Horizontally scrollable on narrow screens. -->
 <div class="day-switch-wrap hidden" id="day-switch-wrap">
   <div class="day-switch-tabs" id="day-switch-tabs"></div>
+  <button class="view-pdf-btn hidden" id="view-pdf-btn" onclick="viewOriginalPdf()">📄 VIEW ORIGINAL PDF</button>
 </div>
 
 <!-- FIREBASE CONFIG BANNER -->
@@ -1855,12 +1869,61 @@ function renderDay(dateKey, dateLabel, events) {
     renderCards(events);
     positionNowLine();
     updateNextUp(events);
+    updateViewPdfButton();
   } catch (err) {
     // A rendering error for one day should never leave the switcher
     // itself stuck or unclickable — always fall through to re-sync tabs.
     console.error('renderDay failed for', dateKey, err);
   } finally {
     renderDaySwitcher();
+  }
+}
+
+// Convert a File to a base64 data URI, for archiving the original PDF in
+// Firebase so "View Original PDF" works for any teammate, not just
+// whoever uploaded it.
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
+    reader.readAsDataURL(file);
+  });
+}
+
+// Shows/hides the "View Original PDF" button based on whether the
+// currently-displayed day has an archived source PDF to show.
+function updateViewPdfButton() {
+  const btn = document.getElementById('view-pdf-btn');
+  if (!btn) return;
+  const day = parsedDays.find(d => d.dateKey === currentDateKey);
+  btn.classList.toggle('hidden', !(day && day.sourcePdfId));
+}
+
+// Opens the original PDF for the currently-displayed day in a new tab.
+// Opens a blank tab synchronously (before the async Firebase fetch) so
+// popup blockers — which generally only block window.open() calls made
+// outside a direct user gesture — don't interfere with this one.
+async function viewOriginalPdf() {
+  const day = parsedDays.find(d => d.dateKey === currentDateKey);
+  const pdfId = day && day.sourcePdfId;
+  if (!pdfId) { alert('No original PDF is available for this day.'); return; }
+  if (!db) { alert('Not connected to Firebase — cannot retrieve the PDF.'); return; }
+  const newTab = window.open('', '_blank');
+  try {
+    const snap = await db.ref('pdfArchive/' + pdfId).once('value');
+    const data = snap.val();
+    if (!data || !data.base64) {
+      if (newTab) newTab.close();
+      alert('The original PDF for this day could not be found.');
+      return;
+    }
+    if (newTab) newTab.location.href = data.base64;
+    else window.open(data.base64, '_blank');
+  } catch (err) {
+    console.error('Failed to load original PDF', err);
+    if (newTab) newTab.close();
+    alert('Failed to load the original PDF: ' + err.message);
   }
 }
 
@@ -1920,8 +1983,8 @@ async function loadScheduleForDate(dateKey) {
     // Cache it regardless of staleness below, so a later click doesn't
     // need to re-fetch it.
     const existing = parsedDays.find(d => d.dateKey === dateKey);
-    if (existing) existing.events = events;
-    else parsedDays.push({ dateKey, dateLabel: data.date || dateKey, events });
+    if (existing) { existing.events = events; existing.sourcePdfId = data.sourcePdfId; }
+    else parsedDays.push({ dateKey, dateLabel: data.date || dateKey, events, sourcePdfId: data.sourcePdfId });
     parsedDays.sort((a,b) => a.dateKey.localeCompare(b.dateKey));
 
     // Only paint this onto the screen if it's still the most recent
@@ -2017,7 +2080,7 @@ async function selectDay(dateKey) {
 */
 function normalizeEvent(ev) {
   const arrayFields = [
-    'audio','audioLabor','video','videoLabor','lighting','lightingLabor',
+    'av','avLabor','audio','audioLabor','video','videoLabor','lighting','lightingLabor',
     'film','filmLabor','gentech','gentechLabor','techRental','notes'
   ];
   const out = { ...ev };
@@ -2038,6 +2101,10 @@ function normalizeEvent(ev) {
     // unexpected. Default to an empty array either way.
     out[f] = [];
   });
+  // rawSource is a string, not an array — Firebase drops empty strings the
+  // same way it drops empty arrays, so make sure a missing value here
+  // still renders as "no source captured" instead of undefined.
+  if (typeof out.rawSource !== 'string') out.rawSource = '';
   return out;
 }
 
@@ -2725,7 +2792,7 @@ async function extractPDFText(file) {
     });
     pages.push(lineText.trim());
   }
-  return pages.join('\n---PAGE---\n');
+  return { text: pages.join('\n---PAGE---\n'), pageCount: pdf.numPages };
 }
 
 /* ═══════════════════════════════════════════════════
@@ -3033,22 +3100,25 @@ function parseMomentusText(rawText) {
   ]);
 
   // Does a line look like a room/location line (as opposed to an event-name
-  // fragment)? Room lines start with an ALL-CAPS building code (2-6 letters).
-  // A digit immediately after the code (e.g. "MCWH 409") is unambiguous and
-  // always treated as a room. A sub-code (e.g. "BSLC SC") or a proper-noun
-  // room name (e.g. "OUT Gabhart") is only trusted for buildings in the
-  // known-codes list above, since that pattern is otherwise indistinguishable
-  // from the start of an event name.
+  // fragment)? Room lines start with an ALL-CAPS building code (2-6
+  // letters). Every pattern here — a room number, a sub-code, or a
+  // proper-noun room name — is only trusted for buildings in the
+  // known-codes list above; without that gate, a line like "CLASS 1st Gen
+  // Meetings Fall 2026" (a real event name, not a room) matches the same
+  // "letters then a digit-leading token" shape as "MCWH 409" and gets
+  // mistaken for a room. That false match previously swallowed the whole
+  // event name, which meant the event never got created at all and its
+  // equipment silently attached to whatever event came before it.
   function looksLikeRoomLine(line) {
     const tokens = line.split(/\s+/);
     if (tokens.length < 2) return false;
     const first = tokens[0];
     if (!/^[A-Z]{2,6}$/.test(first)) return false;
-    const second = tokens[1];
-    if (/^[A-Z]?\d/.test(second)) return true;          // e.g. "409", "201A", "G102" — always safe
     if (!KNOWN_BUILDING_CODES.has(first)) return false;
-    if (/^[A-Z]{1,4}[:\-]?$/.test(second)) return true; // e.g. "SC", "AB"
-    if (/^[A-Z][a-z]/.test(second)) return true;        // e.g. "Gabhart", "Beaman"
+    const second = tokens[1];
+    if (/^[A-Z]?\d/.test(second)) return true;           // e.g. "409", "201A", "G102"
+    if (/^[A-Z]{1,4}[:\-]?$/.test(second)) return true;  // e.g. "SC", "AB"
+    if (/^[A-Z][a-z]/.test(second)) return true;         // e.g. "Gabhart", "Beaman"
     return false;
   }
 
@@ -3092,11 +3162,13 @@ function parseMomentusText(rawText) {
   // are recognized — Non-Technical items are intentionally not tracked at
   // all, since this tool only needs to surface tech/AV needs.
   function detectDept(line) {
+    if (/^av labor/i.test(line))                 return 'AV_LABOR';
     if (/^audio labor/i.test(line))              return 'AUDIO_LABOR';
     if (/^video labor/i.test(line))              return 'VIDEO_LABOR';
     if (/^lighting labor/i.test(line))           return 'LIGHTING_LABOR';
     if (/^film.*broadcast labor/i.test(line))    return 'FILM_LABOR';
     if (/^general tech labor/i.test(line))       return 'GENTECH_LABOR';
+    if (/^av equipment$/i.test(line))            return 'AV';
     if (/^audio equipment$/i.test(line))         return 'AUDIO';
     if (/^video equipment$/i.test(line))         return 'VIDEO';
     if (/^lighting equipment$/i.test(line))      return 'LIGHTING';
@@ -3109,16 +3181,15 @@ function parseMomentusText(rawText) {
   // Parse an equipment item line. In this worksheet's real text-extraction
   // order the quantity trails the description, e.g.
   // "Microphone, Handheld Wireless (B AB) 2" (not "2 Microphone...").
-  // Trailing quantity is capped at 2 digits (1-99) — a realistic ceiling for
-  // AV equipment counts — so a note line that happens to end in a number
-  // (e.g. "Used as one big room with 2302", a room number) doesn't get
-  // mistaken for an item. We check trailing-qty first (the common case) and
-  // fall back to leading-qty in case a differently-ordered export is ever
-  // encountered.
+  // Trailing quantity is capped at 3 digits (1-999) — real large-production
+  // quantities can run into the hundreds (e.g. "146 LED Series 3 Lustr X8
+  // Ellipsoidal Fixtures" for a concert lighting rig) — while still
+  // excluding 4+ digit sequences like room numbers (e.g. "Used as one big
+  // room with 2302") from being mistaken for a quantity.
   function parseItem(line) {
     const stripped = line.replace(/^\*\s*/, '').replace(/\s*\*$/, '').trim();
     let name, qty;
-    const trailing = stripped.match(/^(.+?)\s+(\d{1,2})$/);
+    const trailing = stripped.match(/^(.+?)\s+(\d{1,3})$/);
     const leading  = stripped.match(/^(\d+)\s+(.+)$/);
     if (trailing) {
       name = trailing[1].trim();
@@ -3134,7 +3205,13 @@ function parseMomentusText(rawText) {
       .replace(/\s*\(Required\)\s*$/i, '')
       .trim();
     if (!name || name.length < 2) return null;
-    if (/^No\s+(?:Audio|Video|Lighting|Tech|Non-Technical|General\s+Tech).*Needed?$/i.test(name)) return null;
+    // Generalized (not an enumerated keyword list) so it correctly catches
+    // every "No <whatever> Needed" phrasing this worksheet uses — e.g.
+    // "No Podium/Mic Needed" and "No Presentation System Needed" were
+    // previously missed because they didn't match any of the specific
+    // category names that used to be hardcoded here, which meant those
+    // "nothing needed" declarations were incorrectly kept as real items.
+    if (/^No\s+.+\s+Needed?$/i.test(name)) return null;
     return { qty, name, label: qty > 1 ? `(${qty})` : '(1)' };
   }
 
@@ -3149,6 +3226,7 @@ function parseMomentusText(rawText) {
 
   // Pending event header (accumulated across lines)
   let pendingStart = null;
+  let pendingStartLineIdx = null; // which raw line the Reservation time-pair was on — lets us recover each event's exact source text later
   let pendingNameLines = [];
   let pendingRoomCandidate = null;
   let pendingEC = null;
@@ -3157,25 +3235,57 @@ function parseMomentusText(rawText) {
   function finalizeEv() {
     if (!ev) return;
     ev.hasTech = (
+      ev.av.length > 0 || ev.avLabor.length > 0 ||
       ev.audio.length > 0 || ev.audioLabor.length > 0 ||
       ev.video.length > 0 || ev.videoLabor.length > 0 ||
       ev.lighting.length > 0 || ev.lightingLabor.length > 0 ||
       ev.film.length > 0 || ev.filmLabor.length > 0 ||
-      ev.techRental.length > 0 || ev.gentechLabor.length > 0
+      ev.gentech.length > 0 || ev.gentechLabor.length > 0 ||
+      ev.techRental.length > 0
     );
     events.push(ev);
     ev = null; dept = null; lastItem = null;
   }
 
+  // Lines that are worksheet page furniture (title, column headers, ID
+  // labels, date/page stamp) rather than actual event content — stripped
+  // out of the "view source" text so it reads as just the event's own
+  // block, not interleaved with page-break boilerplate.
+  function isPageBoilerplate(line) {
+    return /^Belmont University\s+Setup Worksheet/i.test(line) ||
+           /^Res Start\s+Res End|^Res Start\s+Evt Start/i.test(line) ||
+           /^Res ID$/i.test(line) ||
+           /^Book ID$/i.test(line) ||
+           /^\d{1,2}\/\d{1,2}\/\d{4}.*Page \d+ of \d+/i.test(line);
+  }
+
   // Close out the day currently being accumulated (if any) and push its
   // tech-only events into `days`, then reset accumulators for a new day.
-  function finalizeDay() {
+  // endLineIdx marks where this day's content stops (exclusive) — the
+  // line index of whatever comes next (a new day header, or end of file).
+  function finalizeDay(endLineIdx) {
     finalizeEv();
     if (currentDayKey) {
+      // Recover each event's original source text: from its own Reservation
+      // line up to (but not including) the next event's Reservation line,
+      // or the end of the day for the last event. Computed here — using
+      // every raw-parsed event in file order, before the hasTech filter
+      // below — so the boundary is accurate even when a skipped/no-tech
+      // event sits between two tech events in the source PDF.
+      events.forEach((e, idx) => {
+        const start = e._srcStart;
+        const end = (idx + 1 < events.length) ? events[idx + 1]._srcStart : endLineIdx;
+        if (start != null && end != null && end > start) {
+          e.rawSource = rawLines.slice(start, end)
+            .filter(l => l && !isPageBoilerplate(l))
+            .join('\n');
+        }
+        delete e._srcStart;
+      });
       const valid = events.filter(e =>
         e.name && e.startH != null && e.endH != null && e.startH < e.endH && e.hasTech
       );
-      days.push({ dateKey: currentDayKey, dateLabel: currentDayLabel, events: valid });
+      days.push({ dateKey: currentDayKey, dateLabel: currentDayLabel, events: valid, totalRawEvents: events.length });
     }
     events = [];
   }
@@ -3185,6 +3295,7 @@ function parseMomentusText(rawText) {
     ev = {
       room, name: name.trim(), type: '', startH, endH, allDay: false,
       ec: ec || '',
+      av: [], avLabor: [],
       audio: [], audioLabor: [],
       video: [], videoLabor: [],
       lighting: [], lightingLabor: [],
@@ -3192,6 +3303,8 @@ function parseMomentusText(rawText) {
       gentech: [], gentechLabor: [],
       techRental: [],
       notes: [],
+      rawSource: '',
+      _srcStart: pendingStartLineIdx,
       hasTech: false, hasFood: false
     };
     dept = null; lastItem = null;
@@ -3199,6 +3312,7 @@ function parseMomentusText(rawText) {
 
   function resetPending() {
     pendingStart = null;
+    pendingStartLineIdx = null;
     pendingNameLines = [];
     pendingRoomCandidate = null;
     pendingEC = null;
@@ -3215,7 +3329,7 @@ function parseMomentusText(rawText) {
     const dayKey = lineToDateKey(line);
     if (dayKey !== null) {
       if (dayKey !== currentDayKey) {
-        finalizeDay();
+        finalizeDay(i);
         resetPending();
         currentDayKey   = dayKey;
         currentDayLabel = parseDateString(line) || '';
@@ -3334,6 +3448,7 @@ function parseMomentusText(rawText) {
     if (tp) {
       if (pendingStart !== null) resetPending(); // abandon any open pending
       pendingStart = tp.startH;
+      pendingStartLineIdx = i;
       pendingNameLines = [];
       pendingRoomCandidate = null;
       pendingEC = null;
@@ -3362,6 +3477,8 @@ function parseMomentusText(rawText) {
       }
 
       switch(dept) {
+        case 'AV':             ev.av.push(item);           lastItem = item; break;
+        case 'AV_LABOR':       ev.avLabor.push(item);      lastItem = item; break;
         case 'AUDIO':          ev.audio.push(item);        lastItem = item; break;
         case 'AUDIO_LABOR':    ev.audioLabor.push(item);   lastItem = item; break;
         case 'VIDEO':          ev.video.push(item);        lastItem = item; break;
@@ -3378,7 +3495,7 @@ function parseMomentusText(rawText) {
     }
   }
 
-  finalizeDay(); // push the last day's events into `days`
+  finalizeDay(lines.length); // push the last day's events into `days`
 
   // Sort chronologically so the day-switcher and "earliest day" default
   // both make sense regardless of the order pages appeared in the PDF.
@@ -3395,7 +3512,7 @@ async function handleBuild(e) {
   parseBtn.disabled = true;
   statusEl.textContent = 'Reading PDF…';
   try {
-    const text   = await extractPDFText(pdfFile);
+    const { text, pageCount } = await extractPDFText(pdfFile);
     statusEl.textContent = 'Parsing…';
     const result = parseMomentusText(text);
 
@@ -3405,6 +3522,7 @@ async function handleBuild(e) {
       return;
     }
     const totalEvents = result.days.reduce((sum, d) => sum + d.events.length, 0);
+    const totalRawEvents = result.days.reduce((sum, d) => sum + (d.totalRawEvents || 0), 0);
     if (!totalEvents) {
       statusEl.textContent = '⚠ No tech events found in this PDF — check PDF format';
       parseBtn.disabled = false;
@@ -3430,7 +3548,10 @@ async function handleBuild(e) {
 
     document.getElementById('shared-schedule-banner').classList.add('hidden');
     renderDay(defaultDay.dateKey, defaultDay.dateLabel, defaultDay.events);
-    statusEl.textContent = `✓ ${totalEvents} tech event${totalEvents === 1 ? '' : 's'} loaded across ${result.days.length} day${result.days.length === 1 ? '' : 's'}`;
+    // A quick sanity-check summary, not a correctness guarantee — but a
+    // day that normally shows ~50 tech events suddenly showing 12 is
+    // worth a second look before trusting it.
+    statusEl.textContent = `✓ ${pageCount} page${pageCount === 1 ? '' : 's'} → ${totalRawEvents} event${totalRawEvents === 1 ? '' : 's'} found → ${totalEvents} with tech needs, across ${result.days.length} day${result.days.length === 1 ? '' : 's'}`;
 
     // Share every day found with the team via Firebase — so a teammate
     // opening the app on any of these dates (today or not) can find it
@@ -3442,12 +3563,39 @@ async function handleBuild(e) {
       h = h % 12 || 12;
       const timeStr = h + ':' + String(m).padStart(2,'0') + ' ' + ap;
       const uploaderInitials = myInitials || 'someone';
+      const summaryMsg = `✓ ${pageCount} page${pageCount === 1 ? '' : 's'} → ${totalRawEvents} event${totalRawEvents === 1 ? '' : 's'} found → ${totalEvents} with tech needs — shared with your team`;
+
+      // Archive the original PDF itself (once per upload, not once per day
+      // — an 8-day worksheet shouldn't store the same file 8 times) so
+      // "View Original PDF" works for any teammate, not just whoever
+      // uploaded it. Every day in this upload points at the same archive
+      // entry via sourcePdfId.
+      const pdfArchiveId = result.days[0].dateKey + '_' + Date.now();
+      // Stamp the local (already-merged) parsedDays entries too, so the
+      // "View Original PDF" button works immediately for the uploader's
+      // own session without waiting on a Firebase round-trip.
+      result.days.forEach(d => {
+        const local = parsedDays.find(p => p.dateKey === d.dateKey);
+        if (local) local.sourcePdfId = pdfArchiveId;
+      });
+      updateViewPdfButton();
+
+      const pdfArchivePromise = fileToBase64(pdfFile).then(base64 =>
+        db.ref('pdfArchive/' + pdfArchiveId).set({
+          base64, fileName: pdfFile.name,
+          uploadedBy: uploaderInitials, uploadedAt: timeStr
+        })
+      ).catch(err => {
+        // Non-fatal — the schedule itself still saves fine without the
+        // PDF archive; "View Original PDF" just won't work for this upload.
+        console.error('Failed to archive PDF', err);
+      });
 
       // Only write the days that were actually in THIS upload — never the
       // full merged parsedDays, which can include stale placeholder
       // entries (events: null) from the known-dates index. Writing those
       // would overwrite real Firebase data for days this PDF doesn't cover.
-      Promise.all(result.days.map(d => {
+      Promise.all([pdfArchivePromise, ...result.days.map(d => {
         // JSON round-trip strips any `undefined` values, which Firebase
         // Realtime Database otherwise rejects (and fails the entire write).
         const safeEvents = JSON.parse(JSON.stringify(d.events));
@@ -3456,7 +3604,8 @@ async function handleBuild(e) {
             date: d.dateLabel,
             events: safeEvents,
             uploadedBy: uploaderInitials,
-            uploadedAt: timeStr
+            uploadedAt: timeStr,
+            sourcePdfId: pdfArchiveId
           }),
           // Lightweight index of every date that has a shared schedule —
           // this is what lets a page refresh (or a teammate's browser)
@@ -3464,9 +3613,9 @@ async function handleBuild(e) {
           // this, only today's date is ever rediscoverable after a reload.
           db.ref('scheduleDates/' + d.dateKey).set(d.dateLabel)
         ]);
-      })).then(() => {
+      })]).then(() => {
         console.log('Schedule shared with team:', result.days.map(d => d.dateKey));
-        statusEl.textContent = `✓ ${totalEvents} events loaded — shared with your team`;
+        statusEl.textContent = summaryMsg;
       }).catch(err => {
         console.error('Failed to share schedule', err);
         statusEl.textContent = `✓ ${totalEvents} events loaded (local only — sharing failed: ${err.message})`;
@@ -3495,6 +3644,7 @@ function showTooltip(ev, evKey, x, y) {
   if (ev.hasTech) h += `<div class="tt-badge">⚙ TECH START ${fmtH(ev.startH - 0.5)}</div>`;
 
   const tags = [];
+  ev.av.forEach(a       => tags.push(`<span class="tt-tag g">🎛 <b>${a.label}</b> ${a.name}</span>`));
   ev.audio.forEach(a    => tags.push(`<span class="tt-tag g">🎙 <b>${a.label}</b> ${a.name}</span>`));
   ev.video.forEach(v    => tags.push(`<span class="tt-tag g">📽 <b>${v.label}</b> ${v.name}</span>`));
   ev.lighting.forEach(l => tags.push(`<span class="tt-tag g">💡 <b>${l.label}</b> ${l.name}</span>`));
@@ -3557,11 +3707,13 @@ function openDetailModal(ev, evKey) {
   }
 
   let techHtml = '';
+  techHtml += dmSection('AV Equipment',       ev.av,           'tg');
   techHtml += dmSection('Audio Equipment',    ev.audio,        'tg');
   techHtml += dmSection('Video Equipment',    ev.video,        'tg');
   techHtml += dmSection('Lighting Equipment', ev.lighting,     'tg');
   techHtml += dmSection('Film / Broadcast',   ev.film,         'tg');
   techHtml += dmSection('General Tech',       ev.gentech,      'tg');
+  techHtml += dmSection('AV Labor',           ev.avLabor,      'tr');
   techHtml += dmSection('Audio Labor',        ev.audioLabor,   'tr');
   techHtml += dmSection('Video Labor',        ev.videoLabor,   'tr');
   techHtml += dmSection('Lighting Labor',     ev.lightingLabor,'tr');
@@ -3577,6 +3729,11 @@ function openDetailModal(ev, evKey) {
     body += `<div class="dm-section-lbl">Notes</div><div class="dm-notes">`;
     ev.notes.forEach(n => { body += `<div class="dm-note">${n}</div>`; });
     body += `</div>`;
+  }
+
+  // View Source — same raw-PDF-text verification tool as the card view.
+  if (ev.rawSource) {
+    body += `<div class="dm-section-lbl">🔍 View Source</div><pre class="raw-source">${escapeHtml(ev.rawSource)}</pre>`;
   }
 
   // Single sign-off button — only if event has tech needs
@@ -3800,8 +3957,8 @@ function renderRoomCells(row, evs, allEventsForContext) {
     el.dataset.evkey    = evKey;
     el.dataset.evname   = ev.name.toLowerCase();
     el.dataset.evroom   = ev.room.toLowerCase();
-    el.dataset.evequip  = [...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech,
-                            ...ev.audioLabor, ...ev.videoLabor, ...ev.lightingLabor, ...ev.filmLabor,
+    el.dataset.evequip  = [...ev.av, ...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech,
+                            ...ev.avLabor, ...ev.audioLabor, ...ev.videoLabor, ...ev.lightingLabor, ...ev.filmLabor,
                             ...ev.gentechLabor, ...ev.techRental]
                             .map(it => it.name).join(' ').toLowerCase();
 
@@ -3913,8 +4070,8 @@ function renderCards(events) {
     card.dataset.allday     = ev.allDay ? '1' : '0';
     card.dataset.searchHide = '0';
     card.dataset.searchText = (ev.room + ' ' + ev.name + ' ' + ev.type + ' ' +
-      [...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech,
-       ...ev.audioLabor, ...ev.videoLabor, ...ev.lightingLabor, ...ev.filmLabor,
+      [...ev.av, ...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech,
+       ...ev.avLabor, ...ev.audioLabor, ...ev.videoLabor, ...ev.lightingLabor, ...ev.filmLabor,
        ...ev.gentechLabor, ...ev.techRental]
       .map(it => it.name).join(' ')).toLowerCase();
 
@@ -3939,11 +4096,13 @@ function renderCards(events) {
     }
 
     // ── Department sections ──
+    inner += deptSection('AV Equipment',       ev.av,           'tg');
     inner += deptSection('Audio Equipment',    ev.audio,        'tg');
     inner += deptSection('Video Equipment',    ev.video,        'tg');
     inner += deptSection('Lighting Equipment', ev.lighting,     'tg');
     inner += deptSection('Film / Broadcast',   ev.film,         'tg');
     inner += deptSection('General Tech',       ev.gentech,      'tg');
+    inner += deptSection('AV Labor',           ev.avLabor,      'tr');
     inner += deptSection('Audio Labor',        ev.audioLabor,   'tr');
     inner += deptSection('Video Labor',        ev.videoLabor,   'tr');
     inner += deptSection('Lighting Labor',     ev.lightingLabor,'tr');
@@ -3951,8 +4110,8 @@ function renderCards(events) {
     inner += deptSection('General Tech Labor', ev.gentechLabor, 'tr');
     inner += deptSection('Technical Rentals',  ev.techRental,   'ta');
 
-    const techItems = [...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech];
-    if (!techItems.length && !ev.audioLabor.length && !ev.videoLabor.length &&
+    const techItems = [...ev.av, ...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech];
+    if (!techItems.length && !ev.avLabor.length && !ev.audioLabor.length && !ev.videoLabor.length &&
         !ev.lightingLabor.length && !ev.filmLabor.length && !ev.gentechLabor.length && !ev.techRental.length) {
       inner += `<div class="no-needs-label">No Technical Needs</div>`;
     }
@@ -3966,6 +4125,16 @@ function renderCards(events) {
       inner += `<div class="side-notes">`;
       ev.notes.forEach(n => { inner += `<div class="side-note">${n}</div>`; });
       inner += `</div></div>`;
+    }
+
+    // View Source — the exact raw text this event was parsed from, so
+    // anyone can double-check a parse against the original PDF without
+    // digging through the whole document.
+    if (ev.rawSource) {
+      inner += `<div class="dept-lbl collapsed" onclick="toggleSection(this)">🔍 View Source</div>`;
+      inner += `<div class="dept-section collapsed">`;
+      inner += `<pre class="raw-source">${escapeHtml(ev.rawSource)}</pre>`;
+      inner += `</div>`;
     }
 
     inner += `</div>`; // .evt
