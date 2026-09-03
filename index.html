@@ -1451,7 +1451,7 @@
 .terminal-boot{
   position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
   z-index:600;pointer-events:none;
-  width:min(90vw, 340px);box-sizing:border-box;
+  width:340px;max-width:90vw;box-sizing:border-box;
   font-family:'Share Tech Mono',monospace;color:#39ff14;font-size:13px;
   text-shadow:0 0 6px rgba(57,255,20,.55);line-height:1.9;
   background:rgba(0,0,0,.85);border:1px solid rgba(57,255,20,.3);
@@ -1772,16 +1772,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .surprise-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
 .surprise-btn:hover{border-color:var(--amber-border);color:var(--amber-text);}
 .theme-menu{
-  position:absolute;top:calc(100% + 6px);right:0;z-index:400;width:min(300px, 90vw);
+  position:absolute;top:calc(100% + 6px);right:0;z-index:400;
+  width:300px;max-width:90vw;box-sizing:border-box;
   background:var(--surface);border:1px solid var(--border2);border-radius:8px;
   box-shadow:0 12px 32px var(--shadow);padding:6px;
-  display:grid;grid-template-columns:1fr 1fr;gap:2px;max-height:70vh;overflow-y:auto;
+  display:flex;flex-wrap:wrap;gap:2px;
+  max-height:420px;overflow-y:auto;
 }
 .theme-menu-item{
   font-family:'DM Mono',monospace;font-size:11px;text-align:left;line-height:1.3;
   padding:7px 8px;border-radius:5px;cursor:pointer;border:none;background:transparent;
   color:var(--text2);transition:background .12s,color .12s;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  box-sizing:border-box;width:calc(50% - 1px);flex-shrink:0;
 }
 .theme-menu-item:hover{background:var(--surface2);color:var(--text);}
 .theme-menu-item.active{background:var(--green-bg);color:var(--green-text);}
