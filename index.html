@@ -1759,20 +1759,20 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .sync-dot.connected{background:var(--green);box-shadow:0 0 6px rgba(0,207,190,.55);}
 .sync-dot.error{background:var(--red);}
 .sync-label{font-family:'DM Mono',monospace;line-height:1.3;font-size:10px;color:var(--muted2);letter-spacing:.05em;}
-.sync-wrap{display:flex;align-items:center;padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);}
+.sync-wrap{display:flex;align-items:center;height:32px;box-sizing:border-box;padding:0 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);}
 
-.initials-wrap{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);cursor:pointer;transition:all .15s;}
+.initials-wrap{display:flex;align-items:center;gap:7px;height:32px;box-sizing:border-box;padding:0 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);cursor:pointer;transition:all .15s;}
 .initials-wrap:hover{border-color:var(--amber);color:var(--amber-text);}
 .initials-label{font-family:'DM Mono',monospace;line-height:1.3;font-size:10px;color:var(--muted2);letter-spacing:.05em;}
 .initials-val{font-family:'DM Mono',monospace;line-height:1.3;font-size:13px;color:var(--amber-text);font-weight:700;letter-spacing:.1em;}
 
 .theme-menu-wrap{position:relative;}
-.theme-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.theme-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;height:32px;box-sizing:border-box;display:flex;align-items:center;padding:0 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
 .theme-btn:hover{border-color:var(--green-border);color:var(--text);}
-.surprise-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.surprise-btn{font-size:15px;line-height:1;width:32px;height:32px;padding:0;flex-shrink:0;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;display:flex;align-items:center;justify-content:center;}
 .surprise-btn:hover{border-color:var(--amber-border);color:var(--amber-text);}
 .theme-menu{
-  position:absolute;top:calc(100% + 6px);right:0;z-index:400;
+  position:fixed;z-index:400;
   width:300px;max-width:90vw;box-sizing:border-box;
   background:var(--surface);border:1px solid var(--border2);border-radius:8px;
   box-shadow:0 12px 32px var(--shadow);padding:6px;
@@ -1788,7 +1788,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 }
 .theme-menu-item:hover{background:var(--surface2);color:var(--text);}
 .theme-menu-item.active{background:var(--green-bg);color:var(--green-text);}
-.clear-data-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--red-border);background:transparent;color:var(--red);transition:all .15s;}
+.clear-data-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;height:32px;box-sizing:border-box;display:flex;align-items:center;padding:0 14px;border-radius:6px;cursor:pointer;border:1px solid var(--red-border);background:transparent;color:var(--red);transition:all .15s;}
 .clear-data-btn:hover{background:var(--red-bg);}
 
 /* ── DROP ZONE ── */
@@ -1843,13 +1843,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 }
 .day-tab:hover{border-color:var(--green-border);color:var(--text);}
 .day-tab.active{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
-.view-pdf-btn{
-  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.05em;
-  padding:7px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;flex-shrink:0;
-  border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);
-  transition:all .15s;
-}
-.view-pdf-btn:hover{border-color:var(--green-border);color:var(--text);}
 
 /* ── EMPTY STATE ── */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;text-align:center;gap:14px;}
@@ -2128,8 +2121,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 
   /* hdr-right: wrap into a tidy row below the brand on narrow screens */
   .hdr-right{width:100%;justify-content:flex-start;gap:6px;}
-  .sync-wrap, .initials-wrap{font-size:10px;padding:5px 8px;}
-  .notif-btn, .print-btn, .theme-btn, .surprise-btn, .clear-data-btn{font-size:10px;padding:7px 10px;}
+  .sync-wrap, .initials-wrap{font-size:10px;padding:0 8px;}
+  .notif-btn, .theme-btn, .clear-data-btn{font-size:10px;padding:0 10px;}
 
   /* Drop zone: stack vertically, full-width buttons */
   .drop-zone{flex-wrap:wrap;padding:14px 16px;gap:10px;}
@@ -2230,7 +2223,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   }
   .tl-evt:hover{transform:none;box-shadow:none;filter:none;}
 }
-.print-btn{font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.07em;padding:7px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.print-btn{font-size:15px;line-height:1;width:32px;height:32px;padding:0;flex-shrink:0;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;display:flex;align-items:center;justify-content:center;}
 .print-btn:hover{border-color:var(--green);color:var(--green-text);}
 
 </style>
@@ -2337,12 +2330,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
       <span class="initials-label">SIGNING AS</span>
       <span class="initials-val" id="initials-display">SET</span>
     </div>
-    <button class="print-btn" id="print-btn" onclick="printSchedule()">🖨 PRINT</button>
-    <button class="surprise-btn" id="surprise-btn" onclick="surpriseTheme()" title="Pick a random theme">🎲 SURPRISE</button>
     <div class="theme-menu-wrap" id="theme-menu-wrap">
       <button class="theme-btn" id="theme-menu-btn" onclick="toggleThemeMenu()">🎨 THEMES</button>
       <div class="theme-menu hidden" id="theme-menu"></div>
     </div>
+    <button class="surprise-btn" id="surprise-btn" onclick="surpriseTheme()" title="Pick a random theme">🎲</button>
+    <button class="print-btn" id="print-btn" onclick="printSchedule()" title="Print schedule">🖨</button>
     <button class="clear-data-btn" id="clear-data-btn" onclick="confirmClearSharedData()" title="Permanently delete every shared schedule, sign-off, and note for the whole team">🗑 CLEAR ALL</button>
   </div>
 </div>
@@ -2352,7 +2345,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
      found in the loaded PDF. Horizontally scrollable on narrow screens. -->
 <div class="day-switch-wrap hidden" id="day-switch-wrap">
   <div class="day-switch-tabs" id="day-switch-tabs"></div>
-  <button class="view-pdf-btn hidden" id="view-pdf-btn" onclick="viewOriginalPdf()">📄 VIEW ORIGINAL PDF</button>
 </div>
 
 <!-- FIREBASE CONFIG BANNER -->
@@ -2584,61 +2576,12 @@ function renderDay(dateKey, dateLabel, events) {
     renderCards(events);
     positionNowLine();
     updateNextUp(events);
-    updateViewPdfButton();
   } catch (err) {
     // A rendering error for one day should never leave the switcher
     // itself stuck or unclickable — always fall through to re-sync tabs.
     console.error('renderDay failed for', dateKey, err);
   } finally {
     renderDaySwitcher();
-  }
-}
-
-// Convert a File to a base64 data URI, for archiving the original PDF in
-// Firebase so "View Original PDF" works for any teammate, not just
-// whoever uploaded it.
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
-    reader.readAsDataURL(file);
-  });
-}
-
-// Shows/hides the "View Original PDF" button based on whether the
-// currently-displayed day has an archived source PDF to show.
-function updateViewPdfButton() {
-  const btn = document.getElementById('view-pdf-btn');
-  if (!btn) return;
-  const day = parsedDays.find(d => d.dateKey === currentDateKey);
-  btn.classList.toggle('hidden', !(day && day.sourcePdfId));
-}
-
-// Opens the original PDF for the currently-displayed day in a new tab.
-// Opens a blank tab synchronously (before the async Firebase fetch) so
-// popup blockers — which generally only block window.open() calls made
-// outside a direct user gesture — don't interfere with this one.
-async function viewOriginalPdf() {
-  const day = parsedDays.find(d => d.dateKey === currentDateKey);
-  const pdfId = day && day.sourcePdfId;
-  if (!pdfId) { alert('No original PDF is available for this day.'); return; }
-  if (!db) { alert('Not connected to Firebase — cannot retrieve the PDF.'); return; }
-  const newTab = window.open('', '_blank');
-  try {
-    const snap = await db.ref('pdfArchive/' + pdfId).once('value');
-    const data = snap.val();
-    if (!data || !data.base64) {
-      if (newTab) newTab.close();
-      alert('The original PDF for this day could not be found.');
-      return;
-    }
-    if (newTab) newTab.location.href = data.base64;
-    else window.open(data.base64, '_blank');
-  } catch (err) {
-    console.error('Failed to load original PDF', err);
-    if (newTab) newTab.close();
-    alert('Failed to load the original PDF: ' + err.message);
   }
 }
 
@@ -2698,8 +2641,8 @@ async function loadScheduleForDate(dateKey) {
     // Cache it regardless of staleness below, so a later click doesn't
     // need to re-fetch it.
     const existing = parsedDays.find(d => d.dateKey === dateKey);
-    if (existing) { existing.events = events; existing.sourcePdfId = data.sourcePdfId; }
-    else parsedDays.push({ dateKey, dateLabel: data.date || dateKey, events, sourcePdfId: data.sourcePdfId });
+    if (existing) { existing.events = events; }
+    else parsedDays.push({ dateKey, dateLabel: data.date || dateKey, events });
     parsedDays.sort((a,b) => a.dateKey.localeCompare(b.dateKey));
 
     // Only paint this onto the screen if it's still the most recent
@@ -3309,29 +3252,31 @@ function toggleThemeMenu() {
     closeThemeMenu();
   }
 }
-// Keeps the dropdown fully on-screen no matter where its button ends up —
-// a defensive backup on top of fixing the header layout itself, so a
-// wrapped row, an unusual screen size, or some other cause neither of us
-// has seen yet can't push it off-screen again.
+// Positions the dropdown using fixed (viewport-relative) coordinates
+// computed from the button's actual current position — required now that
+// .theme-menu is position:fixed (switched from position:absolute so it
+// can't be clipped by .hdr-right's own overflow-x:auto scrolling, which
+// was clipping the dropdown down to nothing after that was added).
+// Opens below-and-right-aligned to the button by default, but flips
+// upward if there isn't room below, and always stays clear of the
+// viewport edges by at least 8px.
 function positionThemeMenu() {
   const menu = document.getElementById('theme-menu');
-  const wrap = document.getElementById('theme-menu-wrap');
-  if (!menu || !wrap) return;
-  menu.style.left = '';
-  menu.style.right = '0';
-  const rect = menu.getBoundingClientRect();
-  const wrapRect = wrap.getBoundingClientRect();
+  const btn = document.getElementById('theme-menu-btn');
+  if (!menu || !btn) return;
+  const btnRect = btn.getBoundingClientRect();
   const margin = 8;
-  let desiredViewportLeft;
-  if (rect.left < margin) {
-    desiredViewportLeft = margin;
-  } else if (rect.right > window.innerWidth - margin) {
-    desiredViewportLeft = Math.max(margin, (window.innerWidth - margin) - rect.width);
-  } else {
-    return; // already fully on-screen
+  let left = btnRect.right - menu.offsetWidth;
+  if (left < margin) left = margin;
+  if (left + menu.offsetWidth > window.innerWidth - margin) {
+    left = Math.max(margin, window.innerWidth - margin - menu.offsetWidth);
   }
-  menu.style.right = 'auto';
-  menu.style.left = (desiredViewportLeft - wrapRect.left) + 'px';
+  let top = btnRect.bottom + 6;
+  if (top + menu.offsetHeight > window.innerHeight - margin) {
+    top = Math.max(margin, btnRect.top - menu.offsetHeight - 6);
+  }
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
 }
 window.addEventListener('resize', () => {
   const menu = document.getElementById('theme-menu');
@@ -4349,37 +4294,11 @@ async function handleBuild(e) {
       const uploaderInitials = myInitials || 'someone';
       const summaryMsg = `✓ ${pageCount} page${pageCount === 1 ? '' : 's'} → ${totalRawEvents} event${totalRawEvents === 1 ? '' : 's'} found → ${totalEvents} with tech needs — shared with your team`;
 
-      // Archive the original PDF itself (once per upload, not once per day
-      // — an 8-day worksheet shouldn't store the same file 8 times) so
-      // "View Original PDF" works for any teammate, not just whoever
-      // uploaded it. Every day in this upload points at the same archive
-      // entry via sourcePdfId.
-      const pdfArchiveId = result.days[0].dateKey + '_' + Date.now();
-      // Stamp the local (already-merged) parsedDays entries too, so the
-      // "View Original PDF" button works immediately for the uploader's
-      // own session without waiting on a Firebase round-trip.
-      result.days.forEach(d => {
-        const local = parsedDays.find(p => p.dateKey === d.dateKey);
-        if (local) local.sourcePdfId = pdfArchiveId;
-      });
-      updateViewPdfButton();
-
-      const pdfArchivePromise = fileToBase64(pdfFile).then(base64 =>
-        db.ref('pdfArchive/' + pdfArchiveId).set({
-          base64, fileName: pdfFile.name,
-          uploadedBy: uploaderInitials, uploadedAt: timeStr
-        })
-      ).catch(err => {
-        // Non-fatal — the schedule itself still saves fine without the
-        // PDF archive; "View Original PDF" just won't work for this upload.
-        console.error('Failed to archive PDF', err);
-      });
-
       // Only write the days that were actually in THIS upload — never the
       // full merged parsedDays, which can include stale placeholder
       // entries (events: null) from the known-dates index. Writing those
       // would overwrite real Firebase data for days this PDF doesn't cover.
-      Promise.all([pdfArchivePromise, ...result.days.map(d => {
+      Promise.all(result.days.map(d => {
         // JSON round-trip strips any `undefined` values, which Firebase
         // Realtime Database otherwise rejects (and fails the entire write).
         const safeEvents = JSON.parse(JSON.stringify(d.events));
@@ -4388,8 +4307,7 @@ async function handleBuild(e) {
             date: d.dateLabel,
             events: safeEvents,
             uploadedBy: uploaderInitials,
-            uploadedAt: timeStr,
-            sourcePdfId: pdfArchiveId
+            uploadedAt: timeStr
           }),
           // Lightweight index of every date that has a shared schedule —
           // this is what lets a page refresh (or a teammate's browser)
@@ -4397,7 +4315,7 @@ async function handleBuild(e) {
           // this, only today's date is ever rediscoverable after a reload.
           db.ref('scheduleDates/' + d.dateKey).set(d.dateLabel)
         ]);
-      })]).then(() => {
+      })).then(() => {
         console.log('Schedule shared with team:', result.days.map(d => d.dateKey));
         statusEl.textContent = summaryMsg;
       }).catch(err => {
