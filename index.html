@@ -1753,7 +1753,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .brand-datetime{display:flex;align-items:center;gap:14px;}
 .hdr-date{font-family:var(--font-mono);font-size:15px;font-weight:500;color:var(--text);letter-spacing:.03em;white-space:nowrap;}
 .hdr-clock{font-family:var(--font-mono);font-size:15px;font-weight:500;color:var(--green-text);letter-spacing:.05em;white-space:nowrap;}
-.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
 
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:5px;transition:background .3s;flex-shrink:0;}
 .sync-dot.connected{background:var(--green);box-shadow:0 0 6px rgba(0,207,190,.55);}
@@ -3301,6 +3301,7 @@ function toggleThemeMenu() {
   if (!menu) return;
   if (menu.classList.contains('hidden')) {
     menu.classList.remove('hidden');
+    positionThemeMenu();
     // Deferred so the click that just opened the menu doesn't immediately
     // bubble into this same listener and close it again.
     setTimeout(() => document.addEventListener('click', closeThemeMenuOnOutsideClick), 0);
@@ -3308,6 +3309,34 @@ function toggleThemeMenu() {
     closeThemeMenu();
   }
 }
+// Keeps the dropdown fully on-screen no matter where its button ends up —
+// a defensive backup on top of fixing the header layout itself, so a
+// wrapped row, an unusual screen size, or some other cause neither of us
+// has seen yet can't push it off-screen again.
+function positionThemeMenu() {
+  const menu = document.getElementById('theme-menu');
+  const wrap = document.getElementById('theme-menu-wrap');
+  if (!menu || !wrap) return;
+  menu.style.left = '';
+  menu.style.right = '0';
+  const rect = menu.getBoundingClientRect();
+  const wrapRect = wrap.getBoundingClientRect();
+  const margin = 8;
+  let desiredViewportLeft;
+  if (rect.left < margin) {
+    desiredViewportLeft = margin;
+  } else if (rect.right > window.innerWidth - margin) {
+    desiredViewportLeft = Math.max(margin, (window.innerWidth - margin) - rect.width);
+  } else {
+    return; // already fully on-screen
+  }
+  menu.style.right = 'auto';
+  menu.style.left = (desiredViewportLeft - wrapRect.left) + 'px';
+}
+window.addEventListener('resize', () => {
+  const menu = document.getElementById('theme-menu');
+  if (menu && !menu.classList.contains('hidden')) positionThemeMenu();
+});
 function closeThemeMenu() {
   const menu = document.getElementById('theme-menu');
   if (menu) menu.classList.add('hidden');
