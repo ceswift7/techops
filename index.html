@@ -1850,9 +1850,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .tl-evt .labor-flag{margin-left:auto;}
 
 /* ── VIEW TABS ── */
-.view-tabs{margin:16px 24px 0;display:flex;gap:6px;border-bottom:1px solid var(--border);padding-bottom:10px;}
-.view-tab{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;
-  padding:8px 18px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);
+@media (min-width:1400px){.hdr{flex-wrap:nowrap;}.hdr-left{flex-shrink:0;}.view-tabs{min-width:0;}}
+@media (max-width:1399px){.view-tabs{order:3;flex-basis:100%;margin:0;}}
+.view-tabs{flex:1;display:flex;justify-content:center;gap:6px;margin:0 4px;white-space:nowrap;}
+.view-tab{font-family:'DM Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.05em;
+  padding:7px 11px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);
   background:var(--surface2);color:var(--muted2);transition:all .15s;}
 .view-tab:hover{border-color:var(--green-border);color:var(--text);}
 .view-tab.active{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
@@ -1909,8 +1911,12 @@ body.view-equip #equip-wrap{display:block;}
 .eq-add{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.08em;padding:9px 18px;border-radius:6px;
   cursor:pointer;border:none;background:var(--green);color:#000;}
 @media (max-width:800px){
-  .view-tabs,#equip-wrap{margin-left:12px;margin-right:12px;}
-  .eq-form,.eq-row{grid-template-columns:1fr 1fr;}
+  #equip-wrap{margin-left:12px;margin-right:12px;}
+  .eq-form,.eq-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+  .eq-form label,.eq-form input,.eq-form select{min-width:0;width:100%;box-sizing:border-box;}
+  .eq-datepair select{width:auto;flex:1;}
+  .eq-form label{grid-column:1 / -1;}
+  .eq-form .eq-add{grid-column:1 / -1;}
   .eq-day-banner{margin-left:12px;margin-right:12px;}
   .eq-form .eq-wide,.eq-row .eq-wide{grid-column:1 / -1;}
 }
@@ -2392,6 +2398,10 @@ body.view-equip #equip-wrap{display:block;}
       </div>
     </div>
   </div>
+  <div class="view-tabs" id="view-tabs">
+    <button class="view-tab active" id="vt-schedule" onclick="setView('schedule')">SCHEDULE</button>
+    <button class="view-tab" id="vt-equip" onclick="setView('equip')">EQUIPMENT TRACKER</button>
+  </div>
   <div class="hdr-right">
     <div class="sync-wrap" id="sync-wrap" title="Firebase real-time sync">
       <span class="sync-dot" id="sync-dot"></span>
@@ -2409,12 +2419,6 @@ body.view-equip #equip-wrap{display:block;}
     <button class="print-btn" id="print-btn" onclick="printSchedule()" title="Print schedule">🖨</button>
     <button class="clear-data-btn" id="clear-data-btn" onclick="confirmClearSharedData()" title="Permanently delete every shared schedule, sign-off, and note for the whole team">🗑 CLEAR ALL</button>
   </div>
-</div>
-
-<!-- VIEW TABS -->
-<div class="view-tabs" id="view-tabs">
-  <button class="view-tab active" id="vt-schedule" onclick="setView('schedule')">SCHEDULE</button>
-  <button class="view-tab" id="vt-equip" onclick="setView('equip')">EQUIPMENT TRACKER</button>
 </div>
 
 <!-- EQUIPMENT TRACKER -->
