@@ -1862,12 +1862,23 @@ body.view-equip #drop-zone-wrap, body.view-equip #shared-schedule-banner, body.v
 body.view-equip #equip-wrap{display:block;}
 
 /* ── EQUIPMENT TRACKER ── */
-.eq-form{display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr 1fr 2fr auto;gap:8px;align-items:end;
+.eq-form{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-items:end;
   padding:14px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;margin-bottom:18px;}
 .eq-form label{display:flex;flex-direction:column;gap:4px;font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--muted2);}
-.eq-form input{font-family:var(--font-sans);font-size:13px;padding:8px 10px;border-radius:6px;border:1px solid var(--border2);
+.eq-form select,.eq-form input{font-family:var(--font-sans);font-size:13px;padding:8px 10px;border-radius:6px;border:1px solid var(--border2);
   background:var(--surface2);color:var(--text);outline:none;min-width:0;}
-.eq-form input:focus{border-color:var(--green);}
+.eq-form select:focus,.eq-form input:focus{border-color:var(--green);}
+.eq-datepair{display:flex;gap:6px;}
+.eq-datepair select{flex:1;}
+.eq-day-banner{margin:14px 24px 0;display:flex;flex-direction:column;gap:6px;}
+.eq-day-item{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-radius:6px;border:1px solid;
+  font-family:var(--font-mono);font-size:11px;cursor:pointer;}
+.eq-day-item.set{color:var(--green-text);background:var(--green-bg);border-color:var(--green-border);}
+.eq-day-item.strike{color:var(--amber-text);background:var(--amber-bg);border-color:var(--amber-border);}
+.eq-day-item b{letter-spacing:.06em;}
+.eq-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:6px;vertical-align:middle;}
+.eq-dot.set{background:var(--green-text);}
+.eq-dot.strike{background:var(--amber-text);}
 .eq-hdr{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;color:var(--muted2);margin:18px 0 8px;}
 .eq-empty{font-size:12px;color:var(--muted);font-style:italic;padding:10px 0;}
 .eq-row{display:grid;grid-template-columns:2fr 1.5fr 1fr 1.2fr 2fr auto;gap:10px;align-items:center;
@@ -1890,6 +1901,7 @@ body.view-equip #equip-wrap{display:block;}
 @media (max-width:800px){
   .view-tabs,#equip-wrap{margin-left:12px;margin-right:12px;}
   .eq-form,.eq-row{grid-template-columns:1fr 1fr;}
+  .eq-day-banner{margin-left:12px;margin-right:12px;}
   .eq-form .eq-wide,.eq-row .eq-wide{grid-column:1 / -1;}
 }
 
@@ -2400,8 +2412,9 @@ body.view-equip #equip-wrap{display:block;}
   <div class="eq-form">
     <label class="eq-wide">EQUIPMENT<input id="eq-name" type="text" placeholder="e.g. 2x line array, FOH console" autocomplete="off"></label>
     <label>CURRENT LOCATION<input id="eq-loc" type="text" list="eq-rooms" placeholder="Room / venue" autocomplete="off"></label>
-    <label>SET UP<input id="eq-setup" type="date"></label>
-    <label>STRIKE DATE<input id="eq-strike" type="date"></label>
+    <label>SET UP DATE<span class="eq-datepair"><select id="eq-setup-m"></select><select id="eq-setup-d"></select></span></label>
+    <label>SET UP TIME<input id="eq-setup-time" type="time"></label>
+    <label>STRIKE DATE<span class="eq-datepair"><select id="eq-strike-m"></select><select id="eq-strike-d"></select></span></label>
     <label>STRIKE TIME<input id="eq-strike-time" type="time"></label>
     <label class="eq-wide">NOTES<input id="eq-note" type="text" placeholder="Optional" autocomplete="off"></label>
     <button class="eq-add" onclick="addEquip()">ADD</button>
@@ -2462,6 +2475,8 @@ body.view-equip #equip-wrap{display:block;}
 
 <!-- SCHEDULE -->
 <div id="schedule-wrap" class="hidden">
+
+  <div class="eq-day-banner" id="eq-day-banner"></div>
 
   <div class="legend">
     <div class="li"><div class="ld" style="background:var(--green)"></div>TECH</div>
@@ -2648,6 +2663,7 @@ function renderDay(dateKey, dateLabel, events) {
     renderCards(events);
     positionNowLine();
     updateNextUp(events);
+    if (typeof renderEquipBanner === 'function') renderEquipBanner();
   } catch (err) {
     // A rendering error for one day should never leave the switcher
     // itself stuck or unclickable — always fall through to re-sync tabs.
@@ -2775,6 +2791,9 @@ function renderDaySwitcher() {
       tab.className = 'day-tab' + (d.dateKey === currentDateKey ? ' active' : '');
       tab.textContent = relativeDayLabel(d.dateKey, d.dateLabel);
       tab.title = d.dateLabel || d.dateKey;
+      const eqs = typeof equipForDay === 'function' ? equipForDay(d.dateKey) : [];
+      if (eqs.some(r => r.kind === 'set'))    tab.insertAdjacentHTML('beforeend', '<span class="eq-dot set" title="Equipment set up"></span>');
+      if (eqs.some(r => r.kind === 'strike')) tab.insertAdjacentHTML('beforeend', '<span class="eq-dot strike" title="Equipment strike"></span>');
       tab.onclick = () => selectDay(d.dateKey);
       tabsEl.appendChild(tab);
     });
@@ -5207,18 +5226,71 @@ function fillEquipRooms() {
     [...rooms].sort().map(r => `<option value="${escapeHtml(r).replace(/"/g, '&quot;')}">`).join('');
 }
 
+/* Month + day pickers (no year). The year is inferred: the nearest date
+   within roughly the last 6 / next 6 months of today; a strike date is
+   never earlier than its set-up date. */
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function initEquipDatePickers() {
+  ['eq-setup', 'eq-strike'].forEach(id => {
+    const m = document.getElementById(id + '-m'), d = document.getElementById(id + '-d');
+    m.innerHTML = '<option value="">Month</option>' + MONTHS.map((n, i) => `<option value="${i + 1}">${n}</option>`).join('');
+    let ds = '<option value="">Day</option>';
+    for (let i = 1; i <= 31; i++) ds += `<option value="${i}">${i}</option>`;
+    d.innerHTML = ds;
+  });
+}
+function pad2(n) { return String(n).padStart(2, '0'); }
+function readMD(id, notBefore) {
+  const m = +document.getElementById(id + '-m').value, d = +document.getElementById(id + '-d').value;
+  if (!m || !d) return '';
+  const base = notBefore ? new Date(notBefore + 'T00:00:00') : new Date(todayKey() + 'T00:00:00');
+  let y = base.getFullYear();
+  const mk = yr => `${yr}-${pad2(m)}-${pad2(d)}`;
+  if (notBefore) { if (mk(y) < notBefore) y++; }
+  else {
+    const diff = (new Date(mk(y) + 'T00:00:00') - base) / 86400000;
+    if (diff < -180) y++; else if (diff > 185) y--;
+  }
+  return mk(y);
+}
+
+function equipForDay(dateKey) {
+  const out = [];
+  Object.values(equipCache).forEach(i => {
+    if (i.struck) return;
+    if (i.setup === dateKey) out.push({ kind: 'set', time: i.setupTime, item: i });
+    if (i.strike === dateKey) out.push({ kind: 'strike', time: i.strikeTime, item: i });
+  });
+  return out.sort((a, b) => (a.time || '99').localeCompare(b.time || '99'));
+}
+
+function renderEquipBanner() {
+  const el = document.getElementById('eq-day-banner');
+  if (!el) return;
+  const rows = currentDateKey ? equipForDay(currentDateKey) : [];
+  el.innerHTML = rows.map(r => {
+    const t = r.time ? (() => { const [h, m] = r.time.split(':').map(Number); return fmtH(h + m / 60); })() : 'time TBD';
+    return `<div class="eq-day-item ${r.kind}" onclick="setView('equip')" title="Open equipment tracker">
+      <b>${r.kind === 'set' ? '⬆ SET UP' : '⬇ STRIKE'}</b><span>${t}</span>
+      <span>${escapeHtml(r.item.name || '')}</span>${r.item.loc ? `<span>📍 ${escapeHtml(r.item.loc)}</span>` : ''}</div>`;
+  }).join('');
+}
+
 function addEquip() {
   const g = id => document.getElementById(id);
   const name = g('eq-name').value.trim();
   if (!name) { g('eq-name').focus(); return; }
+  const setup = readMD('eq-setup');
+  const strike = readMD('eq-strike', setup);
   const item = {
-    name, loc: g('eq-loc').value.trim(), setup: g('eq-setup').value,
-    strike: g('eq-strike').value, strikeTime: g('eq-strike-time').value,
+    name, loc: g('eq-loc').value.trim(), setup, setupTime: g('eq-setup-time').value,
+    strike, strikeTime: g('eq-strike-time').value,
     note: g('eq-note').value.trim(), struck: false, by: myInitials || '', ts: Date.now()
   };
   if (db) { db.ref('equipment').push(item); }
   else { equipCache['local_' + Date.now()] = item; saveEquipLocal(); renderEquip(); }
-  ['eq-name','eq-loc','eq-setup','eq-strike','eq-strike-time','eq-note'].forEach(id => g(id).value = '');
+  ['eq-name','eq-loc','eq-setup-time','eq-strike-time','eq-note'].forEach(id => g(id).value = '');
+  ['eq-setup','eq-strike'].forEach(id => { g(id + '-m').value = ''; g(id + '-d').value = ''; });
 }
 
 function toggleStruck(id) {
@@ -5260,7 +5332,7 @@ function renderEquip() {
       else if (days === 0) { cls = 'soon'; label += ' · TODAY'; }
       else if (days === 1) { cls = 'soon'; label += ' · TOMORROW'; }
     }
-    const setup = i.setup ? 'Set up ' + fmtEquipDate(i.setup) : '';
+    const setup = i.setup ? 'Set up ' + fmtEquipDate(i.setup, i.setupTime) : '';
     return `<div class="eq-row${i.struck ? ' struck' : ''}">
       <div class="eq-name">${escapeHtml(i.name || '')}</div>
       <div class="eq-loc">📍 ${escapeHtml(i.loc || '—')}</div>
@@ -5279,7 +5351,10 @@ function renderEquip() {
     h += `<div class="eq-hdr">STRUCK (${done.length})</div>` + done.map(row).join('');
   }
   list.innerHTML = h;
+  renderEquipBanner();
+  renderDaySwitcher();
 }
+initEquipDatePickers();
 if (db) attachEquipListener();
 renderEquip();
 
