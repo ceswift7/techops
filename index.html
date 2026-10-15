@@ -1876,9 +1876,13 @@ body.view-equip #equip-wrap{display:block;}
 .eq-day-item.set{color:var(--green-text);background:var(--green-bg);border-color:var(--green-border);}
 .eq-day-item.strike{color:var(--amber-text);background:var(--amber-bg);border-color:var(--amber-border);}
 .eq-day-item b{letter-spacing:.06em;}
-.eq-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:6px;vertical-align:middle;}
-.eq-dot.set{background:var(--green-text);}
-.eq-dot.strike{background:var(--amber-text);}
+.tl-eqm{position:absolute;top:0;bottom:0;width:0;z-index:4;border-left:2px dashed;pointer-events:none;}
+.tl-eqm span{position:absolute;top:0;left:0;transform:translateX(-50%);white-space:nowrap;pointer-events:auto;cursor:default;
+  font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.04em;padding:1px 5px;border-radius:3px;border:1px solid;}
+.tl-eqm.set{border-color:var(--green-text);}
+.tl-eqm.set span{color:var(--green-text);background:var(--surface);border-color:var(--green-text);}
+.tl-eqm.strike{border-color:var(--amber-text);}
+.tl-eqm.strike span{color:var(--amber-text);background:var(--surface);border-color:var(--amber-text);}
 .eq-hdr{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;color:var(--muted2);margin:18px 0 8px;}
 .eq-empty{font-size:12px;color:var(--muted);font-style:italic;padding:10px 0;}
 .eq-row{display:grid;grid-template-columns:2fr 1.5fr 1fr 1.2fr 2fr auto;gap:10px;align-items:center;
@@ -2791,9 +2795,6 @@ function renderDaySwitcher() {
       tab.className = 'day-tab' + (d.dateKey === currentDateKey ? ' active' : '');
       tab.textContent = relativeDayLabel(d.dateKey, d.dateLabel);
       tab.title = d.dateLabel || d.dateKey;
-      const eqs = typeof equipForDay === 'function' ? equipForDay(d.dateKey) : [];
-      if (eqs.some(r => r.kind === 'set'))    tab.insertAdjacentHTML('beforeend', '<span class="eq-dot set" title="Equipment set up"></span>');
-      if (eqs.some(r => r.kind === 'strike')) tab.insertAdjacentHTML('beforeend', '<span class="eq-dot strike" title="Equipment strike"></span>');
       tab.onclick = () => selectDay(d.dateKey);
       tabsEl.appendChild(tab);
     });
@@ -4810,6 +4811,7 @@ function renderRoomCells(row, evs, allEventsForContext) {
     }
   });
 
+  addEquipMarkers(cells, evs.length ? evs[0].room : '');
   row.appendChild(cells);
 }
 
@@ -5204,6 +5206,7 @@ function setView(v) {
   document.getElementById('vt-schedule').classList.toggle('active', v !== 'equip');
   document.getElementById('vt-equip').classList.toggle('active', v === 'equip');
   if (v === 'equip') { fillEquipRooms(); renderEquip(); }
+  else { try { positionNowLine(); } catch (e) {} }
 }
 
 function attachEquipListener() {
@@ -5254,6 +5257,35 @@ function readMD(id, notBefore) {
   return mk(y);
 }
 
+function roomMatches(loc, room) {
+  const l = (loc || '').trim().toLowerCase(), r = (room || '').trim().toLowerCase();
+  if (l.length < 2 || !r) return false;
+  return l === r || r.includes(l) || l.includes(r);
+}
+
+/* Draws set up / strike markers for equipment located in this room, on the
+   room's own timeline row, at the set up / strike time. */
+function addEquipMarkers(cells, room) {
+  if (!room || !currentDateKey) return;
+  equipForDay(currentDateKey).filter(r => roomMatches(r.item.loc, room)).forEach(r => {
+    let h = TL_START, timeTxt = '';
+    if (r.time) {
+      const [hh, mm] = r.time.split(':').map(Number);
+      h = Math.min(Math.max(hh + mm / 60, TL_START), TL_START + TL_HOURS);
+      timeTxt = ' ' + fmtH(hh + mm / 60);
+    }
+    const m = document.createElement('div');
+    m.className = 'tl-eqm ' + r.kind;
+    m.style.left = tlLeft(h) + '%';
+    m.innerHTML = `<span title="${r.kind === 'set' ? 'Set up' : 'Strike'}: ${escapeHtml(r.item.name || '')}${timeTxt}">${r.kind === 'set' ? '⬆ SET' : '⬇ STRIKE'}${timeTxt}</span>`;
+    cells.appendChild(m);
+  });
+}
+
+function refreshTimelineMarkers() {
+  try { if (currentDateKey && typeof allEvents !== 'undefined' && allEvents.length) { renderTimeline(allEvents); positionNowLine(); } } catch (e) {}
+}
+
 function equipForDay(dateKey) {
   const out = [];
   Object.values(equipCache).forEach(i => {
@@ -5267,7 +5299,10 @@ function equipForDay(dateKey) {
 function renderEquipBanner() {
   const el = document.getElementById('eq-day-banner');
   if (!el) return;
-  const rows = currentDateKey ? equipForDay(currentDateKey) : [];
+  const rooms = (typeof allEvents !== 'undefined' ? allEvents : []).map(e => e.room);
+  // Items whose location matches a room are shown on that room's timeline row;
+  // only the rest (no location / no event in that room today) appear here.
+  const rows = currentDateKey ? equipForDay(currentDateKey).filter(r => !rooms.some(rm => roomMatches(r.item.loc, rm))) : [];
   el.innerHTML = rows.map(r => {
     const t = r.time ? (() => { const [h, m] = r.time.split(':').map(Number); return fmtH(h + m / 60); })() : 'time TBD';
     return `<div class="eq-day-item ${r.kind}" onclick="setView('equip')" title="Open equipment tracker">
@@ -5352,7 +5387,7 @@ function renderEquip() {
   }
   list.innerHTML = h;
   renderEquipBanner();
-  renderDaySwitcher();
+  refreshTimelineMarkers();
 }
 initEquipDatePickers();
 if (db) attachEquipListener();
