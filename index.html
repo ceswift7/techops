@@ -1844,6 +1844,55 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .day-tab:hover{border-color:var(--green-border);color:var(--text);}
 .day-tab.active{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
 
+/* ── LABOR FLAG — same red as the labor tags (.tag.tr) ── */
+.labor-flag{display:inline-block;flex-shrink:0;width:11px;height:13px;vertical-align:middle;
+  background:var(--red-text);clip-path:polygon(0 0,100% 0,70% 50%,100% 100%,0 100%);margin-left:4px;}
+.tl-evt .labor-flag{margin-left:auto;}
+
+/* ── VIEW TABS ── */
+.view-tabs{margin:16px 24px 0;display:flex;gap:6px;border-bottom:1px solid var(--border);padding-bottom:10px;}
+.view-tab{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;
+  padding:8px 18px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);
+  background:var(--surface2);color:var(--muted2);transition:all .15s;}
+.view-tab:hover{border-color:var(--green-border);color:var(--text);}
+.view-tab.active{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
+body.view-equip #schedule-wrap, body.view-equip #day-switch-wrap, body.view-equip #empty-state,
+body.view-equip #drop-zone-wrap, body.view-equip #shared-schedule-banner, body.view-equip #upcoming-ts-wrap{display:none!important;}
+#equip-wrap{display:none;margin:16px 24px 44px;}
+body.view-equip #equip-wrap{display:block;}
+
+/* ── EQUIPMENT TRACKER ── */
+.eq-form{display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr 1fr 2fr auto;gap:8px;align-items:end;
+  padding:14px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;margin-bottom:18px;}
+.eq-form label{display:flex;flex-direction:column;gap:4px;font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--muted2);}
+.eq-form input{font-family:var(--font-sans);font-size:13px;padding:8px 10px;border-radius:6px;border:1px solid var(--border2);
+  background:var(--surface2);color:var(--text);outline:none;min-width:0;}
+.eq-form input:focus{border-color:var(--green);}
+.eq-hdr{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;color:var(--muted2);margin:18px 0 8px;}
+.eq-empty{font-size:12px;color:var(--muted);font-style:italic;padding:10px 0;}
+.eq-row{display:grid;grid-template-columns:2fr 1.5fr 1fr 1.2fr 2fr auto;gap:10px;align-items:center;
+  padding:11px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;margin-bottom:6px;}
+.eq-row .eq-name{font-weight:700;font-size:14px;color:var(--text);}
+.eq-row .eq-loc{font-size:13px;color:var(--text);}
+.eq-row .eq-meta{font-family:var(--font-mono);font-size:11px;color:var(--muted2);}
+.eq-row .eq-note{font-size:12px;color:var(--muted2);}
+.eq-strike{font-family:var(--font-mono);font-size:11px;font-weight:700;padding:4px 9px;border-radius:4px;border:1px solid;display:inline-block;}
+.eq-strike.ok{color:var(--green-text);background:var(--green-bg);border-color:var(--green-border);}
+.eq-strike.soon{color:var(--amber-text);background:var(--amber-bg);border-color:var(--amber-border);}
+.eq-strike.over{color:var(--red-text);background:var(--red-bg);border-color:var(--red-border);}
+.eq-row.struck{opacity:.45;}
+.eq-actions{display:flex;gap:6px;}
+.eq-btn{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.06em;padding:6px 10px;border-radius:5px;
+  cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);}
+.eq-btn:hover{border-color:var(--green-border);color:var(--text);}
+.eq-add{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.08em;padding:9px 18px;border-radius:6px;
+  cursor:pointer;border:none;background:var(--green);color:#000;}
+@media (max-width:800px){
+  .view-tabs,#equip-wrap{margin-left:12px;margin-right:12px;}
+  .eq-form,.eq-row{grid-template-columns:1fr 1fr;}
+  .eq-form .eq-wide,.eq-row .eq-wide{grid-column:1 / -1;}
+}
+
 /* ── EMPTY STATE ── */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 20px;text-align:center;gap:14px;}
 .empty-icon{font-size:48px;opacity:.3;}
@@ -2179,7 +2228,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   .now-line, .now-label, .tl-techline,
   .crt-scanlines, .paper-grain, #starfield, #starfighter, .canopy-dapple, .noir-vignette,
   .blueprint-grid, #sakura-petals, #snowfall, #autumn-leaves, .terminal-boot, .blueprint-compass, #vaporwave-car, #pacman, #forest-fireflies, .coffee-steam, #hyperspace-flash, .forest-owl, .belmont-logo,
-  .day-switch-wrap {
+  .day-switch-wrap, .view-tabs, #equip-wrap {
     display:none!important;
   }
   .hdr{position:static;border-bottom:2px solid #000;padding:0 0 10px;}
@@ -2340,6 +2389,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   </div>
 </div>
 
+<!-- VIEW TABS -->
+<div class="view-tabs" id="view-tabs">
+  <button class="view-tab active" id="vt-schedule" onclick="setView('schedule')">SCHEDULE</button>
+  <button class="view-tab" id="vt-equip" onclick="setView('equip')">EQUIPMENT TRACKER</button>
+</div>
+
+<!-- EQUIPMENT TRACKER -->
+<div id="equip-wrap">
+  <div class="eq-form">
+    <label class="eq-wide">EQUIPMENT<input id="eq-name" type="text" placeholder="e.g. 2x line array, FOH console" autocomplete="off"></label>
+    <label>CURRENT LOCATION<input id="eq-loc" type="text" list="eq-rooms" placeholder="Room / venue" autocomplete="off"></label>
+    <label>SET UP<input id="eq-setup" type="date"></label>
+    <label>STRIKE DATE<input id="eq-strike" type="date"></label>
+    <label>STRIKE TIME<input id="eq-strike-time" type="time"></label>
+    <label class="eq-wide">NOTES<input id="eq-note" type="text" placeholder="Optional" autocomplete="off"></label>
+    <button class="eq-add" onclick="addEquip()">ADD</button>
+    <datalist id="eq-rooms"></datalist>
+  </div>
+  <div id="eq-list"></div>
+</div>
+
 <!-- DAY SWITCHER — sits right below the header so it's visible immediately.
      Shows TODAY/TOMORROW (or a date label for other days) for every day
      found in the loaded PDF. Horizontally scrollable on narrow screens. -->
@@ -2398,6 +2468,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
     <div class="li"><div class="ld" style="background:var(--purple)"></div>ALL DAY</div>
     <div class="li"><div class="ld" style="background:var(--techline);border-radius:50%"></div>TECH START</div>
     <div class="li"><div class="ld" style="background:var(--nowline)"></div>NOW</div>
+    <div class="li"><span class="labor-flag" style="margin:0 6px 0 0"></span>LABOR</div>
   </div>
 
   <div class="tl-owl-anchor">
@@ -2491,6 +2562,7 @@ async function initFirebase() {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
     setSyncStatus('connected');
+    if (typeof attachEquipListener === 'function') attachEquipListener();
     document.getElementById('fb-banner').classList.add('hidden');
     if (currentDateKey) attachListener();
 
@@ -4638,6 +4710,11 @@ function renderTimeline(events) {
 ═══════════════════════════════ */
 let allEvents = [];
 
+function hasLabor(ev) {
+  return !!(ev.avLabor.length || ev.audioLabor.length || ev.videoLabor.length ||
+            ev.lightingLabor.length || ev.filmLabor.length || ev.gentechLabor.length);
+}
+
 function renderRoomCells(row, evs, allEventsForContext) {
   const cells = document.createElement('div');
   cells.className = 'tl-cells';
@@ -4672,6 +4749,12 @@ function renderRoomCells(row, evs, allEventsForContext) {
     el.style.alignItems = 'center';
     el.style.gap = '4px';
     el.appendChild(nameSpan);
+    if (hasLabor(ev)) {
+      const flag = document.createElement('span');
+      flag.className = 'labor-flag';
+      flag.title = 'Labor attached';
+      el.appendChild(flag);
+    }
 
     el.dataset.hasTech = ev.hasTech ? '1' : '0';
 
@@ -4792,7 +4875,8 @@ function renderCards(events) {
     }
     inner += `</div>`;
     inner += `<div class="evt">`;
-    inner += `<div class="evt-time">${fmtRange(ev.startH, ev.endH)}${foodEmoji}</div>`;
+    const laborFlag = hasLabor(ev) ? `<span class="labor-flag" title="Labor attached"></span>` : '';
+    inner += `<div class="evt-time">${fmtRange(ev.startH, ev.endH)}${foodEmoji}${laborFlag}</div>`;
     inner += `<span class="evt-countdown ${cd.cls}" data-start="${ev.startH}" data-end="${ev.endH}">${cd.text}</span>`;
     inner += `<div class="evt-name">${ev.name}</div>`;
     if (ev.type && ev.type.toLowerCase() !== ev.name.toLowerCase()
@@ -5085,6 +5169,119 @@ window.addEventListener('resize', positionNowLine);
 function printSchedule() {
   window.print();
 }
+
+
+/* ═══════════════════════════════
+   VIEW TABS + EQUIPMENT TRACKER
+   Equipment is shared across the team at equipment/{id} (not per-day,
+   since a setup spans several days); falls back to localStorage offline.
+═══════════════════════════════ */
+let equipCache = {};
+let equipListenerAttached = false;
+try { equipCache = JSON.parse(localStorage.getItem('osves_equipment') || '{}'); } catch (e) { equipCache = {}; }
+
+function setView(v) {
+  document.body.classList.toggle('view-equip', v === 'equip');
+  document.getElementById('vt-schedule').classList.toggle('active', v !== 'equip');
+  document.getElementById('vt-equip').classList.toggle('active', v === 'equip');
+  if (v === 'equip') { fillEquipRooms(); renderEquip(); }
+}
+
+function attachEquipListener() {
+  if (!db || equipListenerAttached) return;
+  equipListenerAttached = true;
+  db.ref('equipment').on('value', snap => {
+    equipCache = snap.val() || {};
+    renderEquip();
+  });
+}
+
+function saveEquipLocal() {
+  try { localStorage.setItem('osves_equipment', JSON.stringify(equipCache)); } catch (e) {}
+}
+
+function fillEquipRooms() {
+  const rooms = new Set();
+  (parsedDays || []).forEach(d => (d.events || []).forEach(ev => { if (ev.room) rooms.add(ev.room); }));
+  document.getElementById('eq-rooms').innerHTML =
+    [...rooms].sort().map(r => `<option value="${escapeHtml(r).replace(/"/g, '&quot;')}">`).join('');
+}
+
+function addEquip() {
+  const g = id => document.getElementById(id);
+  const name = g('eq-name').value.trim();
+  if (!name) { g('eq-name').focus(); return; }
+  const item = {
+    name, loc: g('eq-loc').value.trim(), setup: g('eq-setup').value,
+    strike: g('eq-strike').value, strikeTime: g('eq-strike-time').value,
+    note: g('eq-note').value.trim(), struck: false, by: myInitials || '', ts: Date.now()
+  };
+  if (db) { db.ref('equipment').push(item); }
+  else { equipCache['local_' + Date.now()] = item; saveEquipLocal(); renderEquip(); }
+  ['eq-name','eq-loc','eq-setup','eq-strike','eq-strike-time','eq-note'].forEach(id => g(id).value = '');
+}
+
+function toggleStruck(id) {
+  const it = equipCache[id]; if (!it) return;
+  const upd = { struck: !it.struck };
+  if (db) db.ref('equipment/' + id).update(upd);
+  else { Object.assign(it, upd); saveEquipLocal(); renderEquip(); }
+}
+
+function deleteEquip(id) {
+  if (!confirm('Remove this equipment entry?')) return;
+  if (db) db.ref('equipment/' + id).remove();
+  else { delete equipCache[id]; saveEquipLocal(); renderEquip(); }
+}
+
+function fmtEquipDate(d, t) {
+  if (!d) return 'No strike date';
+  const dt = new Date(d + 'T00:00:00');
+  let out = dt.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+  if (t) { const [h, m] = t.split(':').map(Number); out += ' ' + fmtH(h + m / 60); }
+  return out;
+}
+
+function renderEquip() {
+  const list = document.getElementById('eq-list');
+  if (!list) return;
+  const today = todayKey();
+  const entries = Object.entries(equipCache);
+  const open = entries.filter(([, i]) => !i.struck)
+    .sort((a, b) => (a[1].strike || '9999').localeCompare(b[1].strike || '9999') ||
+                    (a[1].strikeTime || '').localeCompare(b[1].strikeTime || ''));
+  const done = entries.filter(([, i]) => i.struck).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
+
+  const row = ([id, i]) => {
+    let cls = 'ok', label = fmtEquipDate(i.strike, i.strikeTime);
+    if (!i.struck && i.strike) {
+      const days = Math.round((new Date(i.strike + 'T00:00:00') - new Date(today + 'T00:00:00')) / 86400000);
+      if (days < 0) { cls = 'over'; label += ' · OVERDUE'; }
+      else if (days === 0) { cls = 'soon'; label += ' · TODAY'; }
+      else if (days === 1) { cls = 'soon'; label += ' · TOMORROW'; }
+    }
+    const setup = i.setup ? 'Set up ' + fmtEquipDate(i.setup) : '';
+    return `<div class="eq-row${i.struck ? ' struck' : ''}">
+      <div class="eq-name">${escapeHtml(i.name || '')}</div>
+      <div class="eq-loc">📍 ${escapeHtml(i.loc || '—')}</div>
+      <div class="eq-meta">${setup}</div>
+      <div><span class="eq-strike ${i.struck ? 'ok' : cls}">${i.struck ? 'STRUCK' : 'STRIKE ' + escapeHtml(label)}</span></div>
+      <div class="eq-note">${escapeHtml(i.note || '')}${i.by ? ` <span class="eq-meta">· ${escapeHtml(i.by)}</span>` : ''}</div>
+      <div class="eq-actions">
+        <button class="eq-btn" onclick="toggleStruck('${id}')">${i.struck ? 'UNDO' : 'STRUCK ✓'}</button>
+        <button class="eq-btn" onclick="deleteEquip('${id}')" title="Remove">✕</button>
+      </div></div>`;
+  };
+
+  let h = `<div class="eq-hdr">CURRENTLY SET UP (${open.length}) — SORTED BY STRIKE DATE</div>`;
+  h += open.length ? open.map(row).join('') : `<div class="eq-empty">Nothing set up. Add equipment above.</div>`;
+  if (done.length) {
+    h += `<div class="eq-hdr">STRUCK (${done.length})</div>` + done.map(row).join('');
+  }
+  list.innerHTML = h;
+}
+if (db) attachEquipListener();
+renderEquip();
 
 // Init Firebase on load
 initFirebase();
