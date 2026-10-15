@@ -1889,6 +1889,7 @@ body.view-equip #equip-wrap{display:block;}
 .tl-eqm.set span{color:#2fbf71;background:var(--surface);border-color:#2fbf71;}
 .tl-eqm.strike{border-color:#e040fb;}
 .tl-eqm.strike span{color:#e040fb;background:var(--surface);border-color:#e040fb;}
+.tl-row-equiponly .tl-rlabel{font-style:italic;opacity:.85;}
 .eq-hdr{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;color:var(--muted2);margin:18px 0 8px;}
 .eq-empty{font-size:12px;color:var(--muted);font-style:italic;padding:10px 0;}
 .eq-row{display:grid;grid-template-columns:2fr 1.5fr 1fr 1.2fr 2fr auto;gap:10px;align-items:center;
@@ -4725,6 +4726,25 @@ function renderTimeline(events) {
     rowsEl.appendChild(row);
   });
 
+  // ── Equipment-only rows: a set up / strike today in a room with no events today ──
+  equipOnlyRooms(rooms).forEach(loc => {
+    const row = document.createElement('div');
+    row.className = 'tl-row tl-row-equiponly print-hide-row';
+    const lbl = document.createElement('div');
+    lbl.className = 'tl-rlabel';
+    lbl.textContent = loc;
+    lbl.title = 'No events scheduled in this room today — equipment only';
+    row.appendChild(lbl);
+    const cells = document.createElement('div');
+    cells.className = 'tl-cells';
+    for (let i = 0; i < TL_HOURS; i++) {
+      const c = document.createElement('div'); c.className = 'tl-cell'; cells.appendChild(c);
+    }
+    addEquipMarkers(cells, loc);
+    row.appendChild(cells);
+    rowsEl.appendChild(row);
+  });
+
   // ── All-day divider + rows ──
   if (allDayRooms.length > 0) {
     const divRow = document.createElement('div');
@@ -5299,12 +5319,25 @@ function readMD(id, notBefore) {
 
 function roomMatches(loc, room) {
   const l = (loc || '').trim().toLowerCase(), r = (room || '').trim().toLowerCase();
-  if (l.length < 2 || !r) return false;
+  if (l.length < 3 || r.length < 3) return l === r && l.length > 0;
   return l === r || r.includes(l) || l.includes(r);
 }
 
 /* Draws set up / strike markers for equipment located in this room, on the
    room's own timeline row, at the set up / strike time. */
+/* Locations of today's set ups / strikes that don't match any room that has
+   an event today — each gets its own (equipment-only) timeline row. */
+function equipOnlyRooms(rooms) {
+  if (!currentDateKey) return [];
+  const seen = new Map();
+  equipForDay(currentDateKey).forEach(r => {
+    const loc = (r.item.loc || '').trim();
+    if (!loc || rooms.some(rm => roomMatches(loc, rm))) return;
+    if (!seen.has(loc.toLowerCase())) seen.set(loc.toLowerCase(), loc);
+  });
+  return [...seen.values()];
+}
+
 function addEquipMarkers(cells, room) {
   if (!room || !currentDateKey) return;
   equipForDay(currentDateKey).filter(r => roomMatches(r.item.loc, room)).forEach(r => {
@@ -5318,7 +5351,7 @@ function addEquipMarkers(cells, room) {
     m.className = 'tl-eqm ' + r.kind + (r.done ? ' done' : '');
     m.style.left = tlLeft(h) + '%';
     const verb = r.kind === 'set' ? 'Set up' : 'Strike';
-    m.innerHTML = `<span title="${verb}: ${escapeHtml(r.item.name || '')}${timeTxt} — click to ${r.done ? 'undo' : 'check off'}">${r.done ? '☑' : '☐'} ${r.kind === 'set' ? '⬆ SET' : '⬇ STRIKE'}${timeTxt}${r.done && r.by ? ' · ' + escapeHtml(r.by) : ''}</span>`;
+    m.innerHTML = `<span title="${verb}: ${escapeHtml(r.item.name || '')}${timeTxt} — click to ${r.done ? 'undo' : 'check off'}">${r.done ? '☑' : '☐'} ${r.kind === 'set' ? '⬆ SET' : '⬇ STRIKE'}${timeTxt}${(() => { const n = r.item.name || ''; return n ? ' · ' + escapeHtml(n.length > 18 ? n.slice(0, 17) + '…' : n) : ''; })()}${r.done && r.by ? ' · ' + escapeHtml(r.by) : ''}</span>`;
     m.firstChild.addEventListener('click', e => { e.stopPropagation(); toggleEquipStep(r.id, r.kind); });
     cells.appendChild(m);
   });
@@ -5340,10 +5373,9 @@ function equipForDay(dateKey) {
 function renderEquipBanner() {
   const el = document.getElementById('eq-day-banner');
   if (!el) return;
-  const rooms = (typeof allEvents !== 'undefined' ? allEvents : []).map(e => e.room);
-  // Items whose location matches a room are shown on that room's timeline row;
-  // only the rest (no location / no event in that room today) appear here.
-  const rows = currentDateKey ? equipForDay(currentDateKey).filter(r => !rooms.some(rm => roomMatches(r.item.loc, rm))) : [];
+  // Items with a location get a timeline row (even if the room has no events
+  // today); only items with no location at all appear here.
+  const rows = currentDateKey ? equipForDay(currentDateKey).filter(r => !(r.item.loc || '').trim()) : [];
   el.innerHTML = rows.map(r => {
     const t = r.time ? (() => { const [h, m] = r.time.split(':').map(Number); return fmtH(h + m / 60); })() : 'time TBD';
     return `<div class="eq-day-item ${r.kind}" onclick="toggleEquipStep('${r.id}','${r.kind}')" title="Click to ${r.done ? 'undo' : 'check off'}">
