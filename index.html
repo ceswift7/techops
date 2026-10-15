@@ -1879,6 +1879,10 @@ body.view-equip #equip-wrap{display:block;}
 .tl-eqm{position:absolute;top:0;bottom:0;width:0;z-index:4;border-left:2px dashed;pointer-events:none;}
 .tl-eqm span{position:absolute;top:0;left:0;transform:translateX(-50%);white-space:nowrap;pointer-events:auto;cursor:default;
   font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.04em;padding:1px 5px;border-radius:3px;border:1px solid;}
+.tl-eqm span{cursor:pointer;}
+.tl-eqm.done{opacity:.75;}
+.tl-eqm.set.done span{background:#2fbf71;color:#04210f;}
+.tl-eqm.strike.done span{background:#e040fb;color:#2a0433;}
 .tl-eqm.set{border-color:#2fbf71;}
 .tl-eqm.set span{color:#2fbf71;background:var(--surface);border-color:#2fbf71;}
 .tl-eqm.strike{border-color:#e040fb;}
@@ -1896,6 +1900,8 @@ body.view-equip #equip-wrap{display:block;}
 .eq-strike.soon{color:var(--amber-text);background:var(--amber-bg);border-color:var(--amber-border);}
 .eq-strike.over{color:var(--red-text);background:var(--red-bg);border-color:var(--red-border);}
 .eq-row.struck{opacity:.45;}
+.eq-done{color:#2fbf71;font-weight:700;}
+.eq-actions{flex-wrap:wrap;}
 .eq-actions{display:flex;gap:6px;}
 .eq-btn{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.06em;padding:6px 10px;border-radius:5px;
   cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);}
@@ -5275,9 +5281,11 @@ function addEquipMarkers(cells, room) {
       timeTxt = ' ' + fmtH(hh + mm / 60);
     }
     const m = document.createElement('div');
-    m.className = 'tl-eqm ' + r.kind;
+    m.className = 'tl-eqm ' + r.kind + (r.done ? ' done' : '');
     m.style.left = tlLeft(h) + '%';
-    m.innerHTML = `<span title="${r.kind === 'set' ? 'Set up' : 'Strike'}: ${escapeHtml(r.item.name || '')}${timeTxt}">${r.kind === 'set' ? '⬆ SET' : '⬇ STRIKE'}${timeTxt}</span>`;
+    const verb = r.kind === 'set' ? 'Set up' : 'Strike';
+    m.innerHTML = `<span title="${verb}: ${escapeHtml(r.item.name || '')}${timeTxt} — click to ${r.done ? 'undo' : 'check off'}">${r.done ? '☑' : '☐'} ${r.kind === 'set' ? '⬆ SET' : '⬇ STRIKE'}${timeTxt}${r.done && r.by ? ' · ' + escapeHtml(r.by) : ''}</span>`;
+    m.firstChild.addEventListener('click', e => { e.stopPropagation(); toggleEquipStep(r.id, r.kind); });
     cells.appendChild(m);
   });
 }
@@ -5288,10 +5296,9 @@ function refreshTimelineMarkers() {
 
 function equipForDay(dateKey) {
   const out = [];
-  Object.values(equipCache).forEach(i => {
-    if (i.struck) return;
-    if (i.setup === dateKey) out.push({ kind: 'set', time: i.setupTime, item: i });
-    if (i.strike === dateKey) out.push({ kind: 'strike', time: i.strikeTime, item: i });
+  Object.entries(equipCache).forEach(([id, i]) => {
+    if (i.setup === dateKey)  out.push({ id, kind: 'set',    time: i.setupTime,  item: i, done: !!i.setDone, by: i.setBy });
+    if (i.strike === dateKey) out.push({ id, kind: 'strike', time: i.strikeTime, item: i, done: !!i.struck,  by: i.strikeBy });
   });
   return out.sort((a, b) => (a.time || '99').localeCompare(b.time || '99'));
 }
@@ -5305,8 +5312,8 @@ function renderEquipBanner() {
   const rows = currentDateKey ? equipForDay(currentDateKey).filter(r => !rooms.some(rm => roomMatches(r.item.loc, rm))) : [];
   el.innerHTML = rows.map(r => {
     const t = r.time ? (() => { const [h, m] = r.time.split(':').map(Number); return fmtH(h + m / 60); })() : 'time TBD';
-    return `<div class="eq-day-item ${r.kind}" onclick="setView('equip')" title="Open equipment tracker">
-      <b>${r.kind === 'set' ? '⬆ SET UP' : '⬇ STRIKE'}</b><span>${t}</span>
+    return `<div class="eq-day-item ${r.kind}" onclick="toggleEquipStep('${r.id}','${r.kind}')" title="Click to ${r.done ? 'undo' : 'check off'}">
+      <b>${r.done ? '☑' : '☐'} ${r.kind === 'set' ? '⬆ SET UP' : '⬇ STRIKE'}</b><span>${t}</span>${r.done && r.by ? `<span>✓ ${escapeHtml(r.by)}</span>` : ''}
       <span>${escapeHtml(r.item.name || '')}</span>${r.item.loc ? `<span>📍 ${escapeHtml(r.item.loc)}</span>` : ''}</div>`;
   }).join('');
 }
@@ -5328,11 +5335,31 @@ function addEquip() {
   ['eq-setup','eq-strike'].forEach(id => { g(id + '-m').value = ''; g(id + '-d').value = ''; });
 }
 
-function toggleStruck(id) {
+/* Check off a set up or strike step with the person's initials.
+   Clicking a completed step again undoes it. Strike completion also
+   moves the item to the "Struck" list. */
+function toggleEquipStep(id, kind) {
   const it = equipCache[id]; if (!it) return;
-  const upd = { struck: !it.struck };
-  if (db) db.ref('equipment/' + id).update(upd);
-  else { Object.assign(it, upd); saveEquipLocal(); renderEquip(); }
+  const f = kind === 'set'
+    ? { done: 'setDone', by: 'setBy', at: 'setAt' }
+    : { done: 'struck',  by: 'strikeBy', at: 'strikeAt' };
+  const apply = upd => {
+    if (db) db.ref('equipment/' + id).update(upd);
+    else { Object.assign(it, upd); saveEquipLocal(); renderEquip(); }
+  };
+  if (it[f.done]) {
+    if (!confirm(`Undo ${kind === 'set' ? 'set up' : 'strike'} check-off by ${it[f.by] || '—'}?`)) return;
+    apply({ [f.done]: false, [f.by]: null, [f.at]: null });
+    return;
+  }
+  const proceed = initials => {
+    const now = new Date();
+    let h = now.getHours(); const m = now.getMinutes();
+    const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+    apply({ [f.done]: true, [f.by]: initials, [f.at]: h + ':' + String(m).padStart(2, '0') + ' ' + ap });
+  };
+  if (myInitials) proceed(myInitials);
+  else promptInitials(ini => { if (ini) proceed(ini); });
 }
 
 function deleteEquip(id) {
@@ -5371,11 +5398,12 @@ function renderEquip() {
     return `<div class="eq-row${i.struck ? ' struck' : ''}">
       <div class="eq-name">${escapeHtml(i.name || '')}</div>
       <div class="eq-loc">📍 ${escapeHtml(i.loc || '—')}</div>
-      <div class="eq-meta">${setup}</div>
-      <div><span class="eq-strike ${i.struck ? 'ok' : cls}">${i.struck ? 'STRUCK' : 'STRIKE ' + escapeHtml(label)}</span></div>
+      <div class="eq-meta">${setup}${i.setDone ? `<br><span class="eq-done">☑ SET UP · ${escapeHtml(i.setBy || '')} ${escapeHtml(i.setAt || '')}</span>` : ''}</div>
+      <div><span class="eq-strike ${i.struck ? 'ok' : cls}">${i.struck ? `☑ STRUCK · ${escapeHtml(i.strikeBy || '')} ${escapeHtml(i.strikeAt || '')}` : 'STRIKE ' + escapeHtml(label)}</span></div>
       <div class="eq-note">${escapeHtml(i.note || '')}${i.by ? ` <span class="eq-meta">· ${escapeHtml(i.by)}</span>` : ''}</div>
       <div class="eq-actions">
-        <button class="eq-btn" onclick="toggleStruck('${id}')">${i.struck ? 'UNDO' : 'STRUCK ✓'}</button>
+        <button class="eq-btn" onclick="toggleEquipStep('${id}','set')">${i.setDone ? 'UNDO SET UP' : '☐ SET UP'}</button>
+        <button class="eq-btn" onclick="toggleEquipStep('${id}','strike')">${i.struck ? 'UNDO STRIKE' : '☐ STRUCK'}</button>
         <button class="eq-btn" onclick="deleteEquip('${id}')" title="Remove">✕</button>
       </div></div>`;
   };
