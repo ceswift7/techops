@@ -2247,10 +2247,33 @@ body.view-equip #equip-wrap{display:block;}
   .brand-divider{margin:0 8px;}
 }
 
+/* ── COMPACT MOBILE HEADER ──
+   Row 1: logo + brand + date/time + menu button. Row 2: view tabs.
+   The status/initials/theme/print/clear buttons fold into the ☰ menu. */
+.hdr-menu-btn{display:none;}
+@media (max-width: 720px) {
+  .hdr{padding:8px 12px;gap:6px;}
+  .hdr-left{order:1;flex:1;min-width:0;}
+  .brand-panel{flex-wrap:nowrap;align-items:center;}
+  .belmont-logo{width:70px;height:22px;margin-right:10px;}
+  .belmont-divider,.brand-sub{display:none;}
+  .brand-divider{margin:0 8px;}
+  .brand-datetime{flex-direction:column;align-items:flex-start;gap:1px;}
+  .hdr-date{font-size:11px;}
+  .hdr-clock{font-size:12px;}
+  .hdr-menu-btn{display:flex;order:2;align-items:center;justify-content:center;width:36px;height:34px;flex-shrink:0;
+    font-size:18px;line-height:1;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);}
+  .hdr.hdr-menu-open .hdr-menu-btn{border-color:var(--green-border);color:var(--green-text);}
+  .view-tabs{order:3;flex-basis:100%;margin:0;}
+  .view-tab{flex:1;padding:8px 6px;text-align:center;}
+  .hdr-right{order:4;display:none;flex-basis:100%;width:100%;flex-wrap:wrap;overflow:visible;padding-top:4px;}
+  .hdr.hdr-menu-open .hdr-right{display:flex;}
+}
+
 /* ── PRINT VIEW ── */
 @media print {
   body{background:#fff;color:#000;font-size:11px;}
-  .hdr-right, .fb-banner, .drop-zone-wrap, .shared-schedule-banner, .upcoming-ts-wrap,
+  .hdr-menu-btn, .hdr-right, .fb-banner, .drop-zone-wrap, .shared-schedule-banner, .upcoming-ts-wrap,
   .legend, .scroll-hint, .search-wrap, .search-count, .cards-wrap,
   .notes-section, .empty-state, .tooltip, .modal-bg, .detail-modal-bg,
   .now-line, .now-label, .tl-techline,
@@ -2398,6 +2421,7 @@ body.view-equip #equip-wrap{display:block;}
       </div>
     </div>
   </div>
+  <button class="hdr-menu-btn" id="hdr-menu-btn" onclick="toggleHdrMenu()" aria-label="Menu" aria-expanded="false">☰</button>
   <div class="view-tabs" id="view-tabs">
     <button class="view-tab active" id="vt-schedule" onclick="setView('schedule')">SCHEDULE</button>
     <button class="view-tab" id="vt-equip" onclick="setView('equip')">EQUIPMENT TRACKER</button>
@@ -5210,6 +5234,12 @@ function printSchedule() {
 let equipCache = {};
 let equipListenerAttached = false;
 try { equipCache = JSON.parse(localStorage.getItem('osves_equipment') || '{}'); } catch (e) { equipCache = {}; }
+
+function toggleHdrMenu() {
+  const hdr = document.querySelector('.hdr');
+  const open = hdr.classList.toggle('hdr-menu-open');
+  document.getElementById('hdr-menu-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+}
 
 function setView(v) {
   document.body.classList.toggle('view-equip', v === 'equip');
