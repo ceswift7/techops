@@ -884,7 +884,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:5px;transition:background .3s;flex-shrink:0;}
 .sync-dot.connected{background:var(--green);box-shadow:0 0 6px rgba(0,207,190,.55);}
-.sync-dot.error{background:var(--red);}
+.sync-dot.error{background:var(--amber);}
 .sync-label{font-family:'DM Mono',monospace;line-height:1.3;font-size:10px;color:var(--muted2);letter-spacing:.05em;}
 .sync-wrap{display:flex;align-items:center;height:32px;box-sizing:border-box;padding:0 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);}
 
@@ -953,25 +953,39 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 }
 .reupload-btn:hover{background:var(--green-bg);}
 
-/* ── DAY SWITCHER ──
-   Horizontally scrollable on narrow screens rather than wrapping, so the
-   row always stays on one line. */
-.day-switch-wrap{
-  margin:16px 24px 0;display:flex;align-items:center;gap:10px;
-}
-.day-switch-tabs{
-  display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;flex:1;min-width:0;
-  -webkit-overflow-scrolling:touch;scrollbar-width:thin;
-  padding-bottom:4px; /* room for the scrollbar so it doesn't sit flush against the tabs */
-}
-.day-tab{
-  font-family:'DM Mono',monospace;line-height:1.3;font-size:11px;letter-spacing:.05em;
-  padding:7px 14px;border-radius:6px;cursor:pointer;white-space:nowrap;flex-shrink:0;
-  border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);
-  transition:all .15s;
-}
-.day-tab:hover{border-color:var(--green-border);color:var(--text);}
-.day-tab.active{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
+/* ── DAY PICKER ──
+   One compact control (prev / date button / next / today) that opens a small
+   month calendar, instead of a row of tabs that scrolls sideways. Days that
+   have a schedule are marked; the rest are dimmed and can't be picked. */
+.day-switch-wrap{margin:16px 24px 0;display:flex;align-items:center;position:relative;}
+.day-picker{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.dp-btn{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.05em;line-height:1.3;
+  padding:8px 12px;border-radius:6px;cursor:pointer;white-space:nowrap;
+  border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;}
+.dp-btn:hover{border-color:var(--green-border);color:var(--text);}
+.dp-btn:disabled{opacity:.35;cursor:default;}
+.dp-btn:disabled:hover{border-color:var(--border2);color:var(--text2);}
+.dp-main{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);padding:8px 16px;font-weight:700;}
+.dp-main:hover{color:var(--green-text);filter:brightness(1.1);}
+.dp-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:350;width:292px;max-width:calc(100vw - 32px);box-sizing:border-box;
+  background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:12px;box-shadow:0 14px 36px var(--shadow);}
+.dp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.dp-month{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--text);text-transform:uppercase;}
+.dp-mnav{width:30px;height:28px;padding:0;text-align:center;}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.dp-dow{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--muted2);text-align:center;padding:2px 0 4px;}
+.dp-day{position:relative;height:34px;border-radius:6px;border:1px solid transparent;background:transparent;
+  font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text);cursor:pointer;padding:0;}
+.dp-day:disabled{color:var(--muted);cursor:default;font-weight:400;}
+.dp-day.has{background:var(--surface2);border-color:var(--border);}
+.dp-day.has::after{content:'';position:absolute;left:50%;bottom:4px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--green);}
+.dp-day.has:hover{border-color:var(--green-border);}
+.dp-day.today{box-shadow:inset 0 0 0 1.5px var(--nowline);}
+.dp-day.sel{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
+.dp-day.sel::after{background:var(--green-text);}
+.dp-day.out{opacity:.45;}
+.dp-foot{margin-top:8px;font-family:var(--font-mono);font-size:9px;letter-spacing:.05em;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.dp-foot i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);}
 
 /* ── LABOR FLAG — same red as the labor tags (.tag.tr) ── */
 .labor-flag{display:inline-block;flex-shrink:0;width:11px;height:13px;vertical-align:middle;
@@ -1092,6 +1106,92 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .eq-seg-btn + .eq-seg-btn{border-left:1px solid var(--border2);}
 .eq-seg-btn.active{background:var(--green-bg);color:var(--green-text);}
 .eq-toolbar .eq-add{margin-left:auto;}
+#equip-wrap.seen-tab .eq-toolbar .eq-add{display:none;}
+/* ── EQUIPMENT TRACKER: shared chrome ── */
+.eq-sum{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;}
+.eq-pill{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.05em;padding:8px 12px;border-radius:999px;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border2);color:var(--text2);transition:border-color .15s;}
+.eq-pill b{font-size:14px;margin-right:4px;color:var(--text);}
+.eq-pill:hover{border-color:var(--green-border);}
+.eq-pill.zero{opacity:.55;} .eq-pill.zero b{color:var(--muted2);}
+.eq-pill.bad{background:var(--red-bg);border-color:var(--red-border);color:var(--red-text);} .eq-pill.bad b{color:var(--red-text);}
+.eq-seg-badge{display:inline-block;min-width:16px;padding:1px 5px;margin-left:4px;border-radius:9px;text-align:center;font-size:10px;font-weight:800;
+  background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);}
+.eq-toolbar .eq-add-item{display:none;margin-left:auto;}
+#equip-wrap.seen-tab .eq-toolbar .eq-add-item{display:inline-block;}
+.eq-cols{display:grid;grid-template-columns:2fr 1.5fr 1fr 1.2fr 2fr auto;gap:10px;padding:0 14px 6px;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--muted2);}
+.eq-cols span:last-child{width:150px;}
+@media (max-width:760px){.eq-cols{display:none;}}
+.eq-btn.main{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
+.eq-btn.main:hover{filter:brightness(1.15);}
+
+/* ── WHERE IS IT (inventory board) ── */
+.inv-intro{background:var(--surface);border:1.5px dashed var(--green-border);border-radius:10px;padding:16px 18px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
+.inv-intro-t{font-family:var(--font-mono);font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--green-text);}
+.inv-intro-s{font-size:13px;color:var(--text2);line-height:1.5;max-width:70ch;}
+.inv-quick{display:grid;grid-template-columns:auto minmax(0,1.6fr) minmax(0,1.6fr) minmax(0,1.4fr) auto;gap:8px;align-items:center;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:12px;}
+.inv-quick-t{font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--green-text);}
+.inv-quick input{font-family:var(--font-sans);font-size:14px;padding:9px 10px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);outline:none;min-width:0;}
+.inv-quick input:focus{border-color:var(--green-border);}
+.inv-quick .eqm-err{grid-column:1 / -1;}
+.inv-bar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px;}
+.inv-filters{display:flex;gap:6px;flex-wrap:wrap;}
+.inv-chip{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.07em;padding:6px 11px;border-radius:999px;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border2);color:var(--text2);}
+.inv-chip i{font-style:normal;opacity:.7;margin-left:3px;}
+.inv-chip.on{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
+.inv-sec{border-radius:10px;margin-bottom:18px;}
+.inv-sec.missing{background:var(--red-bg);border:1.5px solid var(--red-border);padding:12px 14px;}
+.inv-sec-hdr{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--text2);margin:0 0 8px;}
+.inv-sec-hdr i{font-style:normal;font-size:10px;padding:1px 7px;border-radius:9px;background:var(--surface2);border:1px solid var(--border2);color:var(--muted2);}
+.inv-sec.missing .inv-sec-hdr{color:var(--red-text);}
+.inv-sec-hdr.plain{margin-top:4px;}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;}
+.inv-rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:20px;align-items:start;}
+.inv-room{background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:12px;display:flex;flex-direction:column;gap:8px;}
+.inv-room-hdr{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+.inv-room-hdr b{font-size:15px;color:var(--text);} .inv-room-hdr span{font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;color:var(--muted2);}
+.inv-empty{font-size:12px;font-style:italic;color:var(--muted2);padding:4px 0;}
+.inv-ghost{font-family:var(--font-mono);font-size:11px;color:var(--muted2);border:1px dashed var(--border2);border-radius:7px;padding:7px 9px;overflow-wrap:anywhere;}
+.inv-ghost b{color:var(--text2);}
+.inv-bad{font-weight:800;color:var(--red-text);letter-spacing:.06em;}
+.inv-card{background:var(--surface2);border:1px solid var(--border);border-left:4px solid var(--border2);border-radius:8px;padding:9px 10px;display:flex;flex-direction:column;gap:4px;min-width:0;}
+.inv-room .inv-card{background:var(--bg);}
+.inv-card.aging{border-left-color:var(--amber);} .inv-card.stale,.inv-card.missing{border-left-color:var(--red);}
+.inv-card.storage{border-left-color:var(--green);}
+.inv-top{display:flex;align-items:center;gap:7px;}
+.inv-name{font-weight:700;font-size:14px;color:var(--text);flex:1;min-width:0;overflow-wrap:anywhere;}
+.inv-more{background:transparent;border:1px solid transparent;color:var(--muted2);cursor:pointer;font-size:16px;line-height:1;padding:2px 7px;border-radius:5px;}
+.inv-more:hover{border-color:var(--border2);color:var(--text);}
+.inv-where{font-family:var(--font-mono);font-size:11px;color:var(--text2);overflow-wrap:anywhere;line-height:1.4;}
+.inv-where b{color:var(--text);}
+.inv-card.aging .inv-where{color:var(--amber-text);} .inv-card.stale .inv-where{color:var(--red-text);}
+.inv-sub{font-size:11px;color:var(--muted2);overflow-wrap:anywhere;}
+.inv-acts{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+@media (max-width:860px){.inv-quick{grid-template-columns:minmax(0,1fr);}.inv-quick-t{display:none;}}
+
+/* ── Move / item dialogs ── */
+.invm-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.invm-chip{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.06em;padding:7px 11px;border-radius:999px;cursor:pointer;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);}
+.invm-chip:hover{border-color:var(--green-border);color:var(--text);}
+.invm-chip.bad{color:var(--red-text);border-color:var(--red-border);}
+.invm-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--border);}
+.invm-name{font-weight:700;font-size:14px;color:var(--text);}
+.invm-name small{display:block;font-family:var(--font-mono);font-weight:500;font-size:10px;letter-spacing:.04em;color:var(--muted2);margin-top:1px;}
+.invm-sel,.invm-txt{font-family:var(--font-sans);font-size:14px;padding:9px 10px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);outline:none;width:100%;box-sizing:border-box;}
+.invm-sel:focus,.invm-txt:focus{border-color:var(--green-border);}
+.eqm-lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--muted2);margin-bottom:4px;}
+.eqm-lbl span{letter-spacing:0;opacity:.85;}
+.eqm-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.eqm-chip{font-family:var(--font-sans);font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;cursor:pointer;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);}
+.eqm-chip.on{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
+.inve-hist{display:flex;flex-direction:column;gap:3px;font-family:var(--font-mono);font-size:11px;color:var(--muted2);max-height:170px;overflow-y:auto;border-top:1px solid var(--border);padding-top:8px;}
+.inve-hist span{color:var(--text2);font-weight:700;margin-right:3px;}
+.invs-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.invs-row span{flex:1;font-weight:600;color:var(--text);} .invs-row small{font-family:var(--font-mono);font-size:10px;color:var(--muted2);}
+.invs-addrow{display:flex;gap:8px;} .invs-addrow input{flex:1;font-size:14px;padding:9px 10px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);outline:none;min-width:0;}
+
 .eqt-group{margin:0 0 18px;}
 .eqt-ghdr{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted2);margin:0 0 8px;display:flex;gap:8px;align-items:baseline;}
 .eqt-ghdr.over{color:var(--red-text);} .eqt-ghdr.today{color:var(--green-text);}
@@ -1632,6 +1732,165 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .print-btn{font-size:15px;line-height:1;width:32px;height:32px;padding:0;flex-shrink:0;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;display:flex;align-items:center;justify-content:center;}
 .print-btn:hover{border-color:var(--green);color:var(--green-text);}
 
+
+/* ── Settings (⚙) menu ── */
+.set-btn{font-size:16px!important;width:36px;padding:0!important;justify-content:center;}
+.set-acts{flex:0 0 100%;display:flex;flex-direction:column;gap:2px;margin-top:4px;padding-top:4px;border-top:1px solid var(--border);}
+.set-acts .theme-menu-grp{flex:none;}
+.theme-menu{max-height:min(80vh,640px)!important;}
+.set-act{font-family:var(--font-sans);font-size:13px;font-weight:600;text-align:left;padding:9px 10px;border-radius:6px;cursor:pointer;
+  background:transparent;border:1px solid transparent;color:var(--text2);}
+.set-act:hover{background:var(--surface2);border-color:var(--border2);color:var(--text);}
+.set-act.danger{color:var(--red-text);} .set-act.danger:hover{background:var(--red-bg);border-color:var(--red-border);}
+.initials-wrap.none .initials-val{color:var(--amber-text);}
+.initials-wrap.none{border-style:dashed;}
+/* ── Clear-all dialog ── */
+.clr-title{color:var(--red-text)!important;}
+.clr-text{font-size:13px;line-height:1.55;color:var(--text2);}
+.clr-text b{color:var(--text);}
+.clr-go{background:var(--red-bg)!important;border-color:var(--red-border)!important;color:var(--red-text)!important;}
+.clr-go:disabled{opacity:.35;cursor:not-allowed;}
+/* ── Undo toast ── */
+.undo-toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,140%);z-index:1200;display:flex;align-items:center;gap:6px;
+  max-width:calc(100vw - 32px);box-sizing:border-box;padding:8px 8px 8px 16px;border-radius:10px;
+  background:var(--text);color:var(--bg);box-shadow:0 12px 34px var(--shadow);opacity:0;pointer-events:none;transition:transform .22s ease,opacity .22s ease;}
+.undo-toast.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.ut-msg{font-family:var(--font-sans);font-size:13px;font-weight:600;overflow-wrap:anywhere;margin-right:6px;}
+.undo-toast button{font-family:var(--font-mono);font-size:11px;font-weight:800;letter-spacing:.08em;border-radius:6px;cursor:pointer;padding:8px 12px;min-height:36px;
+  background:transparent;color:var(--bg);border:1px solid transparent;}
+.undo-toast .ut-undo{border-color:currentColor;}
+.undo-toast .ut-x{opacity:.65;padding:8px 10px;}
+.undo-toast button:hover{opacity:1;background:rgba(127,127,127,.18);}
+/* ── Timeline: short blocks + full name on hover ── */
+.tl-evt.tl-narrow{padding:0 5px;gap:3px;}
+.tl-evt.tl-narrow .labor-flag{display:none;}
+.tl-evt.tl-grow:hover{width:max-content!important;min-width:var(--w);max-width:none;z-index:8;}
+.tl-evt.tl-grow:hover .tl-evt-name{overflow:visible!important;text-overflow:clip!important;}
+/* ── Search beside the day picker ── */
+.day-switch-wrap{flex-wrap:wrap;gap:10px;}
+.day-switch-wrap .search-wrap{margin-left:auto;padding:0;flex:0 1 380px;min-width:220px;position:relative;}
+.day-switch-wrap .search-count{position:absolute;right:2px;top:100%;padding-top:3px;min-height:0;}
+@media (max-width:720px){.day-switch-wrap .search-wrap{flex:1 1 100%;margin-left:0;}}
+/* ── Touch screens: everything tappable gets a real target (≈44px) ── */
+@media (pointer:coarse){
+  .tl-eqm span{font-size:18px;padding:6px 9px;}
+  .eq-btn,.inv-chip,.invm-chip,.eqm-chip,.eq-pill,.dp-btn,.set-act{min-height:42px;}
+  .eq-btn{padding:8px 13px;font-size:11px;}
+  .inv-more{min-width:42px;min-height:42px;font-size:20px;}
+  .eqt-del{min-width:42px;min-height:42px;}
+  .eqt-box{width:32px;height:32px;}
+  .dp-day{height:42px;}
+  .flag-btn,.ev-edit-btn,.eq-chip{min-height:36px;min-width:36px;}
+  .theme-menu-item{min-height:40px;}
+}
+
+/* ── Backup / sign-in ── */
+.set-act small{display:block;font-family:var(--font-mono);font-size:10px;font-weight:500;color:var(--muted2);margin-top:1px;}
+.inv-bar-r{display:flex;gap:6px;flex-wrap:wrap;}
+.signin-bg{position:fixed;inset:0;z-index:2000;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;}
+.signin-bg.hidden{display:none;}
+.signin-card{background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:12px;align-items:flex-start;box-shadow:0 20px 60px var(--shadow);}
+.signin-brand{font-family:var(--font-mono);font-size:22px;font-weight:800;letter-spacing:.06em;color:var(--green-text);}
+.signin-brand span{display:block;font-size:10px;letter-spacing:.2em;color:var(--muted2);font-weight:600;}
+.signin-t{font-size:15px;color:var(--text);}
+.signin-s{font-size:12px;color:var(--muted2);}
+.signin-go{font-size:13px!important;padding:12px 20px!important;}
+
+/* ── Week: sort / labor views ── */
+.wk-sort{display:flex;align-items:center;gap:6px;margin-left:auto;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted2);}
+.wk-sort select{font-family:var(--font-mono);font-size:11px;font-weight:600;padding:6px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;}
+.wk-sort + .wk-summary{margin-left:10px;}
+.wk-labor{display:none;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--red-text);margin-top:3px;overflow-wrap:anywhere;}
+.wk-labor-mode .wk-labor{display:block;}
+.wk-labor-mode .wk-evt.wk-has-labor{border-left:3px solid var(--red);}
+@media (max-width:720px){.wk-sort{margin-left:0;}}
+
+/* ── Worksheet outline (event window, cards, tooltip) ── */
+.dm-client{font-size:14px;font-weight:600;color:var(--green-text);margin-top:3px;line-height:1.35;}
+.evt-client{font-size:12px;font-weight:600;color:var(--green-text);margin:-1px 0 6px;line-height:1.35;}
+.tt-client{font-size:12px;font-weight:600;color:var(--green-text);margin:-3px 0 7px;}
+.dm-booked{display:block;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--muted2);margin-top:2px;}
+.dm-facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 14px;font-size:13px;color:var(--text2);}
+.dm-facts > span{display:flex;flex-direction:column;gap:1px;}
+.dm-facts i{font-style:normal;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--muted2);}
+.dm-facts .dm-contact{color:var(--muted2);font-size:12px;}
+.ws-gen{background:var(--amber-bg);border:1px solid var(--amber-border);border-left:4px solid var(--amber);border-radius:8px;padding:10px 13px;margin:0 0 14px;
+  font-size:13px;line-height:1.5;color:var(--text);display:flex;flex-direction:column;gap:3px;}
+.ws-gen-h{font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--amber-text);margin-bottom:2px;}
+.ws-gen.compact{display:block;padding:6px 9px;margin:4px 0 8px;font-size:11.5px;border-left-width:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ws-gen.compact b{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:var(--amber-text);margin-right:4px;}
+.ws-gen i,.ws-notes i{font-style:normal;color:var(--muted2);}
+.ws{display:flex;flex-direction:column;gap:16px;margin-top:4px;}
+.ws-sec{min-width:0;}
+.ws-h{display:flex;align-items:baseline;gap:8px;padding-bottom:5px;margin-bottom:4px;border-bottom:1.5px solid var(--border2);}
+.ws-t{font-family:var(--font-mono);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text);}
+.ws-win{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--red-text);}
+.ws-n{margin-left:auto;font-family:var(--font-mono);font-size:10px;color:var(--muted2);}
+.ws-sec.labor .ws-h{border-bottom-color:var(--red-border);}
+.ws-sec.labor .ws-t{color:var(--red-text);}
+.ws-detail{font-size:12px;color:var(--text2);margin:2px 0 4px;}
+.ws-item{display:grid;grid-template-columns:34px minmax(0,1fr) auto;column-gap:8px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border);}
+.ws-item:last-child{border-bottom:none;}
+.ws-q{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text);text-align:right;}
+.ws-nm{font-size:14px;font-weight:600;color:var(--text);overflow-wrap:anywhere;line-height:1.35;}
+.ws-code{font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;color:var(--muted2);border:1px solid var(--border2);border-radius:3px;padding:0 5px;white-space:nowrap;}
+.ws-notes{grid-column:2 / -1;margin:3px 0 1px;padding-left:10px;border-left:2px solid var(--border2);font-size:12px;line-height:1.5;color:var(--muted2);display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere;}
+.ws-notes.compact{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ws-snotes{font-size:12px;color:var(--muted2);padding:4px 0 0 42px;display:flex;flex-direction:column;gap:2px;}
+.ws-more{display:none;}
+.ws-sec.open .ws-more{display:grid;}
+.ws-all{margin:6px 0 0 42px;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.08em;padding:5px 10px;border-radius:5px;cursor:pointer;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);}
+.ws-all:hover{border-color:var(--green-border);color:var(--text);}
+.ws-reup{font-size:11px;font-style:italic;color:var(--muted2);margin-top:6px;}
+/* cards: compact — category label is the card's own toggle */
+.ws-card .ws-h,.ws-card .ws-detail{display:none;}
+.ws-card .ws-item{grid-template-columns:26px minmax(0,1fr);padding:3px 0;border-bottom:none;}
+.ws-card .ws-code{display:none;}
+.ws-card .ws-q{font-size:11px;}
+.ws-card .ws-nm{font-size:12.5px;font-weight:500;}
+.ws-card .ws-snotes{padding-left:34px;font-size:11px;}
+.ws-card-lbl.labor{color:var(--red-text);}
+.card .dept-section.ws-card{max-height:none;}
+/* tooltip */
+.tt-sec{font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin:8px 0 2px;}
+.tt-sec.labor{color:var(--red-text);}
+.tt-row{font-size:12px;color:var(--text);line-height:1.45;display:flex;gap:7px;}
+.tt-row b{font-family:var(--font-mono);font-size:11px;min-width:18px;text-align:right;color:var(--text2);}
+.tt-more{font-family:var(--font-mono);font-size:10px;color:var(--muted2);margin-top:3px;padding-left:25px;}
+.tooltip .ws-gen.compact{white-space:normal;}
+/* actions + source */
+.dm-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.dm-actions > *{flex:1 1 120px;}
+.dm-actions .dm-signoff-btn{margin-top:0;flex:2 1 190px;}
+.dm-actions .dm-flag{margin-top:0;}
+.dm-actions .dm-flag:has(.dm-flag-txt){flex-basis:100%;}
+.dm-actions .dm-flag-btn{height:100%;min-height:46px;}
+.dm-src{margin-top:16px;border-top:1px solid var(--border);padding-top:10px;}
+.dm-src summary{cursor:pointer;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted2);text-transform:uppercase;list-style-position:inside;}
+.dm-src summary span{font-weight:500;letter-spacing:.02em;text-transform:none;margin-left:6px;}
+.dm-src[open] summary{margin-bottom:8px;}
+
+/* ── Event window formatting pass ── */
+.detail-modal{max-width:640px;}
+.dm-client,.evt-client,.tt-client{color:var(--text);}
+.dm-client{font-weight:700;}
+.ws-h{border-bottom-width:1px;}
+.ws-item{border-bottom:none;padding:6px 0;}
+.ws-notes{border-left-color:var(--border);}
+.ws-code{color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);font-size:10px;font-weight:700;padding:1px 6px;}
+.dm-tel{color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2);}
+.dm-tel:hover{color:var(--text);}
+.dm-actions .dm-signoff-btn,.dm-actions .dm-flag-btn{font-size:12px;letter-spacing:.07em;white-space:nowrap;padding:13px 12px;}
+.dm-actions .dm-signoff-btn{flex:2 1 210px;}
+.dm-actions .dm-flag{flex:1 1 100px;}
+.dm-actions .dm-signoff-btn.signed{font-size:14px;letter-spacing:.1em;}
+
+/* ── Tall card collapse ── */
+.evt.capped{max-height:440px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 70px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 70px),transparent);}
+.card-more{display:block;width:100%;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.08em;padding:10px;cursor:pointer;
+  background:var(--surface2);border:none;border-bottom:1px solid var(--border);color:var(--text2);}
+.card-more:hover{color:var(--text);background:var(--green-bg);}
 </style>
 </head>
 <body>
@@ -1682,6 +1941,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
       <div>
         <div class="dm-room" id="dm-room"></div>
         <div class="dm-name" id="dm-name"></div>
+        <div class="dm-client hidden" id="dm-client"></div>
         <div class="dm-time" id="dm-time"></div>
       </div>
       <button class="dm-close" onclick="closeDetailModal()">✕</button>
@@ -1718,17 +1978,47 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
       <span class="sync-dot" id="sync-dot"></span>
       <span class="sync-label" id="sync-label">OFFLINE</span>
     </div>
-    <div class="initials-wrap" id="initials-wrap" onclick="promptInitials(null)">
-      <span class="initials-label">SIGNING AS</span>
-      <span class="initials-val" id="initials-display">SET</span>
+    <div class="initials-wrap none" id="initials-wrap" onclick="promptInitials(null)" title="Your initials go on every sign-off and check-off">
+      <span class="initials-label">NOT SIGNED IN</span>
+      <span class="initials-val" id="initials-display">TAP TO SET</span>
     </div>
+    <!-- Settings: themes, print, clear — kept out of the main bar on purpose -->
     <div class="theme-menu-wrap" id="theme-menu-wrap">
-      <button class="theme-btn" id="theme-menu-btn" onclick="toggleThemeMenu()">🎨 THEMES</button>
+      <button class="theme-btn set-btn" id="theme-menu-btn" onclick="toggleThemeMenu()" aria-label="Settings: theme, print, clear data" title="Theme, print, and more">⚙</button>
       <div class="theme-menu hidden" id="theme-menu"></div>
     </div>
-    <button class="surprise-btn" id="surprise-btn" onclick="surpriseTheme()" title="Pick a random theme">🎲</button>
-    <button class="print-btn" id="print-btn" onclick="printSchedule()" title="Print schedule">🖨</button>
-    <button class="clear-data-btn" id="clear-data-btn" onclick="confirmClearSharedData()" title="Permanently delete every shared schedule, sign-off, and note for the whole team">🗑 CLEAR ALL</button>
+  </div>
+</div>
+
+<!-- FIREBASE STATUS BANNER — directly under the header so it's seen in every view -->
+<div class="fb-banner" id="fb-banner">
+  ⚠ Firebase not configured — sign-offs are local only.
+  <a href="#" onclick="showFirebaseSetup();return false;">Configure Firebase →</a>
+</div>
+
+<input type="file" id="restore-file" accept=".json,application/json" hidden onchange="onRestoreFile(this)">
+
+<!-- SIGN-IN (only used when REQUIRE_SIGNIN is true) -->
+<div class="signin-bg hidden" id="signin-bg">
+  <div class="signin-card" role="dialog" aria-modal="true">
+    <div class="signin-brand">OSVES <span>TECH CALENDAR</span></div>
+    <div class="signin-t">Sign in to see the schedule and equipment.</div>
+    <button class="eq-add signin-go" onclick="doSignin()">Sign in with Google</button>
+    <div class="signin-s">Use your <b id="signin-dom">@belmont.edu</b> account.</div>
+    <div class="eqm-err" id="signin-msg"></div>
+  </div>
+</div>
+
+<!-- CLEAR ALL — typed confirmation -->
+<div class="eqm-bg hidden" id="clr-bg" onclick="if(event.target===this)closeClear()">
+  <div class="eqm" role="dialog" aria-modal="true">
+    <div class="eqm-title clr-title" id="clr-title">CLEAR ALL SHARED DATA</div>
+    <div class="clr-text" id="clr-text"></div>
+    <label class="eqm-wide"><span id="clr-word-lbl">TYPE CLEAR TO CONFIRM</span><input id="clr-input" type="text" autocomplete="off" oninput="clrCheck()" onkeydown="if(event.key==='Enter'){event.preventDefault();doClear();}if(event.key==='Escape')closeClear();"></label>
+    <div class="eqm-btns">
+      <button class="eqm-cancel" onclick="closeClear()">CANCEL</button>
+      <button class="eqm-save clr-go" id="clr-go" disabled onclick="doClear()">DELETE EVERYTHING</button>
+    </div>
   </div>
 </div>
 
@@ -1741,6 +2031,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
     <label class="eqm-wide">EQUIPMENT<input id="eqm-name" type="text" placeholder="e.g. 2x wireless handhelds" autocomplete="off"></label>
     <label class="eqm-wide">LOCATION<input id="eqm-loc" type="text" list="eq-rooms" placeholder="Room / venue" autocomplete="off" oninput="updateEqLocHint()"></label>
     <div class="eqm-hint" id="eqm-hint"></div>
+    <div class="eqm-wide hidden" id="eqm-assets-wrap"><div class="eqm-lbl">TRACKED ITEMS <span>(optional — they move to this room at set up, and you'll be asked where they went at strike)</span></div><div class="eqm-chips" id="eqm-assets"></div></div>
     <div class="eqm-grid">
       <label>SET UP DATE<input id="eqm-setup" type="date"></label>
       <label>SET UP TIME<input id="eqm-setup-time" type="time"></label>
@@ -1755,6 +2046,54 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
       <button class="eqm-cancel" onclick="closeEquipModal()" id="eqm-cancel">CANCEL</button>
       <button class="eqm-save" onclick="saveEquipModal()" id="eqm-save">ADD</button>
     </div>
+  </div>
+</div>
+
+<!-- INVENTORY: MOVE / STRIKE-RETURN DIALOG -->
+<div class="eqm-bg hidden" id="invm-bg" onclick="if(event.target===this)closeMove()">
+  <div class="eqm" role="dialog" aria-modal="true">
+    <div class="eqm-title" id="invm-title">MOVE</div>
+    <div class="eqm-for hidden" id="invm-sub"></div>
+    <div class="invm-chips" id="invm-chips"></div>
+    <div id="invm-rows"></div>
+    <label class="eqm-wide">NOTE<input id="invm-note" type="text" placeholder="Optional — e.g. in the black bag" autocomplete="off"></label>
+    <div class="eqm-err hidden" id="invm-err"></div>
+    <div class="eqm-btns">
+      <button class="eqm-cancel hidden" id="invm-skip" onclick="skipMove()" title="Check-off stays; don't update locations">SKIP</button>
+      <button class="eqm-cancel" onclick="closeMove()">CANCEL</button>
+      <button class="eqm-save" onclick="saveMove()">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVENTORY: ADD / EDIT ITEM -->
+<div class="eqm-bg hidden" id="inve-bg" onclick="if(event.target===this)closeItem()">
+  <div class="eqm" role="dialog" aria-modal="true">
+    <div class="eqm-title" id="inve-title">ADD ITEM</div>
+    <label class="eqm-wide">NAME<input id="inve-name" type="text" placeholder="e.g. Laptop E" autocomplete="off"></label>
+    <div class="eqm-grid">
+      <label>TYPE<input id="inve-type" type="text" list="inv-types" placeholder="Laptop" autocomplete="off"></label>
+      <label>HOME (STORAGE)<select id="inve-home" class="invm-sel" onchange="inveHomeChanged()"></select></label>
+    </div>
+    <datalist id="inv-types"><option value="Laptop"><option value="RF clicker"><option value="Wireless pack"><option value="Camera"><option value="Other"></datalist>
+    <div id="inve-now-wrap"><div class="eqm-lbl">WHERE IS IT RIGHT NOW?</div><div id="inve-now"></div></div>
+    <div class="inve-hist hidden" id="inve-hist"></div>
+    <div class="eqm-err hidden" id="inve-err"></div>
+    <div class="eqm-btns">
+      <button class="eqm-cancel evm-del hidden" id="inve-del" onclick="deleteItem()">DELETE</button>
+      <button class="eqm-cancel" onclick="closeItem()">CANCEL</button>
+      <button class="eqm-save" onclick="saveItem()">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVENTORY: STORAGE ROOMS -->
+<div class="eqm-bg hidden" id="invs-bg" onclick="if(event.target===this)closeStorageRooms()">
+  <div class="eqm" role="dialog" aria-modal="true">
+    <div class="eqm-title">STORAGE ROOMS</div>
+    <div id="invs-list"></div>
+    <div class="invs-addrow"><input id="invs-add" type="text" placeholder="Add a storage room…" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();addStorage();}"><button class="eqm-save" onclick="addStorage()">ADD</button></div>
+    <div class="eqm-btns"><button class="eqm-cancel" onclick="closeStorageRooms()">DONE</button></div>
   </div>
 </div>
 
@@ -1787,6 +2126,14 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
     <button class="wk-btn" onclick="weekToday()">THIS WEEK</button>
     <button class="wk-btn" onclick="shiftWeek(1)" title="Next week">▶</button>
     <span class="wk-label" id="wk-label"></span>
+    <label class="wk-sort">SORT BY
+      <select id="wk-sort" onchange="setWeekSort(this.value)" aria-label="Sort or filter the week">
+        <option value="time">Time</option>
+        <option value="room">Room</option>
+        <option value="labor-first">Labor first</option>
+        <option value="labor-only">Labor only</option>
+      </select>
+    </label>
     <span class="wk-summary" id="wk-summary"></span>
   </div>
   <div class="wk-flagged hidden" id="wk-flagged"></div>
@@ -1798,26 +2145,29 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   <div class="eq-toolbar">
     <div class="eq-seg">
       <button class="eq-seg-btn active" id="eqt-today" onclick="setEqTab('today')">TODAY</button>
-      <button class="eq-seg-btn" id="eqt-all" onclick="setEqTab('all')">ALL EQUIPMENT</button>
+      <button class="eq-seg-btn" id="eqt-all" onclick="setEqTab('all')">ALL SET/STRIKES</button>
+      <button class="eq-seg-btn" id="eqt-seen" onclick="setEqTab('seen')">📍 LAST SEEN</button>
     </div>
-    <button class="eq-add" onclick="openEquipModal({})">+ ADD EQUIPMENT</button>
+    <button class="eq-add" onclick="openEquipModal({})">+ ADD SET/STRIKE</button>
+    <button class="eq-add eq-add-item" onclick="openItem()">+ ADD ITEM</button>
     <datalist id="eq-rooms"></datalist>
   </div>
+  <div class="eq-sum" id="eq-sum"></div>
   <div id="eq-list"></div>
 </div>
 
 <!-- DAY SWITCHER — sits right below the header so it's visible immediately.
-     Shows TODAY/TOMORROW (or a date label for other days) for every day
-     found in the loaded PDF. Horizontally scrollable on narrow screens. -->
+     A date button that opens a small month calendar; days with a schedule
+     are marked. -->
 <div class="day-switch-wrap hidden" id="day-switch-wrap">
-  <div class="day-switch-tabs" id="day-switch-tabs"></div>
+  <div class="day-picker" id="day-picker"></div>
+  <!-- SEARCH — beside the day picker; press / to jump here -->
+  <div class="search-wrap" id="search-wrap">
+    <input class="search-input" id="search-input" type="search" placeholder="Search events, rooms, equipment…   /" aria-label="Search (press /)" oninput="handleSearch()" onkeydown="if(event.key==='Escape'){this.value='';handleSearch();this.blur();}">
+    <div class="search-count hidden" id="search-count"></div>
+  </div>
 </div>
 
-<!-- FIREBASE CONFIG BANNER -->
-<div class="fb-banner" id="fb-banner">
-  ⚠ Firebase not configured — sign-offs are local only.
-  <a href="#" onclick="showFirebaseSetup();return false;">Configure Firebase →</a>
-</div>
 
 <!-- DROP ZONE -->
 <!-- SHARED SCHEDULE BANNER — shown when today's schedule auto-loaded from Firebase -->
@@ -1898,11 +2248,6 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   </div>
   <div class="scroll-hint">← scroll →</div>
 
-  <!-- SEARCH — below timeline, above cards -->
-  <div class="search-wrap" id="search-wrap" style="padding:14px 24px 0;">
-    <input class="search-input" id="search-input" type="text" placeholder="Search events, rooms, equipment…" oninput="handleSearch()">
-    <div class="search-count hidden" id="search-count"></div>
-  </div>
 
   <div class="cards-wrap">
     <div class="cards-hdr">TECH EVENTS — SORTED BY START TIME <span id="cards-debug-count"></span></div>
@@ -1939,6 +2284,11 @@ const FIREBASE_CONFIG = {
   appId: "1:31829479692:web:983d21dbe40e758ecfb929"
 };
 
+// Optional sign-in. Leave false until Google sign-in is enabled in the Firebase
+// console AND the "signed-in" database rules are published (see the rules file).
+const REQUIRE_SIGNIN = false;
+const SIGNIN_DOMAIN = 'belmont.edu';
+
 /* ═══════════════════════════════
    FIREBASE INIT & SYNC
 ═══════════════════════════════ */
@@ -1961,9 +2311,11 @@ async function initFirebase() {
     await loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
     await loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js');
     firebase.initializeApp(FIREBASE_CONFIG);
+    if (REQUIRE_SIGNIN) await requireSignin();   // blocks here until a valid account signs in
     db = firebase.database();
     setSyncStatus('connected');
     if (typeof attachEquipListener === 'function') attachEquipListener();
+    if (typeof attachInvListener === 'function') attachInvListener();
     attachFlagsListener();
     attachManualListener();
     document.getElementById('fb-banner').classList.add('hidden');
@@ -1997,6 +2349,11 @@ async function initFirebase() {
   } catch(e) {
     console.error('Firebase init failed', e);
     setSyncStatus('error');
+    const b = document.getElementById('fb-banner');
+    if (b) {
+      b.innerHTML = '⚠ Can\'t reach the shared database — changes are saved on this device only until it reconnects. <a href="#" onclick="location.reload();return false;">Retry →</a>';
+      b.classList.remove('hidden');
+    }
   }
 }
 
@@ -2170,24 +2527,67 @@ function relativeDayLabel(dateKey, dateLabel) {
   return dateLabel || dateKey;
 }
 
+let dpOpen = false, dpMonth = null; // dpMonth: Date on the 1st of the month being shown
+function dpDays() { return parsedDays.map(d => d.dateKey).sort(); }
 function renderDaySwitcher() {
   const wrap = document.getElementById('day-switch-wrap');
-  const tabsEl = document.getElementById('day-switch-tabs');
-  if (!wrap || !tabsEl) return;
-
-  tabsEl.innerHTML = '';
-  if (parsedDays.length > 1) {
-    parsedDays.forEach(d => {
-      const tab = document.createElement('button');
-      tab.className = 'day-tab' + (d.dateKey === currentDateKey ? ' active' : '');
-      tab.textContent = relativeDayLabel(d.dateKey, d.dateLabel);
-      tab.title = d.dateLabel || d.dateKey;
-      tab.onclick = () => selectDay(d.dateKey);
-      tabsEl.appendChild(tab);
-    });
-  }
+  const host = document.getElementById('day-picker');
+  if (!wrap || !host) return;
+  const keys = dpDays();
+  if (!keys.length || !currentDateKey) { host.innerHTML = ''; wrap.classList.remove('hidden'); dpOpen = false; return; }
+  const cur = parsedDays.find(d => d.dateKey === currentDateKey);
+  const label = (cur && cur.dateLabel) || currentDateKey;
+  const rel = relativeDayLabel(currentDateKey, label);
+  const text = rel === label ? label : rel + ' · ' + label;
+  const i = keys.indexOf(currentDateKey);
+  const todayHas = keys.includes(todayKey()) && currentDateKey !== todayKey();
+  host.innerHTML =
+    `<button class="dp-btn" id="dp-prev" title="Previous scheduled day" ${i <= 0 ? 'disabled' : ''}>◀</button>` +
+    `<button class="dp-btn dp-main" id="dp-main" title="Pick a day">📅 ${escapeHtml(text)} ▾</button>` +
+    `<button class="dp-btn" id="dp-next" title="Next scheduled day" ${i < 0 || i >= keys.length - 1 ? 'disabled' : ''}>▶</button>` +
+    (todayHas ? `<button class="dp-btn" id="dp-today" title="Jump to today">TODAY</button>` : '') +
+    `<div class="dp-pop hidden" id="dp-pop"></div>`;
+  document.getElementById('dp-prev').onclick = () => { if (i > 0) selectDay(keys[i - 1]); };
+  document.getElementById('dp-next').onclick = () => { if (i >= 0 && i < keys.length - 1) selectDay(keys[i + 1]); };
+  const t = document.getElementById('dp-today'); if (t) t.onclick = () => selectDay(todayKey());
+  document.getElementById('dp-main').onclick = e => { e.stopPropagation(); dpToggle(); };
   wrap.classList.remove('hidden');
+  if (dpOpen) { renderDpCal(); document.getElementById('dp-pop').classList.remove('hidden'); }
 }
+function dpToggle(force) {
+  const pop = document.getElementById('dp-pop'); if (!pop) return;
+  dpOpen = force === undefined ? !dpOpen : force;
+  if (dpOpen) { const k = keyToDate(currentDateKey || todayKey()); dpMonth = new Date(k.getFullYear(), k.getMonth(), 1); renderDpCal(); }
+  pop.classList.toggle('hidden', !dpOpen);
+}
+function renderDpCal() {
+  const pop = document.getElementById('dp-pop'); if (!pop || !dpMonth) return;
+  const has = new Set(dpDays()), today = todayKey();
+  const y = dpMonth.getFullYear(), m = dpMonth.getMonth();
+  const first = new Date(y, m, 1), start = new Date(y, m, 1 - ((first.getDay() - WEEK_START + 7) % 7));
+  const dows = ['S','M','T','W','T','F','S'].map((_, n, a) => a[(n + WEEK_START) % 7]);
+  let cells = '';
+  for (let n = 0; n < 42; n++) {
+    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + n), k = dateToKey(d);
+    if (n >= 35 && d.getMonth() !== m) break; // skip a 6th row that is all next-month
+    const cls = ['dp-day', has.has(k) ? 'has' : '', k === currentDateKey ? 'sel' : '', k === today ? 'today' : '', d.getMonth() !== m ? 'out' : ''].join(' ').replace(/\s+/g, ' ').trim();
+    cells += `<button class="${cls}" data-k="${k}" ${has.has(k) ? '' : 'disabled'} aria-label="${k}">${d.getDate()}</button>`;
+  }
+  pop.innerHTML =
+    `<div class="dp-head"><button class="dp-btn dp-mnav" data-m="-1" aria-label="Previous month">◀</button>` +
+    `<span class="dp-month">${first.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>` +
+    `<button class="dp-btn dp-mnav" data-m="1" aria-label="Next month">▶</button></div>` +
+    `<div class="dp-grid">${dows.map(c => `<span class="dp-dow">${c}</span>`).join('')}${cells}</div>` +
+    `<div class="dp-foot"><i></i> has a schedule</div>`;
+  pop.onclick = e => {
+    e.stopPropagation();
+    const mb = e.target.closest('[data-m]'), db2 = e.target.closest('.dp-day');
+    if (mb) { dpMonth = new Date(y, m + Number(mb.dataset.m), 1); renderDpCal(); }
+    else if (db2 && !db2.disabled) { dpToggle(false); selectDay(db2.dataset.k); }
+  };
+}
+document.addEventListener('click', e => { if (dpOpen) { const w = document.getElementById('day-picker'); if (!w || !w.contains(e.target)) dpToggle(false); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && dpOpen) dpToggle(false); });
 
 // Switch the visible day. Checks in-memory parsed data first (instant —
 // covers every day in the PDF just uploaded, or a day already fully
@@ -2242,6 +2642,8 @@ function normalizeEvent(ev) {
   // same way it drops empty arrays, so make sure a missing value here
   // still renders as "no source captured" instead of undefined.
   if (typeof out.rawSource !== 'string') out.rawSource = '';
+  if (out.sections && !Array.isArray(out.sections)) out.sections = toArr(out.sections);
+  if (out.contacts && !Array.isArray(out.contacts)) out.contacts = toArr(out.contacts);
   return out;
 }
 
@@ -2272,17 +2674,20 @@ function showReuploadZone() {
    start from a clean baseline.
 */
 function confirmClearSharedData() {
-  if (!db) {
-    alert('Not connected to Firebase — nothing to clear.');
-    return;
-  }
-  const sure = confirm(
-    'This permanently deletes EVERY shared schedule, sign-off, and note ' +
-    'for the whole team — every day, not just today. This cannot be undone.\n\n' +
-    'Continue?'
-  );
-  if (!sure) return;
-  clearSharedData();
+  if (!db) { undoToast('Not connected to the shared database — nothing to clear.', null); return; }
+  typedConfirm({
+    title: 'CLEAR ALL SHARED DATA',
+    html: 'Permanently deletes <b>every uploaded schedule, sign-off, note, flag and manual event</b> for the whole team — every day, not just today. Set ups, strikes and the laptop inventory are kept.<br><br>A backup file downloads first, so it can be restored from ⚙ → Restore.',
+    word: 'CLEAR', button: 'DELETE EVERYTHING',
+    onOk: async () => { if (await downloadBackup('osves-before-clear')) clearSharedData(); }
+  });
+}
+function clrCheck() { document.getElementById('clr-go').disabled = document.getElementById('clr-input').value.trim().toUpperCase() !== tcWord; }
+function closeClear() { document.getElementById('clr-bg').classList.add('hidden'); }
+function doClear() {
+  if (document.getElementById('clr-go').disabled) return;
+  closeClear();
+  const f = tcOk; tcOk = null; if (f) f();
 }
 
 async function clearSharedData() {
@@ -2312,7 +2717,7 @@ async function clearSharedData() {
     document.getElementById('schedule-wrap').classList.add('hidden');
     document.getElementById('shared-schedule-banner').classList.add('hidden');
     document.getElementById('day-switch-wrap').classList.add('hidden');
-    document.getElementById('day-switch-tabs').innerHTML = '';
+    document.getElementById('day-picker').innerHTML = '';
     document.getElementById('drop-zone-wrap').classList.remove('hidden');
     document.getElementById('empty-state').classList.remove('hidden');
 
@@ -2338,7 +2743,7 @@ function setSyncStatus(state) {
   const lbl = document.getElementById('sync-label');
   dot.className = 'sync-dot';
   if (state === 'connected')   { dot.classList.add('connected'); lbl.textContent = 'LIVE'; }
-  else if (state === 'error')  { dot.classList.add('error');     lbl.textContent = 'ERROR'; }
+  else if (state === 'error')  { dot.classList.add('error');     lbl.textContent = 'LOCAL ONLY'; }
   else if (state === 'connecting') { lbl.textContent = 'CONNECTING'; }
   else                         { lbl.textContent = 'OFFLINE'; }
 }
@@ -2377,11 +2782,49 @@ function makeEventKey(ev) {
 /* ═══════════════════════════════
    INITIALS
 ═══════════════════════════════ */
+/* "/" jumps to search (when not typing somewhere already, and on the schedule). */
+document.addEventListener('keydown', e => {
+  if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target, tag = t && t.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+  if (document.body.classList.contains('view-equip') || document.body.classList.contains('view-week')) return;
+  const si = document.getElementById('search-input');
+  if (si && si.offsetParent) { e.preventDefault(); si.focus(); si.select(); }
+});
+
+/* ── Undo toast ──
+   Destructive actions happen immediately and offer UNDO for 10 seconds,
+   instead of a browser confirm() popup before the fact. One toast at a
+   time; a newer action replaces the older toast. */
+let undoTimer = null;
+const snapOf = o => o == null ? null : JSON.parse(JSON.stringify(o));
+function undoToast(msg, undo) {
+  let el = document.getElementById('undo-toast');
+  if (!el) {
+    el = document.createElement('div'); el.id = 'undo-toast'; el.className = 'undo-toast';
+    el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite');
+    document.body.appendChild(el);
+  }
+  clearTimeout(undoTimer);
+  el.innerHTML = `<span class="ut-msg">${escapeHtml(msg)}</span>` + (undo ? '<button type="button" class="ut-undo">UNDO</button>' : '') +
+    '<button type="button" class="ut-x" aria-label="Dismiss">✕</button>';
+  el.classList.add('show');
+  const hide = () => { el.classList.remove('show'); clearTimeout(undoTimer); };
+  if (undo) el.querySelector('.ut-undo').onclick = () => { hide(); try { undo(); } catch (e) { console.error('undo failed', e); } undoToast('Restored', null); };
+  el.querySelector('.ut-x').onclick = hide;
+  undoTimer = setTimeout(hide, undo ? 10000 : 2500);
+}
+
 let myInitials = localStorage.getItem('osves_initials') || '';
 let modalResolve = null;
 
 function updateInitialsDisplay() {
-  document.getElementById('initials-display').textContent = myInitials || 'SET';
+  document.getElementById('initials-display').textContent = myInitials || 'TAP TO SET';
+  const w = document.getElementById('initials-wrap');
+  if (w) {
+    w.classList.toggle('none', !myInitials);
+    const l = w.querySelector('.initials-label'); if (l) l.textContent = myInitials ? 'SIGNING AS' : 'NOT SIGNED IN';
+  }
 }
 updateInitialsDisplay();
 
@@ -2446,13 +2889,14 @@ function doSignoff(evKey) {
 }
 
 function doUndoSignoff(evKey, roomLabel) {
-  if (!confirm(`Remove tech sign-off for ${roomLabel}?`)) return;
-
-  if (db) {
-    db.ref(fbPath(evKey)).remove();
-  }
+  const prev = snapOf(signoffCache[evKey]), dk = currentDateKey;
+  if (db) db.ref(fbPath(evKey)).remove();
   delete signoffCache[evKey];
   removeSignoffFromUI(evKey);
+  undoToast('Sign-off removed · ' + roomLabel, prev ? () => {
+    if (db) db.ref('signoffs/' + dk + '/' + evKey).set(prev);
+    if (currentDateKey === dk) { signoffCache[evKey] = prev; applyAllSignoffs(); }
+  } : null);
 }
 
 function removeSignoffFromUI(evKey) {
@@ -2462,7 +2906,7 @@ function removeSignoffFromUI(evKey) {
     const btn = card.querySelector('.tech-signoff-btn');
     if (btn) {
       const ev = allEvents.find(e => makeEventKey(e) === evKey);
-      btn.textContent = ev ? `TECH STARTS AT ${fmtH(ev.startH - 0.5)}` : 'TECH START';
+      btn.textContent = ev ? `TECH STARTS AT ${fmtH(techStartH(ev))}` : 'TECH START';
       btn.classList.remove('signed');
       btn.onclick = () => doSignoff(evKey);
     }
@@ -2481,7 +2925,7 @@ function removeSignoffFromUI(evKey) {
   const dmBtn = document.querySelector(`.dm-signoff-btn[data-evkey="${CSS.escape(evKey)}"]`);
   if (dmBtn) {
     const ev = allEvents.find(e => makeEventKey(e) === evKey);
-    dmBtn.textContent = ev ? `TECH STARTS AT ${fmtH(ev.startH - 0.5)}` : 'TECH START';
+    dmBtn.textContent = ev ? `SIGN OFF · ${fmtH(techStartH(ev))}` : 'SIGN OFF';
     dmBtn.classList.remove('signed');
     dmBtn.onclick = () => doSignoff(evKey);
   }
@@ -2700,6 +3144,17 @@ function renderThemeMenu() {
       menu.appendChild(btn);
     });
   });
+  const acts = document.createElement('div');
+  acts.className = 'set-acts';
+  acts.innerHTML = '<div class="theme-menu-grp">MORE</div>' +
+    '<button class="set-act" id="surprise-btn" onclick="surpriseTheme()">🎲 Random theme</button>' +
+    '<button class="set-act" id="print-btn" onclick="closeThemeMenu();printSchedule()">🖨 Print schedule</button>' +
+    '<div class="theme-menu-grp">DATA</div>' +
+    `<button class="set-act" id="backup-btn" onclick="closeThemeMenu();downloadBackup()">💾 Download backup <small>${escapeHtml(lastBackupLabel())}</small></button>` +
+    '<button class="set-act" onclick="closeThemeMenu();pickRestoreFile()">♻ Restore from backup…</button>' +
+    '<button class="set-act danger" id="clear-data-btn" onclick="closeThemeMenu();confirmClearSharedData()">🗑 Clear all shared data…</button>' +
+    (authUser ? `<button class="set-act" onclick="signOutUser()">↩ Sign out <small>${escapeHtml(authUser.email || '')}</small></button>` : '');
+  menu.appendChild(acts);
   updateThemeMenuActiveState(document.documentElement.getAttribute('data-theme'));
 }
 function updateThemeMenuActiveState(name) {
@@ -2830,7 +3285,45 @@ function filterCards() {
     const searchHide = card.dataset.searchHide === '1';
     card.classList.toggle('hide-card', searchHide);
   });
+  capCards();
 }
+
+/* ── Tall cards: a big production (Christmas, 30+ items) would set the height
+   of its whole grid row and leave the cards beside it mostly empty. Cap each
+   card's content and offer "Show all"; what's opened stays open on re-render. ── */
+const CARD_CAP = 440;               // px of event content before it collapses
+const cardExpanded = new Set();     // evKeys opened this session
+function capCards() {
+  requestAnimationFrame(() => {
+    document.querySelectorAll('#card-grid .card').forEach(card => {
+      const evt = card.querySelector('.evt');
+      if (!evt || card.offsetParent === null) return;
+      const key = card.dataset.evkey;
+      let btn = card.querySelector('.card-more');
+      evt.classList.remove('capped');
+      // +60 so a card that's only a little over isn't cut for one line
+      const tall = evt.scrollHeight > CARD_CAP + 60;
+      if (!tall) { if (btn) btn.remove(); return; }
+      const open = cardExpanded.has(key);
+      evt.classList.toggle('capped', !open);
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'card-more';
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          if (cardExpanded.has(key)) cardExpanded.delete(key); else cardExpanded.add(key);
+          capCards();
+          if (!cardExpanded.has(key)) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        });
+        evt.after(btn);
+      }
+      const n = card.querySelectorAll('.ws-item, .tag').length;
+      btn.textContent = open ? 'Show less ▴' : `Show all${n ? ' · ' + n + ' items' : ''} ▾`;
+    });
+  });
+}
+let capResizeT = null;
+window.addEventListener('resize', () => { clearTimeout(capResizeT); capResizeT = setTimeout(capCards, 150); });
 
 /* ═══════════════════════════════
    NOTES — synced via Firebase, initialed entries
@@ -2998,23 +3491,39 @@ async function loadPDFJS() {
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
+/* Group a page's text items into lines (same rule as always: a new line
+   whenever the baseline moves more than 3pt) and keep, for every line, its
+   pieces with their horizontal position. The worksheet is an outline whose
+   indent IS the meaning — category (x≈220), item (≈265), item note (≈271) —
+   and its header is columns (reservation time ≈52, setup ≈348, client ≈474),
+   so the parser reads positions instead of guessing from the words. */
+function textItemsToLines(items) {
+  const lines = [];
+  let cur = null, lastY = null;
+  items.forEach(it => {
+    if (!cur || (lastY !== null && Math.abs(it.transform[5] - lastY) > 3)) { cur = { text: '', segs: [] }; lines.push(cur); }
+    cur.text += it.str + ' ';
+    if (it.str.trim()) cur.segs.push([Math.round(it.transform[4]), it.str.trim()]);
+    lastY = it.transform[5];
+  });
+  while (lines.length && !lines[0].text.trim()) lines.shift();
+  while (lines.length && !lines[lines.length - 1].text.trim()) lines.pop();
+  return lines;
+}
+
 async function extractPDFText(file) {
   await loadPDFJS();
   const buf  = await file.arrayBuffer();
   const pdf  = await pdfjsLib.getDocument({ data: buf }).promise;
-  const pages = [];
+  const all = [];
   for (let i = 1; i <= pdf.numPages; i++) {
     const page    = await pdf.getPage(i);
     const content = await page.getTextContent();
-    let lineText = '', lastY = null;
-    content.items.forEach(item => {
-      if (lastY !== null && Math.abs(item.transform[5] - lastY) > 3) lineText += '\n';
-      lineText += item.str + ' ';
-      lastY = item.transform[5];
-    });
-    pages.push(lineText.trim());
+    if (i > 1) all.push({ text: '---PAGE---', segs: [] });
+    textItemsToLines(content.items).forEach(l => all.push(l));
   }
-  return { text: pages.join('\n---PAGE---\n'), pageCount: pdf.numPages };
+  // text and segs line up one-to-one (the parser splits text on newlines).
+  return { text: all.map(l => l.text.replace(/\n/g, ' ')).join('\n'), segs: all.map(l => l.segs), pageCount: pdf.numPages };
 }
 
 /* ═══════════════════════════════════════════════════
@@ -3235,7 +3744,7 @@ function isDescriptionLine(text) {
 }
 
 /* ── Main parser ── */
-function parseMomentusText(rawText) {
+function parseMomentusText(rawText, lineSegs) {
   /* ─────────────────────────────────────────────────────────────────
      Setup Worksheet parser — Belmont University format
      Field mapping (from annotated PDF):
@@ -3254,6 +3763,14 @@ function parseMomentusText(rawText) {
   // the event's equipment gets attached to the PREVIOUS event on the page.
   const FOOTNOTE_GLYPH_RE = /^[34]\s+(?=\d{1,2}(?::\d{2})?\s*[AP]M\b)/i;
   const rawLines = rawText.split('\n').map(l => l.trim().replace(FOOTNOTE_GLYPH_RE, ''));
+  // Positions are optional: without them (older callers) the parser falls
+  // back to telling items from notes by the trailing quantity.
+  const SEGS = Array.isArray(lineSegs) && lineSegs.length === rawLines.length ? lineSegs : null;
+  const lineX = idx => { const sg = SEGS && SEGS[idx]; return sg && sg.length ? sg[0][0] : null; };
+  // Column bands, in PDF points.
+  const X_ITEM_MIN = 255, X_NOTE_MIN = 269, X_CAT_MAX = 245, X_OUTLINE_MAX = 330;
+  const inBand = (x, a, b) => x >= a && x < b;
+  let curLine = 0;
 
   // ── Day-header detection ──
   // The PDF may cover multiple days. Every day section gets parsed (not
@@ -3372,6 +3889,7 @@ function parseMomentusText(rawText) {
     if (/^(?:Res ID|Book ID)$/i.test(line)) return true;
     if (/^\d+\/\d+\/\d{4}\s+\d+:\d+\s+(?:AM|PM)\s+[A-Z]{1,3}\s+Page/i.test(line)) return true;
     if (/^Page \d+ of \d+$/i.test(line)) return true;
+    if (/\bPage \d+ of \d+\s*$/i.test(line)) return true;   // "EMS Campus 11/17/2026 12:30 PM   Page 4 of 19"
     if (/^(?:[34]\s+)?Indicates event starts on previous day or ends on next day(?:\s*[34]{1,2})?$/i.test(line)) return true;
     if (/^\d{6,8}$/.test(line)) return true;            // Res/Book IDs
     if (/^\d{3}-\d{3}-\d{4}/.test(line)) return true;  // Phone numbers
@@ -3419,7 +3937,22 @@ function parseMomentusText(rawText) {
     if (/^film.*broadcast equipment/i.test(line))return 'FILM';
     if (/^general tech/i.test(line))             return 'GENTECH';
     if (/^technical rental/i.test(line))         return 'TECH_RENTAL';
+    if (/^general notes?$/i.test(line))          return 'NOTES';
     return null;
+  }
+  // Heading text as printed, plus a labor heading's crew detail and hours:
+  // "AV Labor - Dedicated AV Technician from 2:00 PM to 7:30 PM".
+  function sectionFromHeading(key, line) {
+    const sec = { key, title: line, detail: '', window: '', labor: /_LABOR$/.test(key), items: [], notes: [] };
+    const m = line.match(/^(.*?labor)\s*[-–:]\s*(.+)$/i);
+    if (m) {
+      sec.title = m[1].trim();
+      let rest = m[2].trim();
+      const w = rest.match(/\bfrom\s+(\d{1,2}(?::\d{2})?\s*[AP]M)\s+(?:to|-|–)\s+(\d{1,2}(?::\d{2})?\s*[AP]M)/i);
+      if (w) { sec.window = w[1].toUpperCase() + ' – ' + w[2].toUpperCase(); rest = rest.slice(0, w.index).trim(); }
+      sec.detail = rest;
+    }
+    return sec;
   }
 
   // Parse an equipment item line. In this worksheet's real text-extraction
@@ -3444,19 +3977,18 @@ function parseMomentusText(rawText) {
     } else {
       return null;
     }
-    name = name
-      .replace(/\s*\([A-Z][A-Z0-9 \-\/]*\)\s*$/, '')  // strip (BMRC RBR) etc.
-      .replace(/\s*\(Required\)\s*$/i, '')
-      .trim();
+    return finishItem(name, qty);
+  }
+  // Split the trailing room code off ("(AYRS CD)") and keep it separately.
+  function finishItem(name, qty) {
+    let code = '';
+    name = name.replace(/\s*\(Required\)\s*$/i, '').trim();
+    const cm = name.match(/\s*\(([A-Z][A-Z0-9 \-\/&]*)\)\s*$/);
+    if (cm) { code = cm[1].trim(); name = name.slice(0, cm.index).trim(); }
     if (!name || name.length < 2) return null;
-    // Generalized (not an enumerated keyword list) so it correctly catches
-    // every "No <whatever> Needed" phrasing this worksheet uses — e.g.
-    // "No Podium/Mic Needed" and "No Presentation System Needed" were
-    // previously missed because they didn't match any of the specific
-    // category names that used to be hardcoded here, which meant those
-    // "nothing needed" declarations were incorrectly kept as real items.
+    // Every "No <whatever> Needed" line is a declaration, not an item.
     if (/^No\s+.+\s+Needed?$/i.test(name)) return null;
-    return { qty, name, label: qty > 1 ? `(${qty})` : '(1)' };
+    return { qty, name, code, notes: [], label: qty == null ? '' : `(${qty})` };
   }
 
   // ── State ──
@@ -3467,6 +3999,7 @@ function parseMomentusText(rawText) {
   let ev = null;
   let dept = null;
   let lastItem = null;
+  let section = null;
 
   // Pending event header (accumulated across lines)
   let pendingStart = null;
@@ -3474,6 +4007,7 @@ function parseMomentusText(rawText) {
   let pendingNameLines = [];
   let pendingRoomCandidate = null;
   let pendingEC = null;
+  let pendingRes = null;          // { startH, endH, setup } from the reservation line
   let ecNextLine = false;
 
   // Reservation headers we recognized but could not turn into an event
@@ -3488,8 +4022,43 @@ function parseMomentusText(rawText) {
     unreadable.push(lastFail);
   }
 
+  // Read the header columns (event type, client, contacts) from the lines
+  // between the reservation line and the first category heading.
+  function readHeaderColumns(e) {
+    if (!SEGS || e._srcStart == null) return;
+    const end = e._hdrEnd != null ? e._hdrEnd : curLine;
+    const client = [];
+    for (let k = e._srcStart; k < end && k < rawLines.length; k++) {
+      if (isNoise(rawLines[k]) && !/\d{3}-\d{3}-\d{4}/.test(rawLines[k])) continue;
+      if (isPageBoilerplate(rawLines[k]) || lineToDateKey(rawLines[k])) continue;
+      (SEGS[k] || []).forEach(([x, t]) => {
+        if (inBand(x, 330, 460)) {
+          if (k === e._srcStart) { if (!e.setup && !/^\(\d+\)$/.test(t)) e.setup = t; }
+          else if (!e.evType) e.evType = t;
+        } else if (inBand(x, 460, 600)) {
+          if (/\d{3}-\d{3}-\d{4}/.test(t)) e.contacts.push(t.replace(/\s+/g, ' '));
+          else client.push(t);
+        }
+      });
+    }
+    e.client = client.join(' ').replace(/\s+/g, ' ').trim();
+  }
+
+  // Is the next meaningful line indented at item/note level?
+  function nextIsOutline(idx) {
+    for (let j = idx + 1; j < rawLines.length && j < idx + 8; j++) {
+      const l = rawLines[j];
+      if (!l || l === '*' || isNoise(l) || isPageBoilerplate(l) || lineToDateKey(l)) continue;
+      const xj = lineX(j);
+      return xj != null && xj >= X_ITEM_MIN;
+    }
+    return false;
+  }
+
   function finalizeEv() {
     if (!ev) return;
+    readHeaderColumns(ev);
+    delete ev._hdrEnd;
     ev.hasTech = (
       ev.av.length > 0 || ev.avLabor.length > 0 ||
       ev.audio.length > 0 || ev.audioLabor.length > 0 ||
@@ -3559,15 +4128,22 @@ function parseMomentusText(rawText) {
       gentech: [], gentechLabor: [],
       techRental: [],
       notes: [],
+      sections: [],                 // the worksheet outline, in printed order
+      client: '', contacts: [], setup: '', evType: '',
+      resStartH: pendingRes ? pendingRes.startH : null,
+      resEndH:   pendingRes ? pendingRes.endH : null,
       rawSource: '',
       _srcStart: pendingStartLineIdx,
+      _hdrEnd: null,
       hasTech: false, hasFood: false
     };
-    dept = null; lastItem = null;
+    dept = null; lastItem = null; section = null;
+    if (pendingRes && pendingRes.setup) ev.setup = pendingRes.setup;
     lastFail = null;
   }
 
   function resetPending() {
+    pendingRes = null;
     pendingStart = null;
     pendingStartLineIdx = null;
     pendingNameLines = [];
@@ -3579,6 +4155,7 @@ function parseMomentusText(rawText) {
   const lines = rawLines;
 
   for (let i = 0; i < lines.length; i++) {
+    curLine = i;
     let line = lines[i];
     if (!line) continue;
 
@@ -3709,6 +4286,7 @@ function parseMomentusText(rawText) {
       // reported) instead of being glued onto whatever event came before it.
       finalizeEv();
       pendingStart = tp.startH;
+      pendingRes = { startH: tp.startH, endH: tp.endH, setup: (!SEGS && tp.suffix && !/^\(\d+\)$/.test(tp.suffix)) ? tp.suffix : '' };
       pendingStartLineIdx = i;
       pendingNameLines = [];
       pendingRoomCandidate = null;
@@ -3722,20 +4300,51 @@ function parseMomentusText(rawText) {
       // Customer/org name lines that appear after the event is created — skip
       if (/^(?:20th Television|Office of |School of |College of |Faith-Based|Delight Ministries$|Health Services$|Sodexo)/i.test(line)) continue;
 
-      const d = detectDept(line);
-      if (d) { dept = d; lastItem = null; continue; }
+      const x = lineX(i);
+      let d = (x == null || x < X_CAT_MAX) ? detectDept(line) : null;
+      // A heading the worksheet uses that we don't have a name for (e.g.
+      // "Backline"): any category-level line with items indented under it.
+      if (!d && x != null && x >= 205 && x < X_CAT_MAX && !/^\*/.test(line) && nextIsOutline(i)) d = 'OTHER';
+      if (d) {
+        dept = d; lastItem = null;
+        section = sectionFromHeading(d, line);
+        ev.sections.push(section);
+        if (ev._hdrEnd == null) ev._hdrEnd = i;
+        continue;
+      }
 
       if (!dept) continue; // no active department context — skip
 
-      const item = parseItem(line);
-      if (!item) {
-        // Could be a note/description attached to previous item
-        if (lastItem && line.length > 2 && !isStatusLine(line)) {
-          // Passive notes: "Requested by client for tech support", "Please have MAC adaptor on podium"
-          ev.notes.push(line);
-        }
+      // General Notes: every line is a note about the whole event.
+      if (dept === 'NOTES') {
+        if (x == null || (x >= X_ITEM_MIN && x < X_OUTLINE_MAX)) { section.notes.push(line); ev.notes.push(line); }
         continue;
       }
+
+      let item = null;
+      if (x != null) {
+        if (x < X_ITEM_MIN || x >= X_OUTLINE_MAX) continue; // not part of the outline (footers sit at x≈371)
+        if (x >= X_NOTE_MIN) {                          // tertiary: note on the item above
+          if (lastItem) lastItem.notes.push(line); else section.notes.push(line);
+          ev.notes.push(line);
+          continue;
+        }
+        item = parseItem(line);                         // secondary: an item
+        if (!item) {
+          // "No Audio Equipment Needed 1 *", "No OSVES Needs": declarations, not items
+          if (/^\*?\s*No\s+\S.*?(?:\s+\d{1,3})?(?:\s*\*)?$/i.test(line)) { lastItem = null; continue; }
+          item = finishItem(line.replace(/^\*\s*|\s*\*$/g, ''), null);
+          if (!item) continue;
+        }
+      } else {
+        item = parseItem(line);
+        if (!item) {
+          if (lastItem && line.length > 2 && !isStatusLine(line)) { lastItem.notes.push(line); ev.notes.push(line); }
+          continue;
+        }
+      }
+      section.items.push(item);
+      lastItem = item;
 
       switch(dept) {
         case 'AV':             ev.av.push(item);           lastItem = item; break;
@@ -3777,9 +4386,9 @@ async function handleBuild(e) {
   parseBtn.disabled = true;
   statusEl.textContent = 'Reading PDF…';
   try {
-    const { text, pageCount } = await extractPDFText(pdfFile);
+    const { text, segs, pageCount } = await extractPDFText(pdfFile);
     statusEl.textContent = 'Parsing…';
-    const result = parseMomentusText(text);
+    const result = parseMomentusText(text, segs);
 
     if (!result.days.length) {
       statusEl.textContent = '⚠ No day sections recognized — check PDF format';
@@ -3881,13 +4490,100 @@ const tooltip = document.getElementById('tooltip');
 let tooltipVisible = false;
 let tooltipHideTimer = null;
 
+/* ═══════════════════════════════
+   WORKSHEET OUTLINE — shared by the event window, cards and tooltip.
+   Mirrors the PDF's three indent levels:
+     primary   = category heading (Audio Equipment, AV Labor…), printed order
+     secondary = qty + item, with its room code
+     tertiary  = that item's own notes, directly under it
+   General Notes are about the whole event, so they're pulled out as a
+   callout. Events uploaded before this existed have no outline; they fall
+   back to the old flat lists until the worksheet is re-uploaded.
+═══════════════════════════════ */
+function toArr(v) { return Array.isArray(v) ? v : (v && typeof v === 'object' ? Object.keys(v).sort((a, b) => a - b).map(k => v[k]) : []); }
+function evOutline(ev) {
+  const secs = toArr(ev && ev.sections);
+  if (!secs.length) return null;
+  const all = secs.map(sec => ({
+    key: sec.key || '', title: sec.title || '', detail: sec.detail || '', window: sec.window || '', labor: !!sec.labor,
+    notes: toArr(sec.notes), items: toArr(sec.items).map(i => ({ qty: i.qty, name: i.name || '', code: i.code || '', notes: toArr(i.notes) }))
+  }));
+  return {
+    general: all.filter(x => x.key === 'NOTES').flatMap(x => x.notes),
+    sections: all.filter(x => x.key !== 'NOTES' && (x.items.length || x.notes.length))
+  };
+}
+// Tech start follows the worksheet's reservation start; events without one
+// (manual events, schedules uploaded before this) keep the old 30-minute rule.
+function techStartH(ev) {
+  if (ev && typeof ev.resStartH === 'number' && ev.resStartH <= ev.startH) return ev.resStartH;
+  return ev.startH - 0.5;
+}
+var WS_SHOW = 8;     // items shown per category before "show all"
+// "FCOM 1200" on an item in an FCOM room just repeats the room; "CEC" on a mic
+// in that room means it comes from CEC — that one is worth showing.
+function roomBuilding(room) { return String(room || '').trim().split(/\s+/)[0].toUpperCase(); }
+function codeIsForeign(code, bldg) { return !!code && !!bldg && code.trim().split(/\s+/)[0].toUpperCase() !== bldg; }
+function telLinked(c) {
+  const e = escapeHtml(c);
+  return e.replace(/(\d{3})-(\d{3})-(\d{4})/g, '<a class="dm-tel" href="tel:$1$2$3">$1-$2-$3</a>');
+}
+function wsSectionHtml(sec, full, bldg) {
+  const head = `<span class="ws-t">${escapeHtml(sec.title)}</span>` +
+    (sec.window ? `<span class="ws-win">${escapeHtml(sec.window)}</span>` : '') +
+    '';
+  let h = `<section class="ws-sec${sec.labor ? ' labor' : ''}"><div class="ws-h">${head}</div>`;
+  if (sec.detail) h += `<div class="ws-detail">${escapeHtml(sec.detail)}</div>`;
+  h += '<div class="ws-items">';
+  sec.items.forEach((it, n) => {
+    const more = full && n >= WS_SHOW ? ' ws-more' : '';
+    h += `<div class="ws-item${more}"><span class="ws-q">${it.qty == null ? '' : it.qty}</span><span class="ws-nm">${escapeHtml(it.name)}</span>` +
+      (codeIsForeign(it.code, bldg) ? `<span class="ws-code" title="Comes from ${escapeHtml(it.code)}">from ${escapeHtml(it.code)}</span>` : '<span></span>');
+    if (full && it.notes.length) h += `<div class="ws-notes">${it.notes.map(x => `<div>${escapeHtml(x)}</div>`).join('')}</div>`;
+    if (!full && it.notes.length) h += `<div class="ws-notes compact" title="${escapeHtml(it.notes.join('\n'))}">${escapeHtml(it.notes[0])}${it.notes.length > 1 ? ` <i>+${it.notes.length - 1}</i>` : ''}</div>`;
+    h += '</div>';
+  });
+  h += '</div>';
+  if (sec.notes.length) h += `<div class="ws-snotes">${sec.notes.map(x => `<div>${escapeHtml(x)}</div>`).join('')}</div>`;
+  if (full && sec.items.length > WS_SHOW) h += `<button type="button" class="ws-all" onclick="this.closest('.ws-sec').classList.toggle('open');this.textContent=this.closest('.ws-sec').classList.contains('open')?'Show fewer':'Show all ${sec.items.length}'">Show all ${sec.items.length}</button>`;
+  return h + '</section>';
+}
+function wsGeneralHtml(notes, compact) {
+  if (!notes.length) return '';
+  if (compact) return `<div class="ws-gen compact" title="${escapeHtml(notes.join('\n'))}"><b>NOTE</b> ${escapeHtml(notes[0])}${notes.length > 1 ? ` <i>+${notes.length - 1}</i>` : ''}</div>`;
+  return `<div class="ws-gen"><div class="ws-gen-h">GENERAL NOTES</div>${notes.map(x => `<div>${escapeHtml(x)}</div>`).join('')}</div>`;
+}
+
 function showTooltip(ev, evKey, x, y) {
   clearTimeout(tooltipHideTimer);
   let h = '';
   h += `<div class="tt-room">${ev.room}</div>`;
   h += `<div class="tt-time">${fmtRange(ev.startH, ev.endH)}</div>`;
   h += `<div class="tt-name">${ev.name}</div>`;
-  if (ev.hasTech) h += `<div class="tt-badge">⚙ TECH START ${fmtH(ev.startH - 0.5)}</div>`;
+  if (ev.client) h += `<div class="tt-client">${escapeHtml(ev.client)}</div>`;
+  if (ev.hasTech) h += `<div class="tt-badge">⚙ TECH START ${fmtH(techStartH(ev))}</div>`;
+
+  const ol = evOutline(ev);
+  if (ol) {
+    h += wsGeneralHtml(ol.general, true);
+    let rows = 0, hidden = 0;
+    ol.sections.forEach(sec => {
+      if (rows >= 12) { hidden += sec.items.length; return; }
+      h += `<div class="tt-sec${sec.labor ? ' labor' : ''}">${escapeHtml(sec.title)}${sec.window ? ' · ' + escapeHtml(sec.window) : ''}</div>`;
+      sec.items.forEach(it => {
+        if (rows >= 12) { hidden++; return; }
+        h += `<div class="tt-row"><b>${it.qty == null ? '' : it.qty}</b>${escapeHtml(it.name)}</div>`; rows++;
+      });
+    });
+    if (hidden) h += `<div class="tt-more">+${hidden} more</div>`;
+    if (!ol.sections.length) h += `<div class="tt-notech">No tech needs</div>`;
+    h += `<div class="tt-click-hint">CLICK TO OPEN DETAILS & SIGN OFF</div>`;
+    tooltip.innerHTML = h;
+    positionTooltip(x, y);
+    tooltip.classList.add('show');
+    tooltipVisible = true;
+    return;
+  }
 
   const tags = [];
   ev.av.forEach(a       => tags.push(`<span class="tt-tag g">🎛 <b>${a.label}</b> ${a.name}</span>`));
@@ -3921,18 +4617,21 @@ function openDetailModal(ev, evKey) {
 
   document.getElementById('dm-room').textContent = ev.room;
   document.getElementById('dm-name').textContent = ev.name;
-  document.getElementById('dm-time').textContent = fmtRange(ev.startH, ev.endH);
+  document.getElementById('dm-time').innerHTML = escapeHtml(fmtRange(ev.startH, ev.endH)) +
+    (typeof ev.resStartH === 'number' && typeof ev.resEndH === 'number'
+      ? `<span class="dm-booked">room booked ${escapeHtml(fmtRange(ev.resStartH, ev.resEndH))}</span>` : '');
+  const cl = document.getElementById('dm-client');
+  cl.textContent = ev.client || ''; cl.classList.toggle('hidden', !ev.client);
 
   const state = signoffCache[evKey] || {};
   let body = '';
 
   // Badges row
-  body += `<div class="dm-badges">`;
-  if (ev.hasTech && !ev.allDay) body += `<span class="dm-badge amber">⚙ TECH START ${fmtH(ev.startH - 0.5)}</span>`;
-  if (ev.hasFood) body += `<span class="dm-badge amber">🍽 CATERING</span>`;
-  if (ev.allDay)  body += `<span class="dm-badge amber">ALL DAY</span>`;
-  if (ev.ec)      body += `<span class="dm-badge" style="color:var(--muted2);border-color:var(--border2);background:var(--surface2);">EC: ${ev.ec}</span>`;
-  body += `</div>`;
+  // Tech start lives on the sign-off button and EC in the details row, so
+  // the badge row is only for exceptions (catering, all day).
+  const badges = (ev.hasFood ? `<span class="dm-badge amber">🍽 CATERING</span>` : '') +
+                 (ev.allDay  ? `<span class="dm-badge amber">ALL DAY</span>` : '');
+  if (badges) body += `<div class="dm-badges">${badges}</div>`;
 
   function dmSection(label, items, cls) {
     if (!items.length) return '';
@@ -3968,31 +4667,47 @@ function openDetailModal(ev, evKey) {
   techHtml += dmSection('Technical Rentals',  ev.techRental,   'ta');
   if (!techHtml) techHtml = `<div class="no-needs-label">No Technical Needs</div>`;
 
-  body += dmGroup('⚙ TECH', techHtml, 'dm-group-tech');
-
-  // Notes
-  if (ev.notes.length) {
-    body += `<div class="dm-section-lbl">Notes</div><div class="dm-notes">`;
-    ev.notes.forEach(n => { body += `<div class="dm-note">${n}</div>`; });
-    body += `</div>`;
+  const facts = [['SETUP', ev.setup], ['TYPE', ev.evType], ['EC', ev.ec]].filter(([, v]) => v);
+  const contacts = toArr(ev.contacts);
+  if (facts.length || contacts.length) {
+    body += `<div class="dm-facts">${facts.map(([k, v]) => `<span><i>${k}</i>${escapeHtml(v)}</span>`).join('')}` +
+      (contacts.length ? `<span class="dm-contact"><i>CONTACT</i><span>${contacts.map(telLinked).join(' · ')}</span></span>` : '') + `</div>`;
   }
 
-  // View Source — same raw-PDF-text verification tool as the card view.
-  if (ev.rawSource) {
-    body += `<div class="dm-section-lbl">🔍 View Source</div><pre class="raw-source">${escapeHtml(ev.rawSource)}</pre>`;
+  const ol = evOutline(ev);
+  if (ol) {
+    body += wsGeneralHtml(ol.general, false);
+    body += ol.sections.length ? `<div class="ws">${ol.sections.map(x => wsSectionHtml(x, true, roomBuilding(ev.room))).join('')}</div>`
+                               : `<div class="no-needs-label">No Technical Needs</div>`;
+  } else {
+    // Schedule uploaded before the outline existed: old flat lists.
+    body += `<div class="ws-legacy">${techHtml}</div>`;
+    if (ev.notes.length) {
+      body += `<div class="dm-section-lbl">Notes</div><div class="dm-notes">`;
+      ev.notes.forEach(n => { body += `<div class="dm-note">${escapeHtml(n)}</div>`; });
+      body += `</div><div class="ws-reup">Re-upload the worksheet to see notes under the item they belong to.</div>`;
+    }
   }
+
+  body += `<div class="dm-actions">`;
 
   // Single sign-off button — only if event has tech needs
   if (ev.hasTech && !ev.allDay) {
     if (state.ts) {
       body += `<button class="dm-signoff-btn signed" data-evkey="${evKey}">${state.tsBy}  ·  ${state.tsAt}</button>`;
     } else {
-      body += `<button class="dm-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">TECH STARTS AT ${fmtH(ev.startH - 0.5)}</button>`;
+      body += `<button class="dm-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')" title="Tech starts at ${fmtH(techStartH(ev))} — tap when the room is ready">SIGN OFF · ${fmtH(techStartH(ev))}</button>`;
     }
   }
 
   body += flagModalHtml(evKey, getFlag(currentDateKey, evKey));
-  body += `<div class="dm-flag"><button class="dm-flag-btn" onclick="openEquipModal({ev:detailCurrentEv,dateKey:currentDateKey})">+ ADD EQUIPMENT</button></div>`;
+  body += `<div class="dm-flag"><button class="dm-flag-btn" onclick="openEquipModal({ev:detailCurrentEv,dateKey:currentDateKey})">+ SET/STRIKE</button></div>`;
+  body += `</div>`;
+  // View Source — everything the worksheet printed for this event, in case
+  // the parse missed something. Collapsed until asked for.
+  if (ev.rawSource) {
+    body += `<details class="dm-src"><summary>🔍 View source <span>everything the worksheet printed for this event</span></summary><pre class="raw-source">${escapeHtml(ev.rawSource)}</pre></details>`;
+  }
   if (ev.manual) body += `<div class="dm-flag"><button class="dm-flag-btn" onclick="editManualFromModal()">EDIT / DELETE THIS EVENT</button></div>`;
 
   document.getElementById('dm-body').innerHTML = body;
@@ -4228,6 +4943,10 @@ function renderRoomCells(row, evs, allEventsForContext) {
     el.className = 'tl-evt ' + cls + (ev.manual ? ' tl-manual' : '');
     el.style.left  = tlLeft(s) + '%';
     el.style.width = tlWidth(s, e) + '%';
+    // Hovering grows the block to fit its full name (never smaller than it is).
+    el.style.setProperty('--w', tlWidth(s, e) + '%');
+    el.classList.add('tl-grow');
+    if (e - s < 1.25) el.classList.add('tl-narrow');
     el.dataset.evkey    = evKey;
     el.dataset.evname   = ev.name.toLowerCase();
     el.dataset.evroom   = ev.room.toLowerCase();
@@ -4276,7 +4995,7 @@ function renderRoomCells(row, evs, allEventsForContext) {
     applyFlagToTl(el, getFlag(currentDateKey, evKey));
 
     if (ev.hasTech && !ev.allDay) {
-      const tsH = ev.startH - 0.5;
+      const tsH = techStartH(ev);
       if (tsH >= TL_START) {
         const tline = document.createElement('div');
         tline.className = 'tl-techline';
@@ -4355,7 +5074,7 @@ function renderCards(events) {
       [...ev.av, ...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech,
        ...ev.avLabor, ...ev.audioLabor, ...ev.videoLabor, ...ev.lightingLabor, ...ev.filmLabor,
        ...ev.gentechLabor, ...ev.techRental]
-      .map(it => it.name).join(' ')).toLowerCase();
+      .map(it => it.name).join(' ') + ' ' + (ev.client || '') + ' ' + ev.notes.join(' ')).toLowerCase();
 
     if (isEnded) card.classList.add('card-ended');
 
@@ -4379,12 +5098,22 @@ function renderCards(events) {
     inner += `<div class="evt-time">${fmtRange(ev.startH, ev.endH)}${foodEmoji}${laborFlag}</div>`;
     inner += `<span class="evt-countdown ${cd.cls}" data-start="${ev.startH}" data-end="${ev.endH}">${cd.text}</span>`;
     inner += `<div class="evt-name">${ev.name}</div>`;
+    if (ev.client) inner += `<div class="evt-client">${escapeHtml(ev.client)}</div>`;
     if (ev.type && ev.type.toLowerCase() !== ev.name.toLowerCase()
         && !/^(main event|rehearsal|practice|meeting|meal|reception|planning|ready|doors|client pre-access|breakout session|dressing room|production office|client load-in)$/i.test(ev.type)) {
       inner += `<div class="evt-type">${ev.type}</div>`;
     }
 
     // ── Department sections ──
+    const ol = evOutline(ev);
+    if (ol) {
+      inner += wsGeneralHtml(ol.general, true);
+      ol.sections.forEach(sec => {
+        inner += `<div class="dept-lbl ws-card-lbl${sec.labor ? ' labor' : ''}" onclick="toggleSection(this)"><span>${escapeHtml(sec.title)}${sec.window ? ' · ' + escapeHtml(sec.window) : ''}</span></div>`;
+        inner += `<div class="dept-section ws-card">${wsSectionHtml(sec, false)}</div>`;
+      });
+      if (!ol.sections.length) inner += `<div class="no-needs-label">No Technical Needs</div>`;
+    } else {
     inner += deptSection('AV Equipment',       ev.av,           'tg');
     inner += deptSection('Audio Equipment',    ev.audio,        'tg');
     inner += deptSection('Video Equipment',    ev.video,        'tg');
@@ -4415,6 +5144,7 @@ function renderCards(events) {
       ev.notes.forEach(n => { inner += `<div class="side-note">${n}</div>`; });
       inner += `</div></div>`;
     }
+    } // end legacy (no outline)
 
     // View Source — the exact raw text this event was parsed from, so
     // anyone can double-check a parse against the original PDF. Just a
@@ -4429,7 +5159,7 @@ function renderCards(events) {
       if (state.ts) {
         inner += `<div class="signoff-bar"><button class="tech-signoff-btn signed" data-evkey="${evKey}">${state.tsBy}</button></div>`;
       } else {
-        inner += `<div class="signoff-bar"><button class="tech-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">TECH STARTS AT ${fmtH(ev.startH - 0.5)}</button></div>`;
+        inner += `<div class="signoff-bar"><button class="tech-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">TECH STARTS AT ${fmtH(techStartH(ev))}</button></div>`;
       }
     }
 
@@ -4462,6 +5192,7 @@ function toggleSection(lbl) {
   if (!section || !section.classList.contains('dept-section')) return;
   const collapsed = section.classList.toggle('collapsed');
   lbl.classList.toggle('collapsed', collapsed);
+  if (lbl.closest && lbl.closest('#card-grid')) capCards();   // card height changed
 }
 
 /* ═══════════════════════════════
@@ -4514,7 +5245,7 @@ function updateNextUp(events) {
 
   const upcoming = events
     .filter(ev => ev.hasTech && !ev.allDay)
-    .map(ev => ({ ...ev, tsH: ev.startH - 0.5 }))
+    .map(ev => ({ ...ev, tsH: techStartH(ev) }))
     .filter(ev => ev.tsH > nowH && ev.tsH <= nowH + 4)
     .sort((a,b) => a.tsH - b.tsH);
 
@@ -4640,6 +5371,13 @@ function printSchedule() {
    Equipment is shared across the team at equipment/{id} (not per-day,
    since a setup spans several days); falls back to localStorage offline.
 ═══════════════════════════════ */
+let invCache = {};                  // tracked gear: laptops, clickers… (see INVENTORY below)
+let storageCache = {};              // named storage rooms
+let gearCache = {};                 // the retired "Last Seen" list, kept only so it can be imported
+let invListenerAttached = false;
+try { invCache = JSON.parse(localStorage.getItem('osves_inventory') || '{}'); } catch (e) { invCache = {}; }
+try { storageCache = JSON.parse(localStorage.getItem('osves_storage') || '{}'); } catch (e) { storageCache = {}; }
+try { gearCache = JSON.parse(localStorage.getItem('osves_gear') || '{}'); } catch (e) { gearCache = {}; }
 let equipCache = {};
 let equipListenerAttached = false;
 try { equipCache = JSON.parse(localStorage.getItem('osves_equipment') || '{}'); } catch (e) { equipCache = {}; }
@@ -4686,8 +5424,9 @@ function removeFlag(dateKey, evKey) {
 function toggleFlag(dateKey, evKey) {
   const existing = getFlag(dateKey, evKey);
   if (existing) {
-    const msg = 'Remove the flag from this event?' + (existing.note ? '\n\n"' + existing.note + '"' : '');
-    if (confirm(msg)) removeFlag(dateKey, evKey);
+    const prev = snapOf(existing);
+    removeFlag(dateKey, evKey);
+    undoToast('Flag removed', () => setFlag(dateKey, evKey, prev));
     return;
   }
   const go = (initials) => {
@@ -4741,7 +5480,7 @@ function flagModalHtml(evKey, fl) {
       `<span class="dm-flag-meta">${escapeHtml(fl.by || '')}${fl.at ? ' · ' + escapeHtml(fl.at) : ''}</span></div>` +
       `<button class="dm-flag-btn" onclick="onFlagClick(event,'${evKey}')">REMOVE FLAG</button></div>`;
   }
-  return `<div class="dm-flag" id="dm-flag-block"><button class="dm-flag-btn" onclick="onFlagClick(event,'${evKey}')">${FLAG_ICON} FLAG THIS EVENT</button></div>`;
+  return `<div class="dm-flag" id="dm-flag-block"><button class="dm-flag-btn" onclick="onFlagClick(event,'${evKey}')" title="Flag this event for the team">${FLAG_ICON} FLAG</button></div>`;
 }
 // Paint flags for the day currently on screen (cards, timeline blocks, open modal).
 function applyFlagsToDay() {
@@ -4829,7 +5568,24 @@ function jumpToEvent(dateKey, evKey) {
   });
 }
 
+/* Week view ordering. "Labor only" hides everything without labor attached;
+   "Labor first" keeps all events but floats labor to the top of each day. */
+let weekSort = (function () { try { const v = localStorage.getItem('osves_wk_sort'); return ['time', 'room', 'labor-first', 'labor-only'].includes(v) ? v : 'time'; } catch (e) { return 'time'; } })();
+function setWeekSort(v) { weekSort = v; try { localStorage.setItem('osves_wk_sort', v); } catch (e) {} paintWeek(); }
+function laborKinds(ev) {
+  return [['AV', ev.avLabor], ['Audio', ev.audioLabor], ['Video', ev.videoLabor], ['Lighting', ev.lightingLabor], ['Film', ev.filmLabor], ['Gen tech', ev.gentechLabor]]
+    .filter(([, a]) => a && a.length).map(([n]) => n);
+}
+function weekOrder(events) {
+  const byTime = (a, b) => a.startH - b.startH || a.room.localeCompare(b.room);
+  const list = weekSort === 'labor-only' ? events.filter(hasLabor) : events.slice();
+  if (weekSort === 'room') return list.sort((a, b) => a.room.localeCompare(b.room) || a.startH - b.startH);
+  if (weekSort === 'labor-first') return list.sort((a, b) => (hasLabor(b) - hasLabor(a)) || byTime(a, b));
+  return list.sort(byTime);
+}
 function paintWeek() {
+  const sortSel = document.getElementById('wk-sort'); if (sortSel) sortSel.value = weekSort;
+  document.getElementById('week-wrap').classList.toggle('wk-labor-mode', weekSort === 'labor-only' || weekSort === 'labor-first');
   const grid = document.getElementById('wk-grid');
   if (!grid) return;
   const keys = weekKeys(weekAnchor || currentDateKey || todayKey());
@@ -4877,10 +5633,14 @@ function paintWeek() {
       const e = document.createElement('div'); e.className = 'wk-empty';
       e.textContent = 'NO TECH EVENTS';
       list.appendChild(e);
+    } else if (weekSort === 'labor-only' && !events.some(hasLabor)) {
+      const e = document.createElement('div'); e.className = 'wk-empty';
+      e.textContent = 'NO LABOR EVENTS';
+      list.appendChild(e);
     } else {
-      totalEvents += events.length;
-      cnt.textContent = events.length + (events.length === 1 ? ' EVENT' : ' EVENTS');
-      const sorted = events.slice().sort((a, b) => a.startH - b.startH || a.room.localeCompare(b.room));
+      const sorted = weekOrder(events);
+      totalEvents += sorted.length;
+      cnt.textContent = sorted.length + (weekSort === 'labor-only' ? ' LABOR' : (sorted.length === 1 ? ' EVENT' : ' EVENTS'));
       sorted.forEach(ev => {
         const evKey = makeEventKey(ev);
         const fl = getFlag(k, evKey);
@@ -4913,6 +5673,12 @@ function paintWeek() {
         chip.appendChild(nm);
         const rm = document.createElement('div'); rm.className = 'wk-room'; rm.textContent = ev.room; rm.title = ev.room;
         chip.appendChild(rm);
+        if (hasLabor(ev)) {
+          // In the labor views, say which crews: AV, Audio, Lighting…
+          const lb = document.createElement('div'); lb.className = 'wk-labor'; lb.textContent = 'LABOR · ' + laborKinds(ev).join(', ');
+          chip.appendChild(lb);
+          chip.classList.add('wk-has-labor');
+        }
         if (fl && fl.note) {
           const fn = document.createElement('div'); fn.className = 'wk-fnote'; fn.textContent = fl.note;
           chip.appendChild(fn);
@@ -4929,7 +5695,7 @@ function paintWeek() {
   const fmt = (d, y) => d.toLocaleDateString('en-US', y ? { month: 'short', day: 'numeric', year: 'numeric' } : { month: 'short', day: 'numeric' });
   document.getElementById('wk-label').textContent = fmt(a, false) + ' – ' + fmt(b, true);
   document.getElementById('wk-summary').textContent =
-    totalEvents + ' TECH EVENT' + (totalEvents === 1 ? '' : 'S') + (flagged.length ? ' · ' + flagged.length + ' FLAGGED' : '');
+    totalEvents + (weekSort === 'labor-only' ? ' LABOR EVENT' : ' TECH EVENT') + (totalEvents === 1 ? '' : 'S') + (flagged.length ? ' · ' + flagged.length + ' FLAGGED' : '');
 
   // flagged strip
   const strip = document.getElementById('wk-flagged');
@@ -5092,11 +5858,14 @@ function saveEventModal() {
 function deleteManualEvent() {
   if (!evModal || !evModal.id) return;
   const dk = evModal.dateKey, id = evModal.id;
-  const m = (manualCache[dk] || {})[id];
-  if (!confirm('Delete this manual event' + (m ? ': ' + m.name : '') + '?')) return;
+  const m = snapOf((manualCache[dk] || {})[id]);
   if (db) db.ref('manualEvents/' + dk + '/' + id).remove();
   else { if (manualCache[dk]) delete manualCache[dk][id]; onManualChanged(); }
   closeEventModal();
+  if (m) undoToast('Deleted event “' + (m.name || '') + '”', () => {
+    if (db) db.ref('manualEvents/' + dk + '/' + id).set(m);
+    else { (manualCache[dk] = manualCache[dk] || {})[id] = m; onManualChanged(); }
+  });
 }
 function editManual(e, id) { if (e) e.stopPropagation(); openEventModal({ id }); }
 function editManualFromModal() {
@@ -5206,6 +5975,7 @@ function saveEquipLocal() {
 
 function fillEquipRooms() {
   const rooms = new Set();
+  invStorage().forEach(r => rooms.add(r.name));
   (parsedDays || []).forEach(d => (d.events || []).forEach(ev => { if (ev.room) rooms.add(ev.room); }));
   document.getElementById('eq-rooms').innerHTML =
     [...rooms].sort().map(r => `<option value="${escapeHtml(r).replace(/"/g, '&quot;')}">`).join('');
@@ -5338,7 +6108,7 @@ function renderEquipBanner() {
    same shape already stored, so no year guessing.
 ═══════════════════════════════ */
 const EQ_SETUP_LEAD = 1;        // hours before event start, for the prefilled set up time
-let eqTab = (function () { try { return localStorage.getItem('osves_eq_tab') === 'all' ? 'all' : 'today'; } catch (e) { return 'today'; } })();
+let eqTab = (function () { try { const v = localStorage.getItem('osves_eq_tab'); return v === 'all' || v === 'seen' ? v : 'today'; } catch (e) { return 'today'; } })();
 let eqModal = null;             // { id?, ev?, dateKey?, evKey?, added: n }
 
 function hToTimeStr(h) {
@@ -5361,6 +6131,16 @@ function eqEventLabel(i) {
   return i.evName ? 'for ' + i.evName : '';
 }
 
+function fillEqAssets(sel) {
+  const items = invList().sort((a, b) => (a.type || '').localeCompare(b.type || '') || a.name.localeCompare(b.name));
+  document.getElementById('eqm-assets-wrap').classList.toggle('hidden', !items.length);
+  document.getElementById('eqm-assets').innerHTML = items.map(i =>
+    `<button type="button" class="eqm-chip${sel[i.id] ? ' on' : ''}" data-id="${i.id}" onclick="this.classList.toggle('on')">${invIcon(i.type)} ${escapeHtml(i.name)}${invState(i) === 'missing' ? ' ❓' : ''}</button>`).join('');
+}
+function readEqAssets() {
+  const o = {}; document.querySelectorAll('#eqm-assets .eqm-chip.on').forEach(b => { o[b.dataset.id] = true; });
+  return Object.keys(o).length ? o : null;
+}
 function openEquipModal(opts) {
   opts = opts || {};
   fillEquipRooms();
@@ -5375,6 +6155,7 @@ function openEquipModal(opts) {
   g('eqm-del').classList.toggle('hidden', !it);
   g('eqm-err').classList.add('hidden');
   g('eqm-added').classList.add('hidden');
+  fillEqAssets(it ? (it.assets || {}) : {});
 
   const forEl = g('eqm-for'), exEl = g('eqm-existing');
   forEl.classList.add('hidden'); exEl.classList.add('hidden');
@@ -5445,7 +6226,7 @@ function saveEquipModal() {
     err.textContent = 'Strike is before set up.'; err.classList.remove('hidden'); return;
   }
   err.classList.add('hidden');
-  const fields = { name, loc: g('eqm-loc').value.trim(), setup, setupTime, strike, strikeTime, note: g('eqm-note').value.trim() };
+  const fields = { name, loc: g('eqm-loc').value.trim(), setup, setupTime, strike, strikeTime, note: g('eqm-note').value.trim(), assets: readEqAssets() };
 
   if (eqModal.id) {
     const id = eqModal.id;
@@ -5470,6 +6251,15 @@ function saveEquipModal() {
   g('eqm-name').focus();
 }
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (invMove) { closeMove(); return; }
+    if (invEdit) { closeItem(); return; }
+    if (invsOpen) { closeStorageRooms(); return; }
+  } else if (e.key === 'Enter' && e.target && e.target.tagName === 'INPUT' && (invMove || invEdit) && e.target.type !== 'date') {
+    e.preventDefault(); if (invMove) saveMove(); else saveItem(); return;
+  }
+});
+document.addEventListener('keydown', e => {
   if (!eqModal) return;
   if (e.key === 'Escape') { e.preventDefault(); closeEquipModal(); }
   else if (e.key === 'Enter' && e.target && e.target.tagName === 'INPUT' && e.target.type !== 'date') { e.preventDefault(); saveEquipModal(); }
@@ -5480,7 +6270,7 @@ function onEqClick(e, evKey) {
   if (ev) openEquipModal({ ev, dateKey: currentDateKey });
 }
 function setEqTab(t) {
-  eqTab = t === 'all' ? 'all' : 'today';
+  eqTab = t === 'all' || t === 'seen' ? t : 'today';
   try { localStorage.setItem('osves_eq_tab', eqTab); } catch (e) {}
   renderEquip();
 }
@@ -5527,7 +6317,7 @@ function eqStepRow(st, showDate) {
   const who = st.kind === 'set' ? i.setBy : i.strikeBy, at = st.kind === 'set' ? i.setAt : i.strikeAt;
   const overdue = showDate;
   const when = (showDate ? keyToDate(st.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' : '') + timeStrLabel(st.time);
-  const sub = [i.loc ? '📍 ' + i.loc : '', eqEventLabel(i), i.note || ''].filter(Boolean).map(escapeHtml).join(' · ');
+  const sub = [i.loc ? '📍 ' + i.loc : '', eqEventLabel(i), invNames(i) ? '💻 ' + invNames(i) : '', i.note || ''].filter(Boolean).map(escapeHtml).join(' · ');
   return `<div class="eqt-row ${st.kind}${done ? ' done' : ''}" onclick="toggleEquipStep('${st.id}','${st.kind}')" title="Tap to ${done ? 'undo' : 'check off'}">
     <div class="eqt-box">${done ? '✓' : ''}</div>
     <div class="eqt-time${overdue ? ' over' : ''}">${escapeHtml(when)}</div>
@@ -5562,8 +6352,9 @@ function toggleEquipStep(id, kind) {
     else { Object.assign(it, upd); saveEquipLocal(); renderEquip(); }
   };
   if (it[f.done]) {
-    if (!confirm(`Undo ${kind === 'set' ? 'set up' : 'strike'} check-off by ${it[f.by] || '—'}?`)) return;
+    const prev = { [f.done]: true, [f.by]: it[f.by] || null, [f.at]: it[f.at] || null };
     apply({ [f.done]: false, [f.by]: null, [f.at]: null });
+    undoToast((kind === 'set' ? 'Set up' : 'Strike') + ' un-checked · ' + (it.name || ''), () => apply(prev));
     return;
   }
   const proceed = initials => {
@@ -5571,6 +6362,8 @@ function toggleEquipStep(id, kind) {
     let h = now.getHours(); const m = now.getMinutes();
     const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
     apply({ [f.done]: true, [f.by]: initials, [f.at]: h + ':' + String(m).padStart(2, '0') + ' ' + ap });
+    // Tracked items follow the job: set up moves them into the room; strike asks where they went.
+    try { if (kind === 'set') invOnSetUp(it, initials); else invOnStrike(it); } catch (e) { console.error('inventory hook', e); }
   };
   if (myInitials) proceed(myInitials);
   else promptInitials(ini => { if (ini) proceed(ini); });
@@ -5580,13 +6373,14 @@ function toggleEquipStep(id, kind) {
    Everything else (timeline markers, the Today list, event badges, week counts)
    is drawn from this one record, so it all disappears with it. Returns true if deleted. */
 function deleteEquip(id) {
-  const it = equipCache[id];
+  const it = snapOf(equipCache[id]);
   if (!it) return false;
-  const msg = 'Delete "' + (it.name || 'this item') + '" completely?\n\n' +
-    'This removes both its set up and its strike, and any check-offs, everywhere it appears. It can\'t be undone.';
-  if (!confirm(msg)) return false;
   if (db) db.ref('equipment/' + id).remove();
   else { delete equipCache[id]; saveEquipLocal(); renderEquip(); }
+  undoToast('Deleted “' + (it.name || 'equipment') + '” (set up + strike)', () => {
+    if (db) db.ref('equipment/' + id).set(it);
+    else { equipCache[id] = it; saveEquipLocal(); renderEquip(); }
+  });
   return true;
 }
 function deleteEquipFromModal() {
@@ -5602,13 +6396,595 @@ function fmtEquipDate(d, t) {
   return out;
 }
 
+/* ═══════════════════════════════
+   BACKUP / RESTORE
+   One JSON file with every shared path. Restore replaces the shared data
+   with the file's contents — after first downloading the current data, so a
+   restore can itself be undone by restoring that file.
+═══════════════════════════════ */
+const BACKUP_PATHS = ['schedule', 'scheduleDates', 'signoffs', 'notes', 'flags', 'manualEvents', 'equipment', 'inventory', 'storage', 'gear', 'userPrefs'];
+const BACKUP_APP = 'osves-tech-calendar';
+async function collectBackup() {
+  const data = {};
+  if (db) {
+    const snaps = await Promise.all(BACKUP_PATHS.map(p => db.ref(p).once('value')));
+    BACKUP_PATHS.forEach((p, i) => { const v = snaps[i].val(); if (v != null) data[p] = v; });
+  } else {
+    // Not connected: only what this device holds locally.
+    if (Object.keys(equipCache).length) data.equipment = equipCache;
+    if (Object.keys(invCache).length) data.inventory = invCache;
+    if (Object.keys(storageCache).length) data.storage = storageCache;
+    if (Object.keys(manualCache).length) data.manualEvents = manualCache;
+    if (Object.keys(flagCache).length) data.flags = flagCache;
+  }
+  return { app: BACKUP_APP, version: 1, exportedAt: new Date().toISOString(), exportedBy: myInitials || null, source: db ? 'shared' : 'this-device', data };
+}
+function backupFileName(prefix) {
+  const d = new Date();
+  return prefix + '-' + dateToKey(d) + '-' + String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0') + '.json';
+}
+function downloadJSON(obj, name) {
+  const blob = new Blob([JSON.stringify(obj, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  window.__lastDownload = { name, obj }; // test hook
+}
+function lastBackupLabel() {
+  let t = 0; try { t = Number(localStorage.getItem('osves_last_backup')) || 0; } catch (e) {}
+  return t ? 'last ' + invAgo(t) + ' on this device' : 'never on this device';
+}
+async function downloadBackup(prefix) {
+  try {
+    const b = await collectBackup(), name = backupFileName(prefix || 'osves-backup');
+    downloadJSON(b, name);
+    try { localStorage.setItem('osves_last_backup', String(Date.now())); } catch (e) {}
+    renderThemeMenu();
+    if (!prefix) undoToast('Backup downloaded · ' + name, null);
+    return true;
+  } catch (e) {
+    console.error('backup failed', e);
+    undoToast('Backup failed: ' + (e.message || e), null);
+    return false;
+  }
+}
+function pickRestoreFile() { const i = document.getElementById('restore-file'); i.value = ''; i.click(); }
+function onRestoreFile(input) {
+  const f = input.files && input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => restoreFromText(String(r.result));
+  r.readAsText(f);
+}
+function restoreFromText(txt) {
+  let b; try { b = JSON.parse(txt); } catch (e) { undoToast('That file isn\'t a valid backup.', null); return; }
+  if (!b || b.app !== BACKUP_APP || !b.data || typeof b.data !== 'object') { undoToast('That file isn\'t an OSVES backup.', null); return; }
+  if (!db) { undoToast('Restore needs the shared database — not connected.', null); return; }
+  const n = v => (v && typeof v === 'object') ? Object.keys(v).length : 1;
+  const parts = [['schedule', 'days'], ['equipment', 'set/strikes'], ['inventory', 'tracked items'], ['signoffs', 'days of sign-offs'], ['flags', 'days of flags'], ['manualEvents', 'days of manual events']]
+    .filter(([k]) => b.data[k]).map(([k, l]) => n(b.data[k]) + ' ' + l);
+  typedConfirm({
+    title: 'RESTORE FROM BACKUP',
+    html: `Replaces <b>all shared data</b> with the backup from <b>${escapeHtml(new Date(b.exportedAt).toLocaleString())}</b>${b.exportedBy ? ' (made by ' + escapeHtml(b.exportedBy) + ')' : ''}.<br><br>` +
+          `It contains ${escapeHtml(parts.join(', ') || 'no data')}.<br><br>A backup of what's there now downloads first, so you can go back.`,
+    word: 'RESTORE', button: 'RESTORE',
+    onOk: () => doRestore(b)
+  });
+}
+async function doRestore(b) {
+  try {
+    if (!(await downloadBackup('osves-before-restore'))) return;
+    await Promise.all(BACKUP_PATHS.map(p => db.ref(p).set(b.data[p] === undefined ? null : b.data[p])));
+    undoToast('Restored — reloading…', null);
+    if (!window.__noReload) setTimeout(() => location.reload(), 1200);
+  } catch (e) {
+    console.error('restore failed', e);
+    undoToast('Restore failed: ' + (e.message || e), null);
+  }
+}
+
+/* ── Generic "type a word to confirm" dialog (Clear All, Restore) ── */
+var tcOk = null, tcWord = 'CLEAR';
+function typedConfirm(o) {
+  const g = x => document.getElementById(x);
+  g('clr-title').textContent = o.title; g('clr-text').innerHTML = o.html;
+  g('clr-word-lbl').textContent = 'TYPE ' + o.word + ' TO CONFIRM'; g('clr-go').textContent = o.button;
+  tcWord = o.word; tcOk = o.onOk;
+  g('clr-input').value = ''; clrCheck();
+  g('clr-bg').classList.remove('hidden');
+  setTimeout(() => g('clr-input').focus(), 30);
+}
+
+/* ═══════════════════════════════
+   OPTIONAL SIGN-IN (off until REQUIRE_SIGNIN is true)
+   Google sign-in limited to one email domain. Pair it with the
+   "signed-in" database rules so the data can't be read or changed by
+   anyone without a Belmont account.
+═══════════════════════════════ */
+var authUser = null;   // var: renderThemeMenu() reads it during startup
+function emailOk(e) { return !!e && e.toLowerCase().endsWith('@' + SIGNIN_DOMAIN); }
+function showSignin(msg) {
+  document.getElementById('signin-msg').textContent = msg || '';
+  document.getElementById('signin-dom').textContent = '@' + SIGNIN_DOMAIN;
+  document.getElementById('signin-bg').classList.remove('hidden');
+}
+function hideSignin() { document.getElementById('signin-bg').classList.add('hidden'); }
+async function requireSignin() {
+  await loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js');
+  const auth = firebase.auth();
+  return new Promise(resolve => {
+    let done = false;
+    auth.onAuthStateChanged(u => {
+      if (u && emailOk(u.email)) {
+        authUser = u; hideSignin();
+        if (!myInitials && u.displayName) {
+          myInitials = u.displayName.split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 3).toUpperCase();
+          try { localStorage.setItem('osves_initials', myInitials); } catch (e) {}
+          updateInitialsDisplay();
+        }
+        renderThemeMenu();
+        if (!done) { done = true; resolve(u); }
+      } else if (u) {
+        auth.signOut();
+        showSignin('That account isn\'t a @' + SIGNIN_DOMAIN + ' account. Pick your Belmont Google account.');
+      } else {
+        showSignin('');
+      }
+    });
+  });
+}
+function doSignin() {
+  const p = new firebase.auth.GoogleAuthProvider();
+  p.setCustomParameters({ hd: SIGNIN_DOMAIN, prompt: 'select_account' });
+  firebase.auth().signInWithPopup(p).catch(e => {
+    document.getElementById('signin-msg').textContent = e && e.code === 'auth/popup-blocked'
+      ? 'Your browser blocked the sign-in window — allow pop-ups for this site and try again.'
+      : 'Sign-in didn\'t finish: ' + ((e && (e.message || e.code)) || 'unknown error');
+  });
+}
+function signOutUser() { if (window.firebase && firebase.auth) firebase.auth().signOut().then(() => location.reload()); }
+
+/* ═══════════════════════════════
+   INVENTORY — tracked gear (laptops, clickers…), where it is right now, and
+   where it's been. Set ups / strikes are movements of this gear:
+     • set up checked off → linked items move into that room automatically
+     • strike checked off → we ASK where each one went (never assumed home)
+   Storage rooms are just named places the board shows first. Everything
+   survives Clear All (it's physical gear, not schedule data).
+═══════════════════════════════ */
+const INV_TYPES = ['Laptop', 'RF clicker', 'Wireless pack', 'Camera', 'Other'];
+const qa = s => escapeHtml(String(s == null ? '' : s)).replace(/"/g, '&quot;');
+function invIcon(t) {
+  t = t || '';
+  if (/laptop|computer|mac/i.test(t)) return '💻';
+  if (/clicker|remote/i.test(t)) return '🔘';
+  if (/mic|pack|wireless/i.test(t)) return '🎤';
+  if (/cam/i.test(t)) return '📷';
+  if (/project/i.test(t)) return '📽';
+  return '📦';
+}
+function invStorage() {
+  return Object.entries(storageCache).filter(([, v]) => v && v.name)
+    .map(([id, v]) => ({ id, name: v.name, order: v.order || 0 }))
+    .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+}
+function invIsStorage(n) { const k = (n || '').trim().toLowerCase(); return !!k && invStorage().some(s => s.name.toLowerCase() === k); }
+function invList() { return Object.entries(invCache).filter(([, v]) => v && v.name).map(([id, v]) => Object.assign({ id }, v)); }
+function invState(it) { return it.kind === 'missing' ? 'missing' : it.kind === 'person' ? 'person' : (invIsStorage(it.loc) ? 'storage' : 'room'); }
+function invAgo(ts) {
+  const m = Math.max(0, Math.round((Date.now() - ts) / 60000));
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm ago';
+  const h = Math.round(m / 60); if (h < 24) return h + 'h ago';
+  return Math.round(h / 24) + 'd ago';
+}
+function invAge(ts) { const h = (Date.now() - ts) / 3600000; return h >= 48 ? 'stale' : h >= 12 ? 'aging' : 'fresh'; }
+function invStamp(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+}
+function invHist(it) { const h = it.hist || {}; return Object.keys(h).map(k => h[k]).filter(x => x && x.ts).sort((a, b) => b.ts - a.ts); }
+function invAssetIds(eq) { return Object.keys((eq && eq.assets) || {}).filter(id => invCache[id]); }
+function invNames(eq) { return invAssetIds(eq).map(id => invCache[id].name).join(', '); }
+function invSaveLocal() {
+  try { localStorage.setItem('osves_inventory', JSON.stringify(invCache)); localStorage.setItem('osves_storage', JSON.stringify(storageCache)); } catch (e) {}
+}
+function attachInvListener() {
+  if (!db || invListenerAttached) return;
+  invListenerAttached = true;
+  db.ref('inventory').on('value', s => { invCache = s.val() || {}; renderEquip(); invsRefresh(); });
+  db.ref('storage').on('value', s => { storageCache = s.val() || {}; renderEquip(); invsRefresh(); });
+  db.ref('gear').on('value', s => { gearCache = s.val() || {}; renderEquip(); });
+}
+function withWho(cb) { if (myInitials) cb(myInitials); else promptInitials(ini => { if (ini) cb(ini); }); }
+
+/* The one write path. dest = { kind: 'room'|'person'|'missing', loc }.
+   base = fields for a brand-new item (name, type, home). Every call appends a
+   history entry (last 12 kept) so there's always a chain of who/when/where. */
+function invWrite(id, base, dest, note, who, evName) {
+  const ts = Date.now(), cur = id ? invCache[id] : null, missing = dest.kind === 'missing';
+  const upd = { kind: dest.kind, loc: missing ? null : dest.loc, by: who, ts, note: note || null, evName: evName || null,
+                lastLoc: missing ? ((cur && (cur.loc || cur.lastLoc)) || null) : null };
+  const hk = 'h' + ts + Math.random().toString(36).slice(2, 5);
+  const entry = { kind: dest.kind, loc: missing ? 'MISSING' : dest.loc, by: who, ts };
+  if (note) entry.note = note;
+  if (evName) entry.ev = evName;
+  if (db) {
+    const key = id || db.ref('inventory').push().key;
+    const u = Object.assign({}, base || {}, upd); u['hist/' + hk] = entry;
+    if (cur) {
+      const ks = Object.keys(cur.hist || {}).sort((a, b) => ((cur.hist[a] || {}).ts || 0) - ((cur.hist[b] || {}).ts || 0));
+      ks.slice(0, Math.max(0, ks.length + 1 - 12)).forEach(k => { u['hist/' + k] = null; });
+    }
+    db.ref('inventory/' + key).update(u);
+    return key;
+  }
+  const key = id || ('L' + ts + Math.floor(Math.random() * 1000));
+  const it = invCache[key] || Object.assign({ hist: {} }, base || {});
+  Object.assign(it, upd); it.hist = it.hist || {}; it.hist[hk] = entry;
+  invCache[key] = it; invSaveLocal();
+  return key;
+}
+function invDestFromText(txt) {
+  const t = (txt || '').trim(); if (!t) return null;
+  const m = t.match(/^with\s+(.+)/i);
+  return m ? { kind: 'person', loc: m[1].trim() } : { kind: 'room', loc: t };
+}
+
+/* ── "Where is it?" picker, shared by the move, add-item and strike dialogs ── */
+function destFieldHtml(p, noMissing) {
+  const st = invStorage();
+  return `<select id="${p}-sel" class="invm-sel" onchange="destChanged('${p}')">
+    <option value="">— where is it? —</option>
+    ${st.length ? `<optgroup label="Storage rooms">${st.map(s => `<option value="s:${qa(s.name)}">${escapeHtml(s.name)}</option>`).join('')}</optgroup>` : ''}
+    <option value="r">Another room…</option><option value="p">With a person…</option>
+    ${noMissing ? '' : '<option value="m">Don\'t know — mark missing</option>'}
+  </select><input id="${p}-txt" class="invm-txt hidden" type="text" autocomplete="off">`;
+}
+function destChanged(p) {
+  const sel = document.getElementById(p + '-sel'), txt = document.getElementById(p + '-txt'); if (!sel || !txt) return;
+  const v = sel.value;
+  txt.classList.toggle('hidden', !(v === 'r' || v === 'p'));
+  if (v === 'r') { txt.placeholder = 'Room name'; txt.setAttribute('list', 'eq-rooms'); }
+  else if (v === 'p') { txt.placeholder = 'Who has it?'; txt.removeAttribute('list'); }
+  if (!txt.classList.contains('hidden')) txt.focus();
+}
+function setDest(p, v) { const s = document.getElementById(p + '-sel'); if (s) { s.value = v; destChanged(p); } }
+function readDest(p) {
+  const v = document.getElementById(p + '-sel').value, t = document.getElementById(p + '-txt').value.trim();
+  if (!v) return { error: 'Choose where it is.' };
+  if (v === 'm') return { dest: { kind: 'missing' } };
+  if (v.slice(0, 2) === 's:') return { dest: { kind: 'room', loc: v.slice(2) } };
+  if (!t) return { error: v === 'p' ? 'Who has it?' : 'Which room?' };
+  return { dest: { kind: v === 'p' ? 'person' : 'room', loc: t } };
+}
+function invNow(it) {
+  const s = invState(it);
+  return s === 'missing' ? 'missing' : s === 'person' ? 'with ' + it.loc : (it.loc || '—');
+}
+
+/* ── Move dialog ── */
+let invMove = null;
+function openMove(ids, o) {
+  o = o || {};
+  ids = ids.filter(id => invCache[id]); if (!ids.length) return;
+  fillEquipRooms();
+  invMove = { ids, evName: o.evName || null, skip: !!o.skip };
+  const g = id => document.getElementById(id);
+  g('invm-title').textContent = o.title || (ids.length > 1 ? 'MOVE ' + ids.length + ' ITEMS' : 'MOVE');
+  const sub = g('invm-sub'); sub.textContent = o.sub || ''; sub.classList.toggle('hidden', !o.sub);
+  g('invm-chips').innerHTML = invStorage().map(s => `<button type="button" class="invm-chip" data-v="s:${qa(s.name)}" onclick="moveAll(this.dataset.v)">${escapeHtml(s.name)}</button>`).join('') +
+    '<button type="button" class="invm-chip bad" onclick="moveAll(\'m\')">❓ Missing</button>';
+  g('invm-rows').innerHTML = ids.map((id, n) => `<div class="invm-row"><div class="invm-name">${invIcon(invCache[id].type)} ${escapeHtml(invCache[id].name)}<small>now: ${escapeHtml(invNow(invCache[id]))}</small></div>${destFieldHtml('mv' + n)}</div>`).join('');
+  g('invm-note').value = ''; g('invm-err').classList.add('hidden');
+  g('invm-skip').classList.toggle('hidden', !o.skip);
+  g('invm-bg').classList.remove('hidden');
+  setTimeout(() => { const s = g('mv0-sel'); if (s) s.focus(); }, 30);
+}
+function moveAll(v) { if (invMove) invMove.ids.forEach((_, n) => setDest('mv' + n, v)); }
+function closeMove() { invMove = null; document.getElementById('invm-bg').classList.add('hidden'); }
+function skipMove() { closeMove(); }
+function saveMove() {
+  if (!invMove) return;
+  const err = document.getElementById('invm-err'), dests = [];
+  for (let n = 0; n < invMove.ids.length; n++) {
+    const r = readDest('mv' + n);
+    if (r.error) { err.textContent = (invMove.ids.length > 1 ? invCache[invMove.ids[n]].name + ': ' : '') + r.error; err.classList.remove('hidden'); return; }
+    dests.push(r.dest);
+  }
+  const note = document.getElementById('invm-note').value.trim(), ids = invMove.ids.slice(), ev = invMove.evName;
+  withWho(who => { ids.forEach((id, n) => invWrite(id, null, dests[n], note, who, ev)); closeMove(); if (!db) renderEquip(); });
+}
+function invRestore(id, rec) {
+  if (db) db.ref('inventory/' + id).set(rec);
+  else { invCache[id] = rec; invSaveLocal(); renderEquip(); }
+}
+function invStillHere(id) {
+  const it = invCache[id]; if (!it || it.kind === 'missing') return;
+  withWho(who => { invWrite(id, null, { kind: it.kind === 'person' ? 'person' : 'room', loc: it.loc }, it.note, who, it.evName); if (!db) renderEquip(); });
+}
+function invMarkMissing(id) {
+  const it = invCache[id]; if (!it) return;
+  const prev = snapOf(it);
+  withWho(who => {
+    invWrite(id, null, { kind: 'missing' }, null, who, null); if (!db) renderEquip();
+    undoToast(it.name + ' marked missing', () => invRestore(id, prev));
+  });
+}
+
+/* ── Set up / strike hooks (called from toggleEquipStep) ── */
+function invOnSetUp(it, who) {
+  if (!it.loc) return;
+  const ids = invAssetIds(it); if (!ids.length) return;
+  ids.forEach(id => invWrite(id, null, { kind: 'room', loc: it.loc }, 'Set up', who, it.evName || it.name));
+  if (!db) renderEquip();
+}
+function invOnStrike(it) {
+  const ids = invAssetIds(it); if (!ids.length) return;
+  openMove(ids, { title: 'STRUCK — WHERE DID IT GO?', sub: (it.name || '') + (it.loc ? ' · ' + it.loc : ''), evName: it.evName || it.name, skip: true });
+}
+
+/* ── Add / edit item ── */
+let invEdit = null;
+const invTypesDl = '<datalist id="inv-types">' + INV_TYPES.map(t => `<option value="${t}">`).join('') + '</datalist>';
+function openItem(id) {
+  const g = x => document.getElementById(x), it = id ? invCache[id] : null;
+  if (id && !it) return;
+  fillEquipRooms();
+  invEdit = { id: id || null };
+  g('inve-title').textContent = it ? 'ITEM DETAILS' : 'ADD ITEM';
+  g('inve-name').value = it ? it.name : ''; g('inve-type').value = it ? (it.type || '') : 'Laptop';
+  g('inve-home').innerHTML = '<option value="">— none —</option>' + invStorage().map(s => `<option value="${qa(s.name)}">${escapeHtml(s.name)}</option>`).join('');
+  g('inve-home').value = it ? (it.home || '') : '';
+  g('inve-now-wrap').classList.toggle('hidden', !!it);
+  if (!it) { g('inve-now').innerHTML = destFieldHtml('ni'); }
+  const hist = it ? invHist(it) : [];
+  const hEl = g('inve-hist'); hEl.classList.toggle('hidden', !it);
+  hEl.innerHTML = it ? '<div class="eqm-lbl">HISTORY</div>' + (hist.map(x => `<div><span>${escapeHtml(invStamp(x.ts))}</span> ${x.kind === 'missing' ? '❓ marked missing' : (x.kind === 'person' ? '🧑 with ' : '📍 ') + escapeHtml(x.loc || '—')}${x.by ? ' · ' + escapeHtml(x.by) : ''}${x.ev ? ' · ' + escapeHtml(x.ev) : ''}${x.note ? ' — ' + escapeHtml(x.note) : ''}</div>`).join('') || '<div>No history yet.</div>') : '';
+  g('inve-del').classList.toggle('hidden', !it);
+  g('inve-err').classList.add('hidden');
+  g('inve-bg').classList.remove('hidden');
+  setTimeout(() => g('inve-name').focus(), 30);
+}
+function closeItem() { invEdit = null; document.getElementById('inve-bg').classList.add('hidden'); }
+function inveHomeChanged() { // adding: "now" defaults to home so the common case is one pick
+  if (!invEdit || invEdit.id) return;
+  const h = document.getElementById('inve-home').value, s = document.getElementById('ni-sel');
+  if (h && s && !s.value) setDest('ni', 's:' + h);
+}
+function saveItem() {
+  if (!invEdit) return;
+  const g = x => document.getElementById(x), err = g('inve-err');
+  const name = g('inve-name').value.trim(), type = g('inve-type').value.trim() || 'Other', home = g('inve-home').value;
+  const bad = m => { err.textContent = m; err.classList.remove('hidden'); };
+  if (!name) return bad('Give it a name (e.g. Laptop E).');
+  if (invList().some(i => i.id !== invEdit.id && i.name.trim().toLowerCase() === name.toLowerCase())) return bad('Something with that name is already tracked.');
+  if (invEdit.id) {
+    const id = invEdit.id, f = { name, type, home: home || null };
+    if (db) db.ref('inventory/' + id).update(f); else { Object.assign(invCache[id], f); invSaveLocal(); renderEquip(); }
+    closeItem(); return;
+  }
+  const r = readDest('ni'); if (r.error) return bad(r.error);
+  withWho(who => { invWrite(null, { name, type, home: home || null }, r.dest, null, who, null); closeItem(); if (!db) renderEquip(); });
+}
+function deleteItem() {
+  if (!invEdit || !invEdit.id) return;
+  const id = invEdit.id, prev = snapOf(invCache[id]);
+  if (db) db.ref('inventory/' + id).remove(); else { delete invCache[id]; invSaveLocal(); renderEquip(); }
+  closeItem();
+  undoToast('Stopped tracking ' + prev.name, () => invRestore(id, prev));
+}
+
+/* ── Storage rooms ── */
+let invsOpen = false;
+function openStorageRooms() { invsOpen = true; document.getElementById('invs-bg').classList.remove('hidden'); invsRefresh(); setTimeout(() => document.getElementById('invs-add').focus(), 30); }
+function closeStorageRooms() { invsOpen = false; document.getElementById('invs-bg').classList.add('hidden'); }
+function invsRefresh() {
+  if (!invsOpen) return;
+  const list = invStorage(), items = invList();
+  document.getElementById('invs-list').innerHTML = list.map(s => {
+    const n = items.filter(i => (i.home || '').toLowerCase() === s.name.toLowerCase() || (invState(i) === 'storage' && (i.loc || '').toLowerCase() === s.name.toLowerCase())).length;
+    return `<div class="invs-row"><span>${escapeHtml(s.name)}</span><small>${n} item${n === 1 ? '' : 's'}</small><button class="eq-btn eq-btn-del" onclick="removeStorage('${s.id}')">🗑</button></div>`;
+  }).join('') || '<div class="eq-empty">No storage rooms yet.</div>';
+}
+function addStorage() {
+  const inp = document.getElementById('invs-add'), name = inp.value.trim(); if (!name) return;
+  if (invIsStorage(name)) { inp.value = ''; return; }
+  const rec = { name, order: Date.now() };
+  if (db) db.ref('storage').push(rec); else { storageCache['L' + Date.now()] = rec; invSaveLocal(); renderEquip(); invsRefresh(); }
+  inp.value = '';
+}
+function removeStorage(id) {
+  const s = snapOf(storageCache[id]); if (!s) return;
+  if (db) db.ref('storage/' + id).remove(); else { delete storageCache[id]; invSaveLocal(); renderEquip(); invsRefresh(); }
+  undoToast('Removed storage room ' + s.name, () => {
+    if (db) db.ref('storage/' + id).set(s); else { storageCache[id] = s; invSaveLocal(); renderEquip(); invsRefresh(); }
+  });
+}
+
+/* ── First run: seed rooms + laptops; import the old Last Seen list ── */
+function seedInventory() {
+  if (Object.keys(storageCache).length || Object.keys(invCache).length) return;
+  withWho(who => {
+    const ts = Date.now();
+    [['s_ops', 'Ops office', 1], ['s_432', '432', 2], ['s_fpo', 'Fisher Production Office', 3]].forEach(([id, name, order]) => {
+      const rec = { name, order };
+      if (db) db.ref('storage/' + id).set(rec); else storageCache[id] = rec;
+    });
+    const L = [
+      ['laptop_a', 'Laptop A', 'Fisher Production Office', 'missing'],
+      ['laptop_b', 'Laptop B', '432', 'here'],
+      ['laptop_c', 'Laptop C', 'Ops office', 'missing'],
+      ['laptop_d', 'Laptop D', 'Ops office', 'here']
+    ];
+    L.forEach(([id, name, home, st], n) => {
+      const missing = st === 'missing', t = ts + n;
+      const rec = { name, type: 'Laptop', home, kind: missing ? 'missing' : 'room', loc: missing ? null : home, by: who, ts: t,
+                    note: missing ? 'Reported missing when inventory was set up' : 'Assumed in place when inventory was set up',
+                    hist: { ['h' + t]: { kind: missing ? 'missing' : 'room', loc: missing ? 'MISSING' : home, by: who, ts: t } } };
+      if (db) db.ref('inventory/' + id).set(rec); else invCache[id] = rec;
+    });
+    if (!db) { invSaveLocal(); renderEquip(); }
+  });
+}
+function importOldGear() {
+  const entries = Object.entries(gearCache).filter(([, v]) => v && v.name);
+  if (!entries.length) return;
+  entries.forEach(([gid, g]) => {
+    const found = invList().find(i => i.name.trim().toLowerCase() === g.name.trim().toLowerCase());
+    const dest = invDestFromText(g.loc) || { kind: 'room', loc: '—' };
+    if (found && (found.ts || 0) >= (g.ts || 0)) return;
+    const ts = g.ts || Date.now(), hk = 'h' + ts + 'imp';
+    const entry = { kind: dest.kind, loc: dest.loc, by: g.by || '', ts };
+    const upd = { kind: dest.kind, loc: dest.loc, by: g.by || '', ts, note: g.note || null, lastLoc: null };
+    if (found) {
+      if (db) { const u = Object.assign({}, upd); u['hist/' + hk] = entry; db.ref('inventory/' + found.id).update(u); }
+      else { Object.assign(invCache[found.id], upd); (invCache[found.id].hist = invCache[found.id].hist || {})[hk] = entry; }
+    } else {
+      const rec = Object.assign({ name: g.name, type: 'Other', home: null, hist: { [hk]: entry } }, upd);
+      if (db) db.ref('inventory/' + db.ref('inventory').push().key).set(rec); else invCache['L' + ts + gid] = rec;
+    }
+  });
+  if (db) db.ref('gear').remove(); else { gearCache = {}; try { localStorage.removeItem('osves_gear'); } catch (e) {} invSaveLocal(); renderEquip(); }
+}
+
+/* ── Quick log: "Laptop, RF clicker" → "Chapel" in one go ── */
+function quickLog() {
+  const g = x => document.getElementById(x), err = g('qk-err');
+  const names = g('qk-what').value.split(/[,;\n]+/).map(x => x.trim()).filter(Boolean);
+  const dest = invDestFromText(g('qk-where').value), note = g('qk-note').value.trim();
+  const bad = (m, f) => { err.textContent = m; err.classList.remove('hidden'); g(f).focus(); };
+  if (!names.length) return bad('Enter what you\'re logging, e.g. "Laptop A, RF clicker".', 'qk-what');
+  if (!dest) return bad('Enter where it is (or "with Dave").', 'qk-where');
+  err.classList.add('hidden');
+  withWho(who => {
+    names.forEach(nm => {
+      const found = invList().find(i => i.name.trim().toLowerCase() === nm.toLowerCase());
+      if (found) invWrite(found.id, null, dest, note, who, null);
+      else invWrite(null, { name: nm, type: 'Other', home: null }, dest, note, who, null);
+    });
+    g('qk-what').value = ''; g('qk-note').value = '';
+    if (!db) renderEquip();
+    setTimeout(() => { const e = g('qk-what'); if (e) e.focus(); }, 30);
+  });
+}
+let invFilter = 'all';
+function setInvFilter(t) { invFilter = t; renderEquip(); }
+
+/* ── The board ── */
+function invCard(it) {
+  const st = invState(it), age = (st === 'room' || st === 'person') ? invAge(it.ts || 0) : 'fresh';
+  const by = it.by ? ' · ' + escapeHtml(it.by) : '';
+  let where;
+  if (st === 'missing') where = `<span class="inv-bad">MISSING</span>${it.lastLoc ? ' · last: ' + escapeHtml(it.lastLoc) : ''} · ${invAgo(it.ts || 0)}${by}`;
+  else if (st === 'person') where = `🧑 with <b>${escapeHtml(it.loc)}</b> · ${invAgo(it.ts || 0)}${by}`;
+  else if (st === 'room') where = `📍 <b>${escapeHtml(it.loc)}</b> · ${invAgo(it.ts || 0)}${by}`;
+  else where = `since ${invAgo(it.ts || 0)}${by}`;
+  const acts = st === 'missing'
+    ? `<button class="eq-btn main" onclick="openMove(['${it.id}'],{title:'FOUND — WHERE IS IT NOW?'})">FOUND</button>`
+    : `<button class="eq-btn main" onclick="openMove(['${it.id}'])">MOVE</button><button class="eq-btn" onclick="invStillHere('${it.id}')" title="Saw it, same place — refresh the time">✓ HERE</button><button class="eq-btn" onclick="invMarkMissing('${it.id}')" title="Can't find it">❓</button>`;
+  return `<div class="inv-card ${st} ${age}">
+    <div class="inv-top"><span class="inv-ico">${invIcon(it.type)}</span><span class="inv-name">${escapeHtml(it.name)}</span><button class="inv-more" onclick="openItem('${it.id}')" title="Details, history, edit">⋯</button></div>
+    <div class="inv-where">${where}</div>
+    ${it.evName && st === 'room' ? `<div class="inv-sub">for ${escapeHtml(it.evName)}</div>` : ''}
+    ${it.note ? `<div class="inv-sub">“${escapeHtml(it.note)}”</div>` : ''}
+    ${it.home && st !== 'storage' ? `<div class="inv-sub">home: ${escapeHtml(it.home)}</div>` : ''}
+    <div class="inv-acts">${acts}</div></div>`;
+}
+function invSection(cls, title, count, body) {
+  return `<div class="inv-sec ${cls}"><div class="inv-sec-hdr"><span>${title}</span><i>${count}</i></div>${body}</div>`;
+}
+function renderInventory() {
+  const rooms = invStorage(), all = invList();
+  let h = '';
+  if (!rooms.length && !all.length) {
+    h += `<div class="inv-intro"><div class="inv-intro-t">Start tracking your laptops</div>
+      <div class="inv-intro-s">This will add your storage rooms (Ops office, 432, Fisher Production Office) and Laptops A–D at their home rooms, with <b>A and C marked missing</b> and B and D assumed in place. You can change any of it afterward.</div>
+      <button class="eq-add" onclick="seedInventory()">ADD ROOMS + LAPTOPS</button></div>`;
+  }
+  const oldN = Object.values(gearCache).filter(v => v && v.name).length;
+  if (oldN) {
+    h += `<div class="inv-intro"><div class="inv-intro-t">Bring over the old “Last Seen” list</div>
+      <div class="inv-intro-s">${oldN} item${oldN === 1 ? '' : 's'} logged before this board existed (${Object.values(gearCache).filter(v => v && v.name).map(v => escapeHtml(v.name)).slice(0, 6).join(', ')}). Import them, then the old list is retired.</div>
+      <button class="eq-add" onclick="importOldGear()">IMPORT ${oldN}</button></div>`;
+  }
+  h += `<div class="inv-quick"><div class="inv-quick-t">QUICK LOG</div>
+    <input id="qk-what" list="qk-known" placeholder="Laptop A, RF clicker" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('qk-where').focus();}">
+    <input id="qk-where" list="eq-rooms" placeholder="Where — Chapel, 432, with Dave" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();quickLog();}">
+    <input id="qk-note" placeholder="Note (optional)" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();quickLog();}">
+    <button class="eq-add" onclick="quickLog()">LOG</button>
+    <datalist id="qk-known">${[...new Set(all.map(i => i.name))].map(n => `<option value="${qa(n)}">`).join('')}</datalist>
+    <div class="eqm-err hidden" id="qk-err"></div></div>`;
+
+  const types = [...new Set(all.map(i => i.type || 'Other'))].sort((a, b) => (a === 'Laptop' ? -1 : b === 'Laptop' ? 1 : a.localeCompare(b)));
+  if (invFilter !== 'all' && !types.includes(invFilter)) invFilter = 'all';
+  h += `<div class="inv-bar"><div class="inv-filters">
+      <button class="inv-chip${invFilter === 'all' ? ' on' : ''}" onclick="setInvFilter('all')">ALL <i>${all.length}</i></button>
+      ${types.map(t => `<button class="inv-chip${invFilter === t ? ' on' : ''}" data-t="${qa(t)}" onclick="setInvFilter(this.dataset.t)">${invIcon(t)} ${escapeHtml(t.toUpperCase())} <i>${all.filter(i => (i.type || 'Other') === t).length}</i></button>`).join('')}
+    </div><div class="inv-bar-r"><button class="eq-btn" onclick="openStorageRooms()">🗄 STORAGE ROOMS</button></div></div>`;
+
+  const items = all.filter(i => invFilter === 'all' || (i.type || 'Other') === invFilter);
+  const miss = items.filter(i => invState(i) === 'missing').sort((a, b) => (a.ts || 0) - (b.ts || 0));
+  const out = items.filter(i => invState(i) === 'room').sort((a, b) => (a.ts || 0) - (b.ts || 0));
+  const ppl = items.filter(i => invState(i) === 'person').sort((a, b) => (a.ts || 0) - (b.ts || 0));
+  if (miss.length) h += invSection('missing', '❓ MISSING', miss.length, `<div class="inv-grid">${miss.map(invCard).join('')}</div>`);
+
+  if (rooms.length) {
+    h += `<div class="inv-sec-hdr plain"><span>🗄 STORAGE ROOMS</span></div><div class="inv-rooms">` + rooms.map(r => {
+      const rl = r.name.toLowerCase();
+      const here = items.filter(i => invState(i) === 'storage' && (i.loc || '').toLowerCase() === rl);
+      const ghosts = items.filter(i => (i.home || '').toLowerCase() === rl && !here.includes(i));
+      return `<div class="inv-room"><div class="inv-room-hdr"><b>${escapeHtml(r.name)}</b><span>${here.length} here${ghosts.length ? ' · ' + ghosts.length + ' out' : ''}</span></div>
+        ${here.length ? `<div class="inv-grid">${here.map(invCard).join('')}</div>` : '<div class="inv-empty">Nothing in here right now.</div>'}
+        ${ghosts.map(i => `<div class="inv-ghost">${invIcon(i.type)} <b>${escapeHtml(i.name)}</b> — normally here · <span class="${invState(i) === 'missing' ? 'inv-bad' : ''}">${invState(i) === 'missing' ? 'MISSING' : 'now ' + escapeHtml(invNow(i))}</span></div>`).join('')}</div>`;
+    }).join('') + '</div>';
+  }
+  if (out.length) h += invSection('out', '📍 OUT IN ROOMS', out.length, `<div class="inv-grid">${out.map(invCard).join('')}</div>`);
+  if (ppl.length) h += invSection('ppl', '🧑 WITH PEOPLE', ppl.length, `<div class="inv-grid">${ppl.map(invCard).join('')}</div>`);
+  if (all.length && !items.length) h += '<div class="eq-empty">Nothing of that type is tracked.</div>';
+  if (!all.length && rooms.length) h += '<div class="eq-empty">No items yet — use + ADD ITEM.</div>';
+  return h;
+}
+setInterval(() => { try { if (eqTab === 'seen' && document.body.classList.contains('view-equip') && !document.querySelector('#qk-what:focus,#qk-where:focus,#qk-note:focus,.eqm-bg:not(.hidden)')) renderEquip(); } catch (e) {} }, 60000);
+
+/* ── Summary strip + tab badge (shown on every equipment tab) ── */
+function renderEqChrome() {
+  const el = document.getElementById('eq-sum'); if (!el) return;
+  const d = eqTodaySteps();
+  const open = d.today.filter(r => !(r.kind === 'set' ? r.item.setDone : r.item.struck));
+  const sets = open.filter(r => r.kind === 'set').length, strikes = open.filter(r => r.kind === 'strike').length, over = d.overdue.length;
+  const inv = invList();
+  const miss = inv.filter(i => invState(i) === 'missing').length;
+  const out = inv.filter(i => { const s = invState(i); return s === 'room' || s === 'person'; }).length;
+  // Only what needs attention; zeros are noise.
+  const pill = (tab, n, label, bad) => n ? `<button class="eq-pill${bad ? ' bad' : ''}" onclick="setEqTab('${tab}')"><b>${n}</b> ${label}</button>` : '';
+  const html = pill('today', over, 'overdue', true) + pill('seen', miss, 'missing', true) +
+    pill('today', sets, sets === 1 ? 'set up left today' : 'set ups left today') + pill('today', strikes, strikes === 1 ? 'strike left today' : 'strikes left today') +
+    pill('seen', out, 'out of storage');
+  el.innerHTML = html || '<span class="eq-pill zero">✓ All clear — nothing due today, nothing missing</span>';
+  const t = document.getElementById('eqt-seen');
+  if (t) t.innerHTML = '📍 WHERE IS IT' + (miss ? ` <span class="eq-seg-badge">${miss}</span>` : '');
+}
+
 function renderEquip() {
   const list = document.getElementById('eq-list');
   if (!list) return;
+  try { renderEqChrome(); } catch (e) { console.error('renderEqChrome', e); }
   const today = todayKey();
   const entries = Object.entries(equipCache);
   document.getElementById('eqt-today').classList.toggle('active', eqTab === 'today');
   document.getElementById('eqt-all').classList.toggle('active', eqTab === 'all');
+  document.getElementById('eqt-seen').classList.toggle('active', eqTab === 'seen');
+  document.getElementById('equip-wrap').classList.toggle('seen-tab', eqTab === 'seen');
+  if (eqTab === 'seen') {
+    // Keep typed-but-unsent quick-log text across live Firebase re-renders.
+    const keep = ['qk-what', 'qk-where', 'qk-note'].map(id => { const e = document.getElementById(id); return e ? [id, e.value, e === document.activeElement] : null; }).filter(Boolean);
+    list.innerHTML = renderInventory();
+    keep.forEach(([id, v, focused]) => { const e = document.getElementById(id); if (e) { e.value = v; if (focused) { e.focus(); try { e.setSelectionRange(v.length, v.length); } catch (x) {} } } });
+    fillEquipRooms();
+    renderEquipBanner(); applyEquipBadges(); refreshTimelineMarkers();
+    return;
+  }
   if (eqTab === 'today') {
     list.innerHTML = renderEquipToday();
     renderEquipBanner();
@@ -5632,7 +7008,7 @@ function renderEquip() {
     }
     const setup = i.setup ? 'Set up ' + fmtEquipDate(i.setup, i.setupTime) : '';
     return `<div class="eq-row${i.struck ? ' struck' : ''}">
-      <div class="eq-name">${escapeHtml(i.name || '')}${i.evName ? `<div class="eq-for-line">${escapeHtml(eqEventLabel(i))}</div>` : ''}</div>
+      <div class="eq-name">${escapeHtml(i.name || '')}${i.evName ? `<div class="eq-for-line">${escapeHtml(eqEventLabel(i))}</div>` : ''}${invNames(i) ? `<div class="eq-for-line">💻 ${escapeHtml(invNames(i))}</div>` : ''}</div>
       <div class="eq-loc">📍 ${escapeHtml(i.loc || '—')}</div>
       <div class="eq-meta">${setup}${i.setDone ? `<br><span class="eq-done">☑ SET UP · ${escapeHtml(i.setBy || '')} ${escapeHtml(i.setAt || '')}</span>` : ''}</div>
       <div><span class="eq-strike ${i.struck ? 'ok' : cls}">${i.struck ? `☑ STRUCK · ${escapeHtml(i.strikeBy || '')} ${escapeHtml(i.strikeAt || '')}` : 'STRIKE ' + escapeHtml(label)}</span></div>
@@ -5646,6 +7022,7 @@ function renderEquip() {
   };
 
   let h = `<div class="eq-hdr">CURRENTLY SET UP (${open.length}) — SORTED BY STRIKE DATE</div>`;
+  if (open.length) h += '<div class="eq-cols"><span>EQUIPMENT</span><span>LOCATION</span><span>SET UP</span><span>STRIKE</span><span>NOTES</span><span></span></div>';
   h += open.length ? open.map(row).join('') : `<div class="eq-empty">Nothing set up. Add equipment above.</div>`;
   if (done.length) {
     h += `<div class="eq-hdr">STRUCK (${done.length})</div>` + done.map(row).join('');
@@ -5656,7 +7033,7 @@ function renderEquip() {
   refreshTimelineMarkers();
   if (document.body.classList.contains('view-week')) { try { paintWeek(); } catch (e) {} }
 }
-if (db) attachEquipListener();
+if (db) { attachEquipListener(); attachInvListener(); }
 renderEquip();
 
 // Init Firebase on load
