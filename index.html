@@ -1087,7 +1087,9 @@ body.view-equip #equip-wrap{display:block;}
 body.add-mode .tl-hint{display:inline;}
 .tl-hint-link{background:none;border:none;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer;}
 .qa-btn.active{background:var(--green-text);color:#000;border-color:var(--green-text);}
+#tl-rows .tl-cells{cursor:copy;}
 body.add-mode #tl-rows .tl-cells{cursor:cell;}
+#tl-rows .tl-evt,#tl-rows .tl-eqm span{cursor:pointer;}
 #tl-rows .tl-evt,#tl-rows .tl-eqm span{cursor:pointer;}
 .tl-ghost{position:absolute;top:4px;bottom:4px;border:1.5px dashed var(--green-border);background:var(--green-bg);border-radius:5px;pointer-events:none;
   z-index:4;display:none;align-items:center;padding:0 7px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--green-text);white-space:nowrap;overflow:hidden;}
@@ -1249,7 +1251,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .eqm-save{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
 .eqm .hidden,.eqm-bg .hidden{display:none;}
 @media (max-width:640px){
-  .eqt-row{grid-template-columns:30px 1fr auto;grid-template-areas:"box main who" "time kind kind";row-gap:6px;}
+  .eqt-row{grid-template-columns:30px minmax(0,1fr) auto;grid-template-areas:"box main who" "box time kind";row-gap:6px;column-gap:10px;}
   .eqt-row .eqt-box{grid-area:box;} .eqt-row .eqt-main{grid-area:main;} .eqt-row .eqt-who{grid-area:who;}
   .eqt-row .eqt-time{grid-area:time;} .eqt-row .eqt-kind{grid-area:kind;justify-self:start;}
 }
@@ -1891,6 +1893,30 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .card-more{display:block;width:100%;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.08em;padding:10px;cursor:pointer;
   background:var(--surface2);border:none;border-bottom:1px solid var(--border);color:var(--text2);}
 .card-more:hover{color:var(--text);background:var(--green-bg);}
+
+/* ── Phone fixes ── */
+.card .evt{cursor:pointer;}
+@media (max-width:640px){
+  /* ALL SET/STRIKES rows: stack instead of six squeezed columns */
+  .eq-row{grid-template-columns:minmax(0,1fr);gap:6px;}
+  .eq-row .eq-actions{flex-direction:row;flex-wrap:wrap;margin-top:4px;}
+  .eq-row .eq-actions .eq-btn{flex:1 1 auto;}
+  /* undo toast spans the screen instead of shrinking to a sliver */
+  .undo-toast{left:12px;right:12px;transform:translate(0,140%);}
+  .undo-toast.show{transform:translate(0,0);}
+  .ut-msg{flex:1;}
+}
+@media (pointer:coarse){
+  .view-src-icon-btn{min-width:40px;min-height:36px;}
+  .dept-lbl{padding:9px 0;margin-top:6px;margin-bottom:2px;}
+  .ws-all{min-height:40px;padding:8px 14px;}
+  .wk-btn,.wk-sort select,.qa-btn,.eq-seg-btn,.eq-add{min-height:40px;}
+  .fb-banner a{display:inline-block;padding:8px 0;}
+  .dm-tel{display:inline-block;padding:6px 0;}
+  .dm-src summary{padding:10px 0;}
+  /* no hover on touch: let the first note on a card wrap to two lines instead of an ellipsis */
+  .ws-notes.compact{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+}
 </style>
 </head>
 <body>
@@ -2226,7 +2252,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   <div class="tl-owl-anchor">
     <div class="tl-wrap">
       <div class="tl-header-row">
-        <div class="tl-title">TIMELINE 7 AM – 11 PM <span class="tl-hint" id="tl-hint">· click a time on a room's row to place the event, or <button class="tl-hint-link" onclick="setAddMode(false);openEventModal({})">enter details instead</button> · Esc to cancel</span></div>
+        <div class="tl-title">TIMELINE 7 AM – 11 PM <span class="tl-hint" id="tl-hint">· tap or click a time on a room's row to place the event, or <button class="tl-hint-link" onclick="setAddMode(false);openEventModal({})">enter details instead</button> · Esc to cancel</span></div>
     </div>
     <div class="tl-grid" id="tl-grid">
       <div class="tl-hours" id="tl-hours">
@@ -5169,6 +5195,15 @@ function renderCards(events) {
     // Apply any existing sign-off state
     applySignoffToCard(evKey);
 
+    // Tapping the event itself (not its buttons or category toggles) opens
+    // the full details — the only way to read long notes on a phone.
+    const evtArea = card.querySelector('.evt');
+    if (evtArea) evtArea.addEventListener('click', evt => {
+      if (evt.target.closest('button, a, input, select, .dept-lbl, .card-more')) return;
+      if (window.getSelection && String(window.getSelection())) return;   // selecting text, not tapping
+      openDetailModal(ev, evKey);
+    });
+
     // View Source icon — opens the shared detail modal (which already has
     // its own raw-source section) rather than expanding anything inline.
     const viewSrcBtn = card.querySelector('.view-src-icon-btn');
@@ -5553,7 +5588,9 @@ async function renderWeek() {
   paintWeek();                                   // show what we already have right away
   const keys = weekKeys(weekAnchor);
   const loaded = await Promise.all(keys.map(ensureDayLoaded));
-  if (token === weekToken && loaded.some(Boolean)) { paintWeek(); renderDaySwitcher(); }
+  if (token !== weekToken) return;
+  paintWeek();                                   // also turns LOADING… into NO SCHEDULE for empty days
+  if (loaded.some(Boolean)) renderDaySwitcher();
 }
 
 function jumpToEvent(dateKey, evKey) {
@@ -5901,8 +5938,8 @@ document.addEventListener('keydown', e => {
   const rowsEl = document.getElementById('tl-rows');
   if (!rowsEl) return;
   let ghost = null;
-  function slotAt(e) {
-    if (!addMode) return null;          // hover/click only do anything in add mode
+  function slotAt(e, anyMode) {
+    if (!addMode && !anyMode) return null;   // the hover ghost only shows in add mode
     const t = e.target;
     if (!t || !t.closest) return null;
     if (t.closest('.tl-evt, .tl-eqm, .tl-techline')) return null;
@@ -5934,11 +5971,21 @@ document.addEventListener('keydown', e => {
   });
   rowsEl.addEventListener('mouseleave', hideGhost);
   rowsEl.addEventListener('click', e => {
-    const sl = slotAt(e);
+    // A pinned set/strike card is open: this click just closes it.
+    if (typeof eqPopPinned !== 'undefined' && eqPopPinned) return;
+    if (addMode) {
+      const sl = slotAt(e);
+      if (!sl) return;
+      hideGhost();
+      setAddMode(false);                // one-shot: back to normal once a spot is picked
+      openEventModal({ room: sl.room, startH: sl.h });
+      return;
+    }
+    // Not in add mode: clicking empty space adds a set/strike for that room,
+    // with the set up at the clicked (30-minute) time.
+    const sl = slotAt(e, true);
     if (!sl) return;
-    hideGhost();
-    setAddMode(false);                  // one-shot: back to normal once a spot is picked
-    openEventModal({ room: sl.room, startH: sl.h });
+    openEquipModal({ room: sl.room, dateKey: currentDateKey, setupH: sl.h });
   });
 })();
 
@@ -6149,7 +6196,7 @@ function openEquipModal(opts) {
   if (opts.id) { it = equipCache[opts.id]; if (!it) return; }
   eqModal = { id: opts.id || null, ev: opts.ev || null, dateKey: opts.dateKey || null, evKey: opts.ev ? makeEventKey(opts.ev) : null, added: 0 };
 
-  g('eqm-title').textContent = it ? 'EDIT EQUIPMENT' : 'ADD EQUIPMENT';
+  g('eqm-title').textContent = it ? 'EDIT SET/STRIKE' : 'ADD SET/STRIKE';
   g('eqm-save').textContent = it ? 'SAVE' : 'ADD';
   g('eqm-cancel').textContent = 'CANCEL';
   g('eqm-del').classList.toggle('hidden', !it);
@@ -6189,6 +6236,9 @@ function openEquipModal(opts) {
     ['eqm-name','eqm-loc','eqm-setup-time','eqm-strike-time','eqm-note'].forEach(id => g(id).value = '');
     // Quick add from the schedule: both dates default to the day being viewed
     g('eqm-setup').value = opts.dateKey || ''; g('eqm-strike').value = opts.dateKey || '';
+    // Clicked on the timeline: that room, set up at the clicked time.
+    if (opts.room) g('eqm-loc').value = opts.room;
+    if (typeof opts.setupH === 'number') g('eqm-setup-time').value = hToTimeStr(opts.setupH);
   }
   updateEqLocHint();
   g('eqm-bg').classList.remove('hidden');
