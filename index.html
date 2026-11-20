@@ -46,8 +46,8 @@
   --purple-bg:    rgba(127,178,232,0.14);
   --purple-border:rgba(127,178,232,0.4);
   --purple-text:  #7fb2e8;
-  --techline:     #ff4d5e;
-  --nowline:      #ff8f42;
+  --techline:     #ffffff;
+  --nowline:      #4fc3ff;
   --signoff-bg:   rgba(255,77,94,0.2);
   --signoff-bd:   rgba(255,77,94,0.55);
   --signoff-c:    #ff4d5e;
@@ -86,7 +86,7 @@
   --purple-border:rgba(0,229,255,.4);
   --purple-text:  #66f0ff;
   --techline:     #ffcc00;
-  --nowline:      #ff3333;
+  --nowline:      #00e5ff;
   --signoff-bg:   rgba(57,255,20,.2);
   --signoff-bd:   rgba(57,255,20,.6);
   --signoff-c:    #7fff5a;
@@ -125,8 +125,8 @@
   --purple-bg:    rgba(31,78,156,0.11);
   --purple-border: rgba(31,78,156,0.42);
   --purple-text:  #173b78;
-  --techline:     #c8102e;
-  --nowline:      #b85a0f;
+  --techline:     #00205b;
+  --nowline:      #0077c8;
   --signoff-bg:   rgba(200,16,46,0.13);
   --signoff-bd:   rgba(200,16,46,0.5);
   --signoff-c:    #a50d25;
@@ -165,7 +165,7 @@
   --purple-border:rgba(52,65,90,.4);
   --purple-text:  #232d3e;
   --techline:     #8a6d1f;
-  --nowline:      #8b1a1a;
+  --nowline:      #1f5f8b;
   --signoff-bg:   rgba(139,26,26,.16);
   --signoff-bd:   rgba(139,26,26,.5);
   --signoff-c:    #6b1010;
@@ -205,7 +205,7 @@
   --purple-border:rgba(138,112,144,.4);
   --purple-text:  #b8a0c0;
   --techline:     #e0b04a;
-  --nowline:      #c0503a;
+  --nowline:      #6fb3d2;
   --signoff-bg:   rgba(217,140,61,.2);
   --signoff-bd:   rgba(217,140,61,.6);
   --signoff-c:    #f0b06a;
@@ -245,7 +245,7 @@
   --purple-border: rgba(106,79,160,0.42);
   --purple-text:  #523a82;
   --techline:     #86600d;
-  --nowline:      #c0314f;
+  --nowline:      #2f6fa8;
   --signoff-bg:   rgba(194,39,95,0.13);
   --signoff-bd:   rgba(194,39,95,0.5);
   --signoff-c:    #9e1c4d;
@@ -284,7 +284,7 @@
   --purple-border:rgba(138,154,170,.4);
   --purple-text:  #b8c8d8;
   --techline:     #c9a876;
-  --nowline:      #ff1a3d;
+  --nowline:      #e8e8e8;
   --signoff-bg:   rgba(255,26,61,.2);
   --signoff-bd:   rgba(255,26,61,.6);
   --signoff-c:    #ff4d6a;
@@ -323,7 +323,7 @@
   --purple-border:rgba(138,43,226,0.4);
   --purple-text:  #a65ee9;
   --techline:     #ff00ff;
-  --nowline:      #ff3860;
+  --nowline:      #00f0ff;
   --signoff-bg:   rgba(57,255,20,0.2);
   --signoff-bd:   rgba(57,255,20,0.6);
   --signoff-c:    #39ff14;
@@ -364,7 +364,7 @@
   --purple-border:rgba(106,79,168,0.4);
   --purple-text:  #6a4fa8;
   --techline:     #a8650f;
-  --nowline:      #c14a2e;
+  --nowline:      #0b8a5a;
   --signoff-bg:   rgba(31,111,143,0.2);
   --signoff-bd:   rgba(31,111,143,0.6);
   --signoff-c:    #1f6f8f;
@@ -403,7 +403,7 @@
   --purple-border:rgba(138,111,168,0.36);
   --purple-text:  #735c8b;
   --techline:     #8a6620;
-  --nowline:      #b5583d;
+  --nowline:      #2b5fb3;
   --signoff-bg:   rgba(61,111,51,0.16);
   --signoff-bd:   rgba(61,111,51,0.5);
   --signoff-c:    #3d6f33;
@@ -442,7 +442,7 @@
   --purple-border:rgba(143,184,216,0.4);
   --purple-text:  #8fb8d8;
   --techline:     #f4c542;
-  --nowline:      #ff4d5a;
+  --nowline:      #ffffff;
   --signoff-bg:   rgba(255,77,90,0.2);
   --signoff-bd:   rgba(255,77,90,0.6);
   --signoff-c:    #ff4d5a;
@@ -785,6 +785,7 @@
   animation:boot-fade-out .5s ease 4s forwards;
 }
 [data-theme="terminal"] .terminal-boot{display:block;}
+.no-boot .terminal-boot{display:none!important;}
 .terminal-boot span{
   display:block;overflow:hidden;white-space:nowrap;width:0;max-width:100%;
   animation:boot-type .6s steps(28,end) forwards;
@@ -880,6 +881,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .brand-datetime{display:flex;align-items:center;gap:14px;}
 .hdr-date{font-family:var(--font-mono);font-size:15px;font-weight:500;color:var(--text);letter-spacing:.03em;white-space:nowrap;}
 .hdr-clock{font-family:var(--font-mono);font-size:15px;font-weight:500;color:var(--green-text);letter-spacing:.05em;white-space:nowrap;}
+.hdr-viewday{display:none;}
 .hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
 
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:5px;transition:background .3s;flex-shrink:0;}
@@ -906,7 +908,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   display:flex;flex-wrap:wrap;gap:2px;
   max-height:420px;overflow-y:auto;
 }
-.theme-menu-grp{flex:0 0 100%;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--muted2);padding:8px 10px 3px;}
+.theme-menu-grp{flex:0 0 100%;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--muted2);padding:8px 10px 3px;}
 .theme-menu-grp:first-child{padding-top:4px;}
 .theme-menu-item{
   font-family:'DM Mono',monospace;font-size:11px;text-align:left;line-height:1.3;
@@ -945,7 +947,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
   font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;
 }
 .shared-icon{font-size:16px;flex-shrink:0;}
-#shared-schedule-label{flex:1;min-width:0;}
+#shared-schedule-label{min-width:0;}
+.db-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;}
+.db-notice{color:var(--amber-text);font-weight:700;}
+.db-summary{color:var(--text);opacity:.85;display:flex;gap:8px;align-items:flex-start;}
+.db-summary.warn{color:var(--amber-text);opacity:1;}
+.db-x{background:none;border:0;color:inherit;cursor:pointer;font:inherit;padding:0 4px;opacity:.7;min-width:28px;min-height:24px;}
+.db-x:hover{opacity:1;}
 .reupload-btn{
   font-family:var(--font-mono);font-size:10px;letter-spacing:.07em;font-weight:700;
   padding:6px 12px;border-radius:5px;cursor:pointer;border:1px solid var(--green-border);
@@ -973,7 +981,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .dp-month{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--text);text-transform:uppercase;}
 .dp-mnav{width:30px;height:28px;padding:0;text-align:center;}
 .dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-.dp-dow{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--muted2);text-align:center;padding:2px 0 4px;}
+.dp-dow{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--muted2);text-align:center;padding:2px 0 4px;}
 .dp-day{position:relative;height:34px;border-radius:6px;border:1px solid transparent;background:transparent;
   font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text);cursor:pointer;padding:0;}
 .dp-day:disabled{color:var(--muted);cursor:default;font-weight:400;}
@@ -984,13 +992,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-si
 .dp-day.sel{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
 .dp-day.sel::after{background:var(--green-text);}
 .dp-day.out{opacity:.45;}
-.dp-foot{margin-top:8px;font-family:var(--font-mono);font-size:9px;letter-spacing:.05em;color:var(--muted2);display:flex;align-items:center;gap:6px;}
+.dp-foot{margin-top:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;color:var(--muted2);display:flex;align-items:center;gap:6px;}
 .dp-foot i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);}
 
 /* ── LABOR FLAG — same red as the labor tags (.tag.tr) ── */
 .labor-flag{display:inline-block;flex-shrink:0;width:11px;height:13px;vertical-align:middle;
   background:var(--red-text);clip-path:polygon(0 0,100% 0,70% 50%,100% 100%,0 100%);margin-left:4px;}
 .tl-evt .labor-flag{margin-left:auto;}
+.ld-labcall{display:inline-block;width:0;height:12px;border-left:2px dotted var(--red-text);margin-right:7px;}
+.ld-ss{margin-right:5px;font-size:12px;}
+.evt-laborcall{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--red-text);margin-top:2px;}
+.tl-laborline{position:absolute;top:0;bottom:0;width:0;border-left:2px dotted var(--red-text);z-index:4;pointer-events:none;opacity:.9;}
 
 /* ── VIEW TABS ── */
 @media (min-width:1400px){.hdr{flex-wrap:nowrap;}.hdr-left{flex-shrink:0;}.view-tabs{min-width:0;}}
@@ -1039,11 +1051,11 @@ body.view-week #week-wrap{display:block;}
 .wk-evt:hover{border-color:var(--green-border);box-shadow:0 2px 12px var(--shadow);}
 .wk-evt.wk-past{opacity:.5;}
 .wk-evt.wk-flagged-evt{border-left-color:var(--amber-text);background:var(--amber-bg);border-color:var(--amber-border);}
-.wk-time{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.04em;color:var(--muted2);display:flex;align-items:center;gap:5px;}
+.wk-time{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--muted2);display:flex;align-items:center;gap:5px;}
 .wk-time .wk-icons{margin-left:auto;display:inline-flex;align-items:center;gap:4px;}
 .wk-name{font-family:var(--font-sans);font-size:12.5px;font-weight:600;color:var(--text);line-height:1.25;margin-top:2px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;}
-.wk-room{font-family:var(--font-mono);font-size:10px;color:var(--muted2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.wk-room{font-family:var(--font-mono);font-size:11px;color:var(--muted2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .wk-fnote{font-family:var(--font-sans);font-size:11px;font-style:italic;color:var(--amber-text);margin-top:3px;overflow-wrap:anywhere;}
 @media (max-width:900px){
   #week-wrap{margin-left:12px;margin-right:12px;}
@@ -1052,9 +1064,12 @@ body.view-week #week-wrap{display:block;}
 }
 /* ── FLAGS ── */
 .card-tools{margin-left:auto;display:inline-flex;align-items:center;gap:6px;flex-shrink:0;}
+/* Tools always sit on their own line under the room, so every card header is the same height */
+.card-room .card-tools{flex-basis:100%;justify-content:flex-end;}
+.card-badges{margin-right:auto;display:inline-flex;gap:6px;align-items:center;}
 .card-tools .view-src-icon-btn{margin-left:0;}
-.flag-btn{font-size:13px;font-weight:700;line-height:1;padding:3px 7px;border-radius:4px;flex-shrink:0;background:transparent;
-  border:1px solid var(--border);color:var(--muted2);cursor:pointer;opacity:.55;
+.flag-btn{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.05em;line-height:1;padding:4px 7px;border-radius:4px;flex-shrink:0;background:transparent;white-space:nowrap;
+  border:1px solid var(--border2);color:var(--text2);cursor:pointer;
   transition:opacity .15s,border-color .15s,color .15s,background .15s;}
 .flag-btn:hover{opacity:1;color:var(--amber-text);border-color:var(--amber-border);}
 .flag-btn.on{opacity:1;color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);}
@@ -1062,13 +1077,13 @@ body.view-week #week-wrap{display:block;}
 .card.card-flagged{border-color:var(--amber-border);box-shadow:0 0 0 1px var(--amber-border);}
 .flag-banner{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding:8px 14px;background:var(--amber-bg);
   border-bottom:1px solid var(--amber-border);font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--amber-text);}
-.flag-banner .flag-meta{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--muted2);margin-left:auto;}
+.flag-banner .flag-meta{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted2);margin-left:auto;}
 .tl-evt.tl-flagged{box-shadow:inset 0 0 0 2px var(--amber-text);}
 .tl-flag{flex-shrink:0;font-size:12px;font-weight:900;line-height:1;color:var(--amber-text);}
 .dm-flag{margin-top:18px;display:flex;flex-direction:column;gap:8px;}
 .dm-flag-txt{padding:10px 12px;border-radius:8px;background:var(--amber-bg);border:1px solid var(--amber-border);
   font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--amber-text);display:flex;gap:8px;flex-wrap:wrap;align-items:baseline;}
-.dm-flag-meta{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--muted2);margin-left:auto;}
+.dm-flag-meta{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted2);margin-left:auto;}
 .dm-flag-btn{width:100%;font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.12em;padding:12px;border-radius:8px;
   cursor:pointer;border:2px solid var(--amber-border);background:transparent;color:var(--amber-text);transition:all .15s;}
 .dm-flag-btn:hover{background:var(--amber-bg);border-color:var(--amber-text);}
@@ -1121,7 +1136,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);}
 .eq-toolbar .eq-add-item{display:none;margin-left:auto;}
 #equip-wrap.seen-tab .eq-toolbar .eq-add-item{display:inline-block;}
-.eq-cols{display:grid;grid-template-columns:2fr 1.5fr 1fr 1.2fr 2fr auto;gap:10px;padding:0 14px 6px;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--muted2);}
+.eq-cols{display:grid;grid-template-columns:2fr 1.5fr 1fr 1.2fr 2fr auto;gap:10px;padding:0 14px 6px;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted2);}
 .eq-cols span:last-child{width:150px;}
 @media (max-width:760px){.eq-cols{display:none;}}
 .eq-btn.main{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text);}
@@ -1198,7 +1213,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .eqt-ghdr{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted2);margin:0 0 8px;display:flex;gap:8px;align-items:baseline;}
 .eqt-ghdr.over{color:var(--red-text);} .eqt-ghdr.today{color:var(--green-text);}
 .eqt-ghdr small{font-weight:500;letter-spacing:.05em;}
-.eqt-row{display:grid;grid-template-columns:34px 116px 92px 1fr auto;gap:12px;align-items:center;padding:12px 14px;margin-bottom:6px;
+.eqt-row{display:grid;grid-template-columns:34px 128px 92px 1fr auto;gap:12px;align-items:center;padding:12px 14px;margin-bottom:6px;
   background:var(--surface);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s,opacity .2s;}
 .eqt-row:hover{border-color:var(--green-border);}
 .eqt-row.done{opacity:.45;}
@@ -1206,7 +1221,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .eqt-box{width:26px;height:26px;border-radius:6px;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#000;}
 .eqt-row.set .eqt-box{border-color:var(--eq-set);} .eqt-row.strike .eqt-box{border-color:var(--eq-strike);}
 .eqt-row.done.set .eqt-box{background:var(--eq-set);} .eqt-row.done.strike .eqt-box{background:var(--eq-strike);}
-.eqt-time{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;}
+.eqt-time{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text);line-height:1.3;min-width:0;overflow-wrap:anywhere;}
 .eqt-time.over{color:var(--red-text);}
 .eqt-kind{font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.08em;padding:4px 8px;border-radius:4px;border:1px solid;text-align:center;}
 .eqt-row.set .eqt-kind{color:var(--eq-set);background:var(--eq-set-bg);border-color:var(--eq-set);}
@@ -1221,12 +1236,12 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .eqt-empty{font-size:13px;color:var(--muted2);font-style:italic;padding:14px 0;}
 .eq-for-line{font-size:11px;color:var(--muted2);font-family:var(--font-mono);margin-top:2px;}
 .eq-chip{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.05em;padding:4px 7px;border-radius:4px;flex-shrink:0;
-  background:transparent;border:1px solid var(--border);color:var(--muted2);cursor:pointer;opacity:.6;transition:all .15s;white-space:nowrap;}
+  background:transparent;border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .eq-chip:hover{opacity:1;border-color:var(--green-border);color:var(--green-text);}
 .eq-chip.has{opacity:1;color:var(--green-text);border-color:var(--green-border);background:var(--green-bg);}
 .eq-chip.has.pending{color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);}
 .wk-eqs{font-size:10px;font-weight:700;color:var(--green-text);letter-spacing:.04em;white-space:nowrap;}
-.wk-eqtag{font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:.06em;color:var(--green-text);}
+.wk-eqtag{font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--green-text);}
 .wk-eqtag.pending{color:var(--amber-text);}
 .eqm-bg{position:fixed;inset:0;background:var(--modal-bg);z-index:950;display:flex;align-items:center;justify-content:center;padding:16px;}
 .eqm-bg.hidden{display:none;}
@@ -1241,7 +1256,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .eqm-for span{display:block;font-family:var(--font-mono);font-size:10px;font-weight:600;color:var(--muted2);margin-top:2px;}
 .eqm-existing{font-family:var(--font-mono);font-size:11px;color:var(--muted2);display:flex;flex-direction:column;gap:3px;padding:8px 10px;border:1px dashed var(--border2);border-radius:6px;}
 .eqm-existing b{letter-spacing:.08em;font-size:10px;}
-.eqm-hint{font-family:var(--font-mono);font-size:10px;color:var(--amber-text);margin-top:-6px;min-height:0;}
+.eqm-hint{font-family:var(--font-mono);font-size:11px;color:var(--amber-text);margin-top:-6px;min-height:0;}
 .eqm-hint:empty{display:none;}
 .eqm-err{font-size:12px;font-weight:600;color:var(--red-text);}
 .eqm-added{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--eq-set);}
@@ -1270,6 +1285,8 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .eq-day-item.strike{color:var(--eq-strike);background:var(--eq-strike-bg);border-color:var(--eq-strike);}
 .eq-day-item b{letter-spacing:.06em;}
 .tl-eqm{position:absolute;top:0;bottom:0;width:0;z-index:4;border-left:2px dashed;pointer-events:none;}
+.tl-eqm.tbd{border-left-color:transparent!important;}
+.tl-eqm.tbd span::after{content:'?';font-size:9px;font-weight:800;vertical-align:super;margin-left:1px;}
 .tl-eqm span{position:absolute;top:0;left:0;transform:translateX(-50%);white-space:nowrap;pointer-events:auto;cursor:default;
   font-family:var(--font-mono);font-size:13px;font-weight:700;line-height:1;padding:2px 4px 3px;border-radius:3px;border:1px solid;}
 .tl-eqm span{cursor:pointer;}
@@ -1290,7 +1307,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .eq-pop-btns button.main{background:var(--eq-set);border-color:var(--eq-set);color:var(--eq-set-ink);}
 .eq-pop.strike .eq-pop-btns button.main{background:var(--eq-strike);border-color:var(--eq-strike);color:var(--eq-strike-ink);}
 .eq-pop-btns button.main.undo{background:transparent;color:var(--text2);border-color:var(--border2);}
-.eq-pop-hint{font-family:var(--font-mono);font-size:9px;color:var(--muted2);margin-top:8px;letter-spacing:.04em;}
+.eq-pop-hint{font-family:var(--font-mono);font-size:10px;color:var(--muted2);margin-top:8px;letter-spacing:.04em;}
 .tl-eqm.set.done span{background:var(--eq-set);color:var(--eq-set-ink);}
 .tl-eqm.strike.done span{background:var(--eq-strike);color:var(--eq-strike-ink);}
 .tl-eqm.set{border-color:var(--eq-set);}
@@ -1346,12 +1363,14 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .tl-header-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
 .tl-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--muted2);text-transform:uppercase;}
 .tl-grid{position:relative;min-width:900px;}
-.tl-hours{display:grid;grid-template-columns:180px repeat(16,1fr);margin-bottom:2px;}
+.tl-hours{display:grid;grid-template-columns:180px repeat(var(--tl-cols,16),1fr);margin-bottom:2px;}
 .tl-hlabel{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--text2);text-align:center;padding-bottom:8px;border-right:1px solid var(--border);}
 .tl-hlabel:first-child{border-right:none;}
 .tl-row{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--border);min-height:48px;}
-.tl-rlabel{font-size:12px;font-weight:600;color:var(--text2);padding:8px 12px;border-right:1px solid var(--border);display:flex;align-items:center;line-height:1.3;}
-.tl-cells{position:relative;display:grid;grid-template-columns:repeat(16,1fr);}
+.tl-rlabel{font-size:12px;font-weight:600;color:var(--text2);padding:8px 12px;border-right:1px solid var(--border);display:flex;align-items:center;line-height:1.3;
+  position:sticky;left:0;z-index:21;background:var(--bg);box-shadow:-24px 0 0 var(--bg);}
+.tl-hlabel:first-child{position:sticky;left:0;z-index:23;background:var(--bg);box-shadow:-24px 0 0 var(--bg);}
+.tl-cells{position:relative;display:grid;grid-template-columns:repeat(var(--tl-cols,16),1fr);}
 .tl-cell{border-right:1px solid rgba(100,120,180,.08);}
 .tl-cell:last-child{border-right:none;}
 .tl-evt{
@@ -1377,7 +1396,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .tl-row.tl-fsh-header .tl-rlabel{background:var(--surface2);font-size:13px;}
 .tl-fsh-lbl{display:flex;align-items:center;gap:6px;}
 .fsh-toggle{font-size:11px;opacity:.7;}
-.fsh-count{font-family:var(--font-mono);font-size:9px;background:var(--border2);color:var(--muted2);border-radius:4px;padding:2px 6px;margin-left:2px;}
+.fsh-count{font-family:var(--font-mono);font-size:10px;background:var(--border2);color:var(--muted2);border-radius:4px;padding:2px 6px;margin-left:2px;}
 .tl-fsh-summary{pointer-events:none!important;opacity:.6;font-style:italic;}
 .tl-row.tl-fsh-room{border-top:none;}
 .tl-row.tl-fsh-room .tl-rlabel{font-size:11px;padding-left:20px;color:var(--muted2);}
@@ -1396,12 +1415,12 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .tt-room{font-family:var(--font-mono);font-size:11px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px;}
 .tt-time{font-family:var(--font-mono);font-size:16px;font-weight:300;color:var(--text);margin-bottom:3px;}
 .tt-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;}
-.tt-tag{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:3px;border:1px solid;line-height:1.5;margin:2px 2px 0 0;}
+.tt-tag{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:11px;font-weight:500;padding:3px 8px;border-radius:3px;border:1px solid;line-height:1.5;margin:2px 2px 0 0;}
 .tt-tag.g{color:var(--green-text);border-color:var(--green-border);background:var(--green-bg);}
 .tt-tag.r{color:var(--red-text);border-color:var(--red-border);background:var(--red-bg);}
 .tt-badge{display:inline-block;font-family:var(--font-mono);font-size:10px;color:var(--amber-text);background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:3px;padding:3px 8px;margin-bottom:7px;}
 .tt-notech{font-size:11px;color:var(--muted2);font-style:italic;}
-.tt-click-hint{font-family:var(--font-mono);font-size:9px;color:var(--muted2);letter-spacing:.05em;margin-top:9px;border-top:1px solid var(--border);padding-top:7px;text-align:center;}
+.tt-click-hint{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.05em;margin-top:9px;border-top:1px solid var(--border);padding-top:7px;text-align:center;}
 
 /* ── SEARCH ── */
 .search-wrap{padding:16px 24px 0;}
@@ -1409,6 +1428,8 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .search-input:focus{border-color:var(--green);}
 .search-input::placeholder{color:var(--muted2);}
 .search-count{font-family:var(--font-mono);font-size:11px;color:var(--muted2);padding-top:6px;min-height:18px;}
+.sc-day{background:none;border:0;color:var(--green-text);text-decoration:underline;cursor:pointer;font:inherit;padding:2px 0;}
+.wk-so{font-family:var(--font-mono);font-size:10px;font-weight:800;color:#000;background:var(--green-text);border-radius:3px;padding:0 4px;}
 
 /* ── UPCOMING TECH STARTS ── */
 .upcoming-ts-wrap{margin:14px 24px 0;border-radius:8px;padding:13px 17px;background:var(--amber-bg);border:1px solid var(--amber-border);}
@@ -1423,20 +1444,25 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 /* ── CARDS ── */
 .cards-wrap{padding:20px 24px 36px;}
 .cards-hdr{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--muted2);text-transform:uppercase;margin-bottom:13px;}
+#cards-debug-count{white-space:nowrap;}
+html{scrollbar-gutter:stable;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:13px;}
 .card{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;animation:up .22s ease both;transition:border-color .2s,box-shadow .2s,opacity .3s;}
 .card:hover{border-color:var(--border2);box-shadow:0 5px 26px var(--shadow);}
 @keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .card.hide-card{display:none;}
-.card.card-ended{opacity:.32;filter:grayscale(.5);}
+.card.card-ended{opacity:.78;filter:grayscale(.85);}
+[data-theme="noir"] .card.card-ended{opacity:.9;}
+.evt-countdown.cd-none{display:none;}
+.tl-empty{padding:28px 16px;font-family:var(--font-mono);font-size:12px;color:var(--muted2);text-align:center;}
 
 /* card header */
 .card-room{padding:12px 16px 10px;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:.04em;color:var(--text2);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
-.ec-badge{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--muted2);background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:3px 8px;white-space:nowrap;flex-shrink:0;}
+.ec-badge{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted2);background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:3px 8px;white-space:nowrap;flex-shrink:0;}
 .view-src-icon-btn{
-  font-size:12px;line-height:1;padding:3px 6px;border-radius:4px;flex-shrink:0;
-  background:transparent;border:1px solid var(--border);color:var(--muted2);
-  cursor:pointer;opacity:.55;transition:opacity .15s,border-color .15s;
+  font-size:13px;line-height:1;padding:3px 7px;border-radius:4px;flex-shrink:0;
+  background:transparent;border:1px solid var(--border2);color:var(--text2);
+  cursor:pointer;transition:opacity .15s,border-color .15s;
   margin-left:auto;
 }
 .view-src-icon-btn:hover{opacity:1;border-color:var(--border2);}
@@ -1447,13 +1473,13 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .evt-time{font-family:var(--font-mono);font-size:22px;font-weight:300;color:var(--text);letter-spacing:-.01em;line-height:1;margin-bottom:6px;}
 .evt-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px;}
 .evt-type{font-size:11px;color:var(--muted2);font-style:italic;margin-bottom:9px;}
-.evt-countdown{font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;padding:3px 9px;border-radius:4px;display:inline-block;margin-bottom:9px;}
+.evt-countdown{font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;padding:3px 9px;border-radius:4px;display:inline-block;margin-bottom:9px;}
 .evt-countdown.cd-future{color:var(--amber-text);background:var(--amber-bg);border:1px solid var(--amber-border);}
 .evt-countdown.cd-live{color:var(--green-text);background:var(--green-bg);border:1px solid var(--green-border);}
 .evt-countdown.cd-ended{color:var(--muted2);background:transparent;border:1px solid var(--border);}
 
 /* dept sections */
-.dept-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:var(--muted2);text-transform:uppercase;margin-top:12px;margin-bottom:6px;cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;}
+.dept-lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--muted2);text-transform:uppercase;margin-top:12px;margin-bottom:6px;cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;}
 .dept-lbl::after{content:'▾';font-size:10px;color:var(--muted2);transition:transform .15s;margin-left:4px;}
 .dept-lbl.collapsed::after{transform:rotate(-90deg);}
 .dept-section{overflow:hidden;}
@@ -1496,11 +1522,15 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   cursor:pointer;font-size:15px;font-weight:800;letter-spacing:.2em;
   padding:9px 16px;transition:all .15s;
 }
-.tech-signoff-btn.signed:hover{background:var(--red-text);color:#000;}
-.tech-signoff-btn.signed:hover::after{content:' — TAP TO UNDO';font-size:9px;letter-spacing:.1em;font-weight:700;}
+.tech-signoff-btn.signed{cursor:default;font-size:12px;letter-spacing:.08em;}
+.signoff-bar{display:flex;align-items:stretch;}
+.signoff-bar .tech-signoff-btn{flex:1;}
+.so-undo{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.06em;background:transparent;color:var(--muted2);border:0;border-top:1px solid var(--border);padding:0 14px;cursor:pointer;text-decoration:underline;min-width:56px;min-height:36px;}
+.so-undo:hover{color:var(--red-text);}
+.dm-actions .so-undo{border:1px solid var(--border2);border-radius:8px;flex:0 0 auto;}
 
 /* ── INITIALS MODAL ── */
-.modal-bg{position:fixed;inset:0;background:var(--modal-bg);z-index:900;display:flex;align-items:center;justify-content:center;}
+.modal-bg{position:fixed;inset:0;background:var(--modal-bg);z-index:980;display:flex;align-items:center;justify-content:center;}
 .modal-bg.hidden{display:none;}
 .modal{background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px;min-width:300px;max-width:360px;box-shadow:0 20px 60px var(--shadow);}
 .modal-title{font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;color:var(--text2);text-transform:uppercase;margin-bottom:16px;}
@@ -1548,8 +1578,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .dm-signoff-btn{width:100%;margin-top:20px;font-family:var(--font-mono);font-size:13px;font-weight:800;letter-spacing:.13em;padding:15px;border-radius:8px;cursor:pointer;border:2px solid;color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);transition:all .18s;text-align:center;display:block;}
 .dm-signoff-btn:hover{background:rgba(255,196,0,.32);border-color:var(--amber-text);}
 .dm-signoff-btn.signed{color:#000;border-color:var(--green-text);background:var(--green-text);cursor:pointer;font-size:16px;letter-spacing:.16em;transition:all .15s;}
-.dm-signoff-btn.signed:hover{background:var(--red-text);border-color:var(--red-text);color:#000;}
-.dm-signoff-btn.signed:hover::after{content:'  —  TAP TO UNDO';font-size:11px;letter-spacing:.1em;}
+.dm-signoff-btn.signed{cursor:default;}
 .dm-notes{margin-top:16px;padding:11px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);}
 .dm-note{font-size:12px;color:var(--muted2);line-height:1.65;padding:4px 0;}
 .dm-note+.dm-note{border-top:1px solid var(--border);}
@@ -1557,7 +1586,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 /* ── NOTES SECTION ── */
 .notes-section{margin:0 24px 44px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);}
 .notes-hdr{padding:12px 16px 10px;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--muted2);display:flex;justify-content:space-between;align-items:center;}
-.notes-saved{font-size:10px;color:var(--muted2);font-weight:400;letter-spacing:.04em;}
+.notes-saved{font-size:11px;color:var(--muted2);font-weight:400;letter-spacing:.04em;}
 .notes-list{padding:6px 16px;}
 .notes-empty{font-size:12px;color:var(--muted2);font-style:italic;padding:10px 0;}
 .note-entry{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
@@ -1565,7 +1594,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .note-initials{font-family:var(--font-mono);font-size:11px;font-weight:800;letter-spacing:.08em;color:#000;background:var(--green-text);border-radius:4px;padding:3px 8px;flex-shrink:0;line-height:1.4;}
 .note-body{flex:1;}
 .note-text{font-size:13px;color:var(--text);line-height:1.6;}
-.note-meta{font-family:var(--font-mono);font-size:9px;color:var(--muted2);letter-spacing:.04em;margin-top:2px;}
+.note-meta{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.04em;margin-top:2px;}
 .note-delete{font-family:var(--font-mono);font-size:14px;color:var(--muted2);cursor:pointer;background:none;border:none;padding:0 4px;flex-shrink:0;transition:color .15s;line-height:1.6;}
 .note-delete:hover{color:var(--red-text);}
 .notes-input-row{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);}
@@ -1625,7 +1654,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 
   /* Sign-off buttons: larger tap targets on touch devices */
   .tech-signoff-btn{padding:13px 16px;font-size:12px;}
-  .tech-signoff-btn.signed{padding:12px 16px;font-size:17px;}
+  .tech-signoff-btn.signed{padding:12px 16px;font-size:12px;}
 
   /* Detail modal: full-width sheet from the bottom */
   .detail-modal-bg{padding:0;align-items:flex-end;}
@@ -1644,10 +1673,15 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   /* Timeline room labels narrower to leave more room for the grid */
   .tl-rlabel{font-size:11px;padding:6px 8px;}
   .tl-row{grid-template-columns:120px 1fr;}
-  .tl-hours{grid-template-columns:120px repeat(16,1fr)!important;}
+  .tl-hours{grid-template-columns:120px repeat(var(--tl-cols,16),1fr)!important;}
+  /* Phone: the timeline scrolls in its own box so the room names stay
+     pinned on the left and the hours stay pinned on top. */
+  .tl-wrap{max-height:72vh;overflow:auto;overscroll-behavior:contain;}
+  .tl-hours{position:sticky;top:0;z-index:22;background:var(--bg);box-shadow:0 -16px 0 var(--bg);}
+  .tl-hlabel:first-child{box-shadow:-24px 0 0 var(--bg),-24px -16px 0 var(--bg),0 -16px 0 var(--bg);}
 
   /* Larger tap target for the now-line label and tooltip text */
-  .now-label{font-size:9px;}
+  .now-label{font-size:10px;}
 }
 
 @media (max-width: 420px) {
@@ -1692,8 +1726,8 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   }
   .hdr{position:static;border-bottom:2px solid #000;padding:0 0 10px;}
   .brand, .brand-sub{color:#000;}
-  .hdr-date{color:#000;font-size:20px;}
-  .hdr-clock{display:none;}
+  .hdr-date, .hdr-clock{display:none!important;}
+  .hdr-viewday{display:inline!important;color:#000;font-size:20px;font-family:var(--font-mono);}
   .tl-wrap{padding:14px 0 0;overflow:visible;}
   .tl-grid{min-width:0;}
   .tl-title{color:#000;}
@@ -1782,8 +1816,10 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   .eqt-del{min-width:42px;min-height:42px;}
   .eqt-box{width:32px;height:32px;}
   .dp-day{height:42px;}
-  .flag-btn,.ev-edit-btn,.eq-chip{min-height:36px;min-width:36px;}
-  .theme-menu-item{min-height:40px;}
+  .flag-btn,.ev-edit-btn,.eq-chip{min-height:44px;min-width:44px;}
+  .theme-menu-item{min-height:44px;}
+  .so-undo{min-height:44px;}
+  .sc-day{padding:8px 4px;}
 }
 
 /* ── Backup / sign-in ── */
@@ -1802,7 +1838,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .wk-sort{display:flex;align-items:center;gap:6px;margin-left:auto;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted2);}
 .wk-sort select{font-family:var(--font-mono);font-size:11px;font-weight:600;padding:6px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;}
 .wk-sort + .wk-summary{margin-left:10px;}
-.wk-labor{display:none;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--red-text);margin-top:3px;overflow-wrap:anywhere;}
+.wk-labor{display:none;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--red-text);margin-top:3px;overflow-wrap:anywhere;}
 .wk-labor-mode .wk-labor{display:block;}
 .wk-labor-mode .wk-evt.wk-has-labor{border-left:3px solid var(--red);}
 @media (max-width:720px){.wk-sort{margin-left:0;}}
@@ -1814,20 +1850,20 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .dm-booked{display:block;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--muted2);margin-top:2px;}
 .dm-facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 14px;font-size:13px;color:var(--text2);}
 .dm-facts > span{display:flex;flex-direction:column;gap:1px;}
-.dm-facts i{font-style:normal;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--muted2);}
+.dm-facts i{font-style:normal;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted2);}
 .dm-facts .dm-contact{color:var(--muted2);font-size:12px;}
 .ws-gen{background:var(--amber-bg);border:1px solid var(--amber-border);border-left:4px solid var(--amber);border-radius:8px;padding:10px 13px;margin:0 0 14px;
   font-size:13px;line-height:1.5;color:var(--text);display:flex;flex-direction:column;gap:3px;}
 .ws-gen-h{font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--amber-text);margin-bottom:2px;}
-.ws-gen.compact{display:block;padding:6px 9px;margin:4px 0 8px;font-size:11.5px;border-left-width:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.ws-gen.compact b{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:var(--amber-text);margin-right:4px;}
+.ws-gen.compact{display:block;padding:6px 9px;margin:4px 0 8px;font-size:11.5px;border-left-width:3px;overflow-wrap:anywhere;}
+.ws-gen.compact b{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--amber-text);margin-right:4px;}
 .ws-gen i,.ws-notes i{font-style:normal;color:var(--muted2);}
 .ws{display:flex;flex-direction:column;gap:16px;margin-top:4px;}
 .ws-sec{min-width:0;}
 .ws-h{display:flex;align-items:baseline;gap:8px;padding-bottom:5px;margin-bottom:4px;border-bottom:1.5px solid var(--border2);}
 .ws-t{font-family:var(--font-mono);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text);}
 .ws-win{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--red-text);}
-.ws-n{margin-left:auto;font-family:var(--font-mono);font-size:10px;color:var(--muted2);}
+.ws-n{margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--muted2);}
 .ws-sec.labor .ws-h{border-bottom-color:var(--red-border);}
 .ws-sec.labor .ws-t{color:var(--red-text);}
 .ws-detail{font-size:12px;color:var(--text2);margin:2px 0 4px;}
@@ -1837,7 +1873,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .ws-nm{font-size:14px;font-weight:600;color:var(--text);overflow-wrap:anywhere;line-height:1.35;}
 .ws-code{font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;color:var(--muted2);border:1px solid var(--border2);border-radius:3px;padding:0 5px;white-space:nowrap;}
 .ws-notes{grid-column:2 / -1;margin:3px 0 1px;padding-left:10px;border-left:2px solid var(--border2);font-size:12px;line-height:1.5;color:var(--muted2);display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere;}
-.ws-notes.compact{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ws-notes.compact{display:block;font-size:11px;white-space:normal;overflow-wrap:anywhere;}
 .ws-snotes{font-size:12px;color:var(--muted2);padding:4px 0 0 42px;display:flex;flex-direction:column;gap:2px;}
 .ws-more{display:none;}
 .ws-sec.open .ws-more{display:grid;}
@@ -1854,7 +1890,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .ws-card-lbl.labor{color:var(--red-text);}
 .card .dept-section.ws-card{max-height:none;}
 /* tooltip */
-.tt-sec{font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin:8px 0 2px;}
+.tt-sec{font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin:8px 0 2px;}
 .tt-sec.labor{color:var(--red-text);}
 .tt-row{font-size:12px;color:var(--text);line-height:1.45;display:flex;gap:7px;}
 .tt-row b{font-family:var(--font-mono);font-size:11px;min-width:18px;text-align:right;color:var(--text2);}
@@ -1879,7 +1915,8 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 .ws-h{border-bottom-width:1px;}
 .ws-item{border-bottom:none;padding:6px 0;}
 .ws-notes{border-left-color:var(--border);}
-.ws-code{color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);font-size:10px;font-weight:700;padding:1px 6px;}
+.ws-code{color:var(--amber-text);border-color:var(--amber-border);background:var(--amber-bg);font-size:11px;font-weight:700;padding:1px 6px;}
+.ws-code.ws-tier{color:var(--red-text);border-color:var(--red-border, var(--border2));background:transparent;}
 .dm-tel{color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2);}
 .dm-tel:hover{color:var(--text);}
 .dm-actions .dm-signoff-btn,.dm-actions .dm-flag-btn{font-size:12px;letter-spacing:.07em;white-space:nowrap;padding:13px 12px;}
@@ -1907,15 +1944,17 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   .ut-msg{flex:1;}
 }
 @media (pointer:coarse){
-  .view-src-icon-btn{min-width:40px;min-height:36px;}
+  .view-src-icon-btn{min-width:44px;min-height:44px;}
+  .dp-btn{min-height:44px;}
+  .eqm-cancel,.eqm-save{min-height:44px;}
   .dept-lbl{padding:9px 0;margin-top:6px;margin-bottom:2px;}
   .ws-all{min-height:40px;padding:8px 14px;}
-  .wk-btn,.wk-sort select,.qa-btn,.eq-seg-btn,.eq-add{min-height:40px;}
+  .wk-btn,.wk-sort select,.qa-btn,.eq-seg-btn,.eq-add{min-height:44px;}
   .fb-banner a{display:inline-block;padding:8px 0;}
-  .dm-tel{display:inline-block;padding:6px 0;}
+  .dm-tel{display:inline-block;padding:10px 0;}
   .dm-src summary{padding:10px 0;}
   /* no hover on touch: let the first note on a card wrap to two lines instead of an ellipsis */
-  .ws-notes.compact{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+
 }
 
 /* ── Day picker: fixed geometry ── */
@@ -1933,6 +1972,14 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   .dp-today{display:none;}          /* TODAY lives in the calendar popup on phones */
   .dp-yr,.dp-wd{display:none;}
   .day-switch-wrap{margin-left:16px;margin-right:16px;}
+}
+
+/* ── Accessibility ── */
+:is(button, a, input, select, textarea, summary, [tabindex]):focus-visible{outline:2px solid var(--green-text);outline-offset:2px;}
+.tl-evt:focus-visible{z-index:9;}
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;}
+  #sakura-petals, #snowfall, .coffee-steam, .terminal-boot, .crt-scanlines{display:none!important;}
 }
 </style>
 </head>
@@ -2007,6 +2054,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
       <div class="brand-datetime">
         <span class="hdr-date" id="hdr-date"></span>
         <span class="hdr-clock" id="hdr-clock"></span>
+        <span class="hdr-viewday" id="hdr-viewday"></span>
       </div>
     </div>
   </div>
@@ -2022,7 +2070,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
       <span class="sync-label" id="sync-label">OFFLINE</span>
     </div>
     <div class="initials-wrap none" id="initials-wrap" onclick="promptInitials(null)" title="Your initials go on every sign-off and check-off">
-      <span class="initials-label">NOT SIGNED IN</span>
+      <span class="initials-label">YOUR INITIALS</span>
       <span class="initials-val" id="initials-display">TAP TO SET</span>
     </div>
     <!-- Settings: themes, print, clear — kept out of the main bar on purpose -->
@@ -2065,13 +2113,26 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   </div>
 </div>
 
+<!-- FLAG AN EVENT -->
+<div class="eqm-bg hidden" id="flg-bg" onclick="if(event.target===this)closeFlagDialog()">
+  <div class="eqm" role="dialog" aria-modal="true">
+    <div class="eqm-title" id="flg-title">⚠ FLAG THIS EVENT</div>
+    <div class="clr-text" id="flg-sub"></div>
+    <label class="eqm-wide">WHAT NEEDS ATTENTION? <small>(optional)</small><input id="flg-note" type="text" maxlength="200" autocomplete="off" placeholder="e.g. Client wants a second mic" onkeydown="if(event.key==='Enter'){event.preventDefault();saveFlagDialog();}"></label>
+    <div class="eqm-btns">
+      <button class="eqm-cancel" onclick="closeFlagDialog()">CANCEL</button>
+      <button class="eqm-save" onclick="saveFlagDialog()">FLAG IT</button>
+    </div>
+  </div>
+</div>
+
 <!-- EQUIPMENT ADD / EDIT MODAL -->
 <div class="eqm-bg hidden" id="eqm-bg" onclick="if(event.target===this)closeEquipModal()">
   <div class="eqm" role="dialog" aria-modal="true">
     <div class="eqm-title" id="eqm-title">ADD EQUIPMENT</div>
     <div class="eqm-for hidden" id="eqm-for"></div>
     <div class="eqm-existing hidden" id="eqm-existing"></div>
-    <label class="eqm-wide">EQUIPMENT<input id="eqm-name" type="text" placeholder="e.g. 2x wireless handhelds" autocomplete="off"></label>
+    <label class="eqm-wide">WHAT'S BEING SET UP<input id="eqm-name" type="text" placeholder="e.g. 2x wireless handhelds" autocomplete="off"></label>
     <label class="eqm-wide">LOCATION<input id="eqm-loc" type="text" list="eq-rooms" placeholder="Room / venue" autocomplete="off" oninput="updateEqLocHint()"></label>
     <div class="eqm-hint" id="eqm-hint"></div>
     <div class="eqm-wide hidden" id="eqm-assets-wrap"><div class="eqm-lbl">TRACKED ITEMS <span>(optional — they move to this room at set up, and you'll be asked where they went at strike)</span></div><div class="eqm-chips" id="eqm-assets"></div></div>
@@ -2093,7 +2154,7 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 </div>
 
 <!-- INVENTORY: MOVE / STRIKE-RETURN DIALOG -->
-<div class="eqm-bg hidden" id="invm-bg" onclick="if(event.target===this)closeMove()">
+<div class="eqm-bg hidden" id="invm-bg" onclick="if(event.target===this)cancelMove()">
   <div class="eqm" role="dialog" aria-modal="true">
     <div class="eqm-title" id="invm-title">MOVE</div>
     <div class="eqm-for hidden" id="invm-sub"></div>
@@ -2102,8 +2163,8 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
     <label class="eqm-wide">NOTE<input id="invm-note" type="text" placeholder="Optional — e.g. in the black bag" autocomplete="off"></label>
     <div class="eqm-err hidden" id="invm-err"></div>
     <div class="eqm-btns">
-      <button class="eqm-cancel hidden" id="invm-skip" onclick="skipMove()" title="Check-off stays; don't update locations">SKIP</button>
-      <button class="eqm-cancel" onclick="closeMove()">CANCEL</button>
+      <button class="eqm-cancel hidden" id="invm-skip" onclick="skipMove()" title="Keep the strike checked off; don't change where anything is">SKIP — DON'T TRACK</button>
+      <button class="eqm-cancel" id="invm-cancel" onclick="cancelMove()">CANCEL</button>
       <button class="eqm-save" onclick="saveMove()">SAVE</button>
     </div>
   </div>
@@ -2216,8 +2277,12 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
 <!-- SHARED SCHEDULE BANNER — shown when today's schedule auto-loaded from Firebase -->
 <div class="shared-schedule-banner hidden" id="shared-schedule-banner">
   <span class="shared-icon">☁</span>
-  <span id="shared-schedule-label">Today's schedule loaded</span>
-  <button class="reupload-btn" onclick="showReuploadZone()">Re-upload</button>
+  <div class="db-text">
+    <span id="shared-schedule-label"></span>
+    <span id="day-notice" class="db-notice hidden"></span>
+    <span id="upload-summary" class="db-summary hidden"><span id="upload-summary-t"></span><button type="button" class="db-x" onclick="clearUploadSummary()" aria-label="Dismiss upload summary">✕</button></span>
+  </div>
+  <button class="reupload-btn" onclick="pickWorksheet()">⬆ UPLOAD WORKSHEET</button>
 </div>
 
 <div class="drop-zone-wrap" id="drop-zone-wrap">
@@ -2260,6 +2325,8 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
     <div class="li"><div class="ld" style="background:var(--techline);border-radius:50%"></div>TECH START</div>
     <div class="li"><div class="ld" style="background:var(--nowline)"></div>NOW</div>
     <div class="li"><span class="labor-flag" style="margin:0 6px 0 0"></span>LABOR</div>
+    <div class="li"><span class="ld-labcall"></span>LABOR CALL</div>
+    <div class="li"><span class="ld-ss">☐</span>SET/STRIKE</div>
     <span class="qa-group">
       <button class="qa-btn qa-btn-eq" id="qs-btn" onclick="quickAddSetStrike()" title="Add a set up and/or strike for the day you're viewing">+ ADD SET/STRIKE</button>
       <button class="qa-btn" id="qa-btn" onclick="toggleAddMode()" title="Add a manual event: click here, then click a time on a room's timeline row">+ ADD EVENT</button>
@@ -2269,19 +2336,10 @@ body.add-mode #tl-rows .tl-cells{cursor:cell;}
   <div class="tl-owl-anchor">
     <div class="tl-wrap">
       <div class="tl-header-row">
-        <div class="tl-title">TIMELINE 7 AM – 11 PM <span class="tl-hint" id="tl-hint">· tap or click a time on a room's row to place the event, or <button class="tl-hint-link" onclick="setAddMode(false);openEventModal({})">enter details instead</button> · Esc to cancel</span></div>
+        <div class="tl-title"><span id="tl-range">TIMELINE 7 AM – 11 PM</span> <span class="tl-hint" id="tl-hint">· tap or click a time on a room's row to place the event, or <button class="tl-hint-link" onclick="setAddMode(false);openEventModal({})">enter details instead</button> · Esc to cancel</span></div>
     </div>
     <div class="tl-grid" id="tl-grid">
       <div class="tl-hours" id="tl-hours">
-        <div class="tl-hlabel"></div>
-        <div class="tl-hlabel">7A</div><div class="tl-hlabel">8A</div>
-        <div class="tl-hlabel">9A</div><div class="tl-hlabel">10A</div>
-        <div class="tl-hlabel">11A</div><div class="tl-hlabel">12P</div>
-        <div class="tl-hlabel">1P</div><div class="tl-hlabel">2P</div>
-        <div class="tl-hlabel">3P</div><div class="tl-hlabel">4P</div>
-        <div class="tl-hlabel">5P</div><div class="tl-hlabel">6P</div>
-        <div class="tl-hlabel">7P</div><div class="tl-hlabel">8P</div>
-        <div class="tl-hlabel">9P</div><div class="tl-hlabel">10P</div>
       </div>
       <div id="tl-rows"></div>
       <div class="now-line"  id="now-line"></div>
@@ -2342,6 +2400,9 @@ const FLAG_ICON = '\u26A0\uFE0E';
 let currentDateKey = '';   // e.g. "2026-04-15" — scope sign-offs per day
 let signoffCache = {};     // { eventKey: { ts: bool, tsBy:'JW', tsAt:'9:42 AM', ready:bool, readyBy:'EW', readyAt:'6:14 PM' } }
 let fbListenerAttached = false;
+// Without a database connection, sign-offs and notes are kept per day here
+// (this tab only) so they can't leak onto another day.
+const localByDay = { signoffs: {}, notes: {} };
 
 async function initFirebase() {
   if (!FIREBASE_CONFIG) {
@@ -2357,6 +2418,7 @@ async function initFirebase() {
     if (REQUIRE_SIGNIN) await requireSignin();   // blocks here until a valid account signs in
     db = firebase.database();
     setSyncStatus('connected');
+    watchConnection();
     if (typeof attachEquipListener === 'function') attachEquipListener();
     if (typeof attachInvListener === 'function') attachInvListener();
     attachFlagsListener();
@@ -2384,20 +2446,30 @@ async function initFirebase() {
     // to the closest known date rather than leaving a blank screen.
     if (!foundToday && parsedDays.length) {
       const today = todayKey();
-      const closest = parsedDays.slice().sort((a, b) =>
-        Math.abs(a.dateKey.localeCompare(today)) - Math.abs(b.dateKey.localeCompare(today))
-      )[0];
-      await selectDay(closest.dateKey);
+      const closest = pickFallbackDay(parsedDays.map(d => d.dateKey), today);
+      dayNotice = { forKey: closest, text: `No schedule uploaded for today (${fmtDayShort(today)}) — showing ${fmtDayShort(closest)}, the ${closest > today ? 'next' : 'most recent'} uploaded day.` };
+      await selectDay(closest);
+      updateDayBar();
     }
   } catch(e) {
     console.error('Firebase init failed', e);
     setSyncStatus('error');
     const b = document.getElementById('fb-banner');
     if (b) {
-      b.innerHTML = '⚠ Can\'t reach the shared database — changes are saved on this device only until it reconnects. <a href="#" onclick="location.reload();return false;">Retry →</a>';
+      b.innerHTML = '⚠ Can\'t reach the shared database. You can look around, but anything you change now stays in this tab only — it won\'t reach the team and is lost if you reload. <a href="#" onclick="location.reload();return false;">Reload and try again →</a>';
       b.classList.remove('hidden');
     }
   }
+}
+
+// Prefer the next uploaded day within a week; otherwise the most recent past one.
+function pickFallbackDay(keys, today) {
+  const dayDiff = k => Math.round((keyToDate(k) - keyToDate(today)) / 86400000);
+  const ahead = keys.filter(k => k > today && dayDiff(k) <= 7).sort();
+  if (ahead.length) return ahead[0];
+  const past = keys.filter(k => k < today).sort();
+  if (past.length) return past[past.length - 1];
+  return keys.slice().sort()[0];
 }
 
 /* ── loadKnownDatesIndex ──
@@ -2437,18 +2509,32 @@ function renderDay(dateKey, dateLabel, events) {
   try {
     detachListeners(); // must run BEFORE currentDateKey changes, or it detaches the new path instead of the old one
     currentDateKey = dateKey;
-    document.getElementById('hdr-date').textContent = dateLabel || '';
+    if (typeof weekAnchor !== 'undefined') weekAnchor = dateKey;   // Week view opens on the day being viewed
+    document.getElementById('hdr-viewday').textContent = dateLabel || '';
 
     fbListenerAttached = false;
     notesListenerAttached = false;
+    // Never show one day's sign-offs or notes on another: start empty and let
+    // this day's data fill in (from Firebase, or this device's per-day store).
+    if (db) { signoffCache = {}; notesCache = {}; }
+    else {
+      signoffCache = localByDay.signoffs[dateKey] = localByDay.signoffs[dateKey] || {};
+      notesCache = localByDay.notes[dateKey] = localByDay.notes[dateKey] || {};
+    }
+    { const ns = document.getElementById('notes-saved'); if (ns) ns.textContent = ''; }
     if (db) { attachListener(); attachNotesListener(); }
     renderNotes();
 
     document.getElementById('empty-state').classList.add('hidden');
     document.getElementById('drop-zone-wrap').classList.add('hidden');
     document.getElementById('schedule-wrap').classList.remove('hidden');
+    updateDayBar();
 
     renderTimeline(events);
+    {
+      const rowsEl = document.getElementById('tl-rows');
+      if (rowsEl && !rowsEl.children.length) rowsEl.innerHTML = '<div class="tl-empty">No tech events on this day. Use + ADD EVENT or + ADD SET/STRIKE to put something on it.</div>';
+    }
     renderCards(events);
     applyFlagsToDay();
     applyEquipBadges();
@@ -2523,6 +2609,7 @@ async function loadScheduleForDate(dateKey) {
     if (existing) { existing.events = events; }
     else parsedDays.push({ dateKey, dateLabel: data.date || dateKey, events });
     parsedDays.sort((a,b) => a.dateKey.localeCompare(b.dateKey));
+    migrateDay(dateKey);
 
     // Only paint this onto the screen if it's still the most recent
     // request — a newer click since this one started wins.
@@ -2731,19 +2818,43 @@ function normalizeEvent(ev) {
    Firebase (auto-loaded on startup, or via day-switcher / jump-to-date),
    with who uploaded it and a re-upload option.
 */
+// Per-day upload info, so the banner always describes the day on screen.
+const dayMeta = {};   // { dateKey: { by, at } }
+let dayNotice = null; // { forKey, text } — e.g. "no schedule for today, showing …"
 function showSharedScheduleBanner(uploadedBy, uploadedAt) {
+  if (currentDateKey) dayMeta[currentDateKey] = { by: uploadedBy || '', at: uploadedAt || '' };
+  updateDayBar();
+}
+function fmtDayShort(k) {
+  return keyToDate(k).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+function updateDayBar() {
   const banner = document.getElementById('shared-schedule-banner');
   const label  = document.getElementById('shared-schedule-label');
-  if (!banner || !label) return;
-  const whichDay = currentDateKey === todayKey() ? "Today's" : "This day's";
-  label.textContent = `${whichDay} schedule loaded — uploaded by ${uploadedBy || 'a teammate'}${uploadedAt ? ' at ' + uploadedAt : ''}`;
+  if (!banner || !label || !currentDateKey) return;
+  const m = dayMeta[currentDateKey];
+  const rel = currentDateKey === todayKey() ? 'Today' : fmtDayShort(currentDateKey);
+  label.textContent = m && m.by
+    ? `${rel} — uploaded by ${m.by}${m.at ? ' at ' + m.at : ''}`
+    : `${rel} — from your upload`;
+  const n = document.getElementById('day-notice');
+  const show = dayNotice && dayNotice.forKey === currentDateKey;
+  n.textContent = show ? dayNotice.text : '';
+  n.classList.toggle('hidden', !show);
   banner.classList.remove('hidden');
 }
-
-function showReuploadZone() {
-  document.getElementById('shared-schedule-banner').classList.add('hidden');
-  document.getElementById('drop-zone-wrap').classList.remove('hidden');
+function setUploadSummary(text, warn) {
+  const w = document.getElementById('upload-summary');
+  document.getElementById('upload-summary-t').textContent = text;
+  w.classList.toggle('warn', !!warn);
+  w.classList.remove('hidden');
 }
+function clearUploadSummary() { document.getElementById('upload-summary').classList.add('hidden'); }
+function pickWorksheet() {
+  document.getElementById('drop-zone-wrap').classList.remove('hidden');
+  document.getElementById('file-input').click();
+}
+function showReuploadZone() { pickWorksheet(); }
 
 /* ── Clear shared data ──
    A hard reset for the whole team's Firebase data — every day's schedule,
@@ -2817,6 +2928,27 @@ function loadScript(src) {
   });
 }
 
+// Once connected, Firebase queues writes made while the connection drops and
+// sends them when it returns — as long as this page stays open.
+function watchConnection() {
+  let seen = false;
+  db.ref('.info/connected').on('value', snap => {
+    const on = !!snap.val();
+    const b = document.getElementById('fb-banner');
+    if (on) {
+      seen = true; setSyncStatus('connected');
+      if (b && b.dataset.kind === 'drop') { b.classList.add('hidden'); b.dataset.kind = ''; }
+    } else if (seen) {
+      setSyncStatus('offline');
+      if (b) {
+        b.dataset.kind = 'drop';
+        b.textContent = '⚠ Connection lost. Changes you make are queued and will sync when it comes back — keep this page open (reloading now loses them).';
+        b.classList.remove('hidden');
+      }
+    }
+  });
+}
+
 function setSyncStatus(state) {
   const dot = document.getElementById('sync-dot');
   const lbl = document.getElementById('sync-label');
@@ -2830,8 +2962,11 @@ function setSyncStatus(state) {
 function attachListener() {
   if (!db || !currentDateKey || fbListenerAttached) return;
   fbListenerAttached = true;
-  db.ref('signoffs/' + currentDateKey).on('value', snap => {
+  const dk = currentDateKey;
+  db.ref('signoffs/' + dk).on('value', snap => {
+    if (dk !== currentDateKey) return;   // a stale listener from another day
     signoffCache = snap.val() || {};
+    migrateLegacyKeys('signoffs/' + dk, dk, signoffCache);
     applyAllSignoffs();
   });
 }
@@ -2853,9 +2988,47 @@ function writeSignoff(evKey, patch) {
 function makeEventKey(ev) {
   // Manual events key off their own id so editing the name/time keeps sign-offs and flags
   if (ev.manualId) return ('M_' + ev.manualId).replace(/[^a-zA-Z0-9_]/g, '_');
-  // Stable key from room + start time + name
+  // Worksheet events key off the reservation ID, so a re-upload with a new
+  // time or name keeps its sign-off, flag and attached set/strikes.
+  if (ev.resId) return 'R' + String(ev.resId).replace(/[^0-9]/g, '');
+  return legacyEventKey(ev);
+}
+// The key used before reservation IDs were read (room + start + name).
+// Still used for events without an ID, and to carry old data across.
+function legacyEventKey(ev) {
   return (ev.room + '_' + ev.startH + '_' + ev.name)
     .replace(/[^a-zA-Z0-9_]/g, '_').substring(0, 80);
+}
+// Move records stored under an event's legacy key to its reservation-ID key
+// (signoffs/<day>, flags/<day>). Done once in Firebase, then it's a no-op.
+function migrateLegacyKeys(base, dateKey, obj) {
+  const day = parsedDays.find(d => d.dateKey === dateKey);
+  if (!obj || !day || !day.events) return false;
+  let moved = false;
+  day.events.forEach(ev => {
+    if (!ev.resId || ev.manualId) return;
+    const nk = makeEventKey(ev), ok = legacyEventKey(ev);
+    if (obj[ok] && !obj[nk]) {
+      obj[nk] = obj[ok]; delete obj[ok]; moved = true;
+      if (db) { db.ref(base + '/' + nk).set(obj[nk]); db.ref(base + '/' + ok).remove(); }
+    }
+  });
+  return moved;
+}
+// A day's events just arrived (shared load or upload): carry its old-key data over.
+function migrateDay(dk) {
+  if (flagCache && flagCache[dk] && migrateLegacyKeys('flags/' + dk, dk, flagCache[dk]) && typeof onFlagsChanged === 'function') onFlagsChanged();
+  migrateEquipKeys();
+}
+function migrateEquipKeys() {
+  Object.entries(equipCache || {}).forEach(([id, it]) => {
+    if (!it || !it.evKey || !it.evDate || /^(R\d|M_)/.test(it.evKey)) return;
+    const day = parsedDays.find(d => d.dateKey === it.evDate);
+    const ev = day && day.events && day.events.find(e => e.resId && legacyEventKey(e) === it.evKey);
+    if (!ev) return;
+    it.evKey = makeEventKey(ev);
+    if (db) db.ref('equipment/' + id + '/evKey').set(it.evKey);
+  });
 }
 
 /* ═══════════════════════════════
@@ -2902,7 +3075,7 @@ function updateInitialsDisplay() {
   const w = document.getElementById('initials-wrap');
   if (w) {
     w.classList.toggle('none', !myInitials);
-    const l = w.querySelector('.initials-label'); if (l) l.textContent = myInitials ? 'SIGNING AS' : 'NOT SIGNED IN';
+    const l = w.querySelector('.initials-label'); if (l) l.textContent = myInitials ? 'SIGNING AS' : 'YOUR INITIALS';
   }
 }
 updateInitialsDisplay();
@@ -2945,6 +3118,33 @@ document.getElementById('modal-input').addEventListener('keydown', e => {
 /* ═══════════════════════════════
    SIGN-OFF ACTIONS
 ═══════════════════════════════ */
+let lastSignoffAt = 0;
+const unsignedLabel = ev => `SIGN OFF · TECH START ${fmtH(techStartH(ev))}`;
+const signedLabel = st => `✓ SIGNED OFF · ${escapeHtml(st.tsBy || '')}${st.tsAt ? ' · ' + escapeHtml(st.tsAt) : ''}`;
+// Signed buttons are status, not actions: undo is a separate small link
+// beside them so a second tap can't cancel the sign-off by accident.
+function paintSignoff(btn, evKey, state, roomLabel) {
+  const next = btn.nextElementSibling;
+  if (state) {
+    btn.innerHTML = signedLabel(state);
+    btn.classList.add('signed');
+    btn.setAttribute('aria-disabled', 'true');
+    btn.title = `Signed off by ${state.tsBy || ''} ${state.tsAt || ''}`;
+    btn.onclick = null; btn.removeAttribute('onclick');
+    let u = next && next.classList.contains('so-undo') ? next : null;
+    if (!u) { u = document.createElement('button'); u.type = 'button'; u.className = 'so-undo'; u.textContent = 'undo'; btn.after(u); }
+    u.setAttribute('aria-label', 'Undo sign-off');
+    u.onclick = e => { e.stopPropagation(); doUndoSignoff(evKey, roomLabel); };
+  } else {
+    const ev = allEvents.find(e => makeEventKey(e) === evKey);
+    btn.textContent = ev ? unsignedLabel(ev) : 'SIGN OFF';
+    btn.classList.remove('signed');
+    btn.removeAttribute('aria-disabled');
+    btn.title = '';
+    btn.onclick = () => doSignoff(evKey);
+    if (next && next.classList.contains('so-undo')) next.remove();
+  }
+}
 function doSignoff(evKey) {
   const now = new Date();
   let h = now.getHours(), m = now.getMinutes();
@@ -2953,6 +3153,7 @@ function doSignoff(evKey) {
   const timeStr = h + ':' + String(m).padStart(2,'0') + ' ' + ap;
 
   const proceed = (initials) => {
+    lastSignoffAt = Date.now();
     const patch = { ts: true, tsBy: initials, tsAt: timeStr };
     writeSignoff(evKey, patch);
     if (!signoffCache[evKey]) signoffCache[evKey] = {};
@@ -2968,6 +3169,7 @@ function doSignoff(evKey) {
 }
 
 function doUndoSignoff(evKey, roomLabel) {
+  if (Date.now() - lastSignoffAt < 1200) return;   // a double-tap on SIGN OFF isn't an undo
   const prev = snapOf(signoffCache[evKey]), dk = currentDateKey;
   if (db) db.ref(fbPath(evKey)).remove();
   delete signoffCache[evKey];
@@ -2983,12 +3185,7 @@ function removeSignoffFromUI(evKey) {
   const card = document.querySelector(`.card[data-evkey="${CSS.escape(evKey)}"]`);
   if (card) {
     const btn = card.querySelector('.tech-signoff-btn');
-    if (btn) {
-      const ev = allEvents.find(e => makeEventKey(e) === evKey);
-      btn.textContent = ev ? `TECH STARTS AT ${fmtH(techStartH(ev))}` : 'TECH START';
-      btn.classList.remove('signed');
-      btn.onclick = () => doSignoff(evKey);
-    }
+    if (btn) paintSignoff(btn, evKey, null);
     card.classList.remove('card-ready');
   }
 
@@ -3002,12 +3199,7 @@ function removeSignoffFromUI(evKey) {
 
   // ── Detail modal, if open for this event ──
   const dmBtn = document.querySelector(`.dm-signoff-btn[data-evkey="${CSS.escape(evKey)}"]`);
-  if (dmBtn) {
-    const ev = allEvents.find(e => makeEventKey(e) === evKey);
-    dmBtn.textContent = ev ? `SIGN OFF · ${fmtH(techStartH(ev))}` : 'SIGN OFF';
-    dmBtn.classList.remove('signed');
-    dmBtn.onclick = () => doSignoff(evKey);
-  }
+  if (dmBtn) paintSignoff(dmBtn, evKey, null);
 }
 
 function applyAllSignoffs() {
@@ -3025,12 +3217,7 @@ function applySignoffToCard(evKey) {
   const card = document.querySelector(`.card[data-evkey="${CSS.escape(evKey)}"]`);
   if (card) {
     const btn = card.querySelector('.tech-signoff-btn');
-    if (btn) {
-      btn.textContent = state.tsBy;
-      btn.classList.add('signed');
-      btn.title = 'Tap to undo sign-off';
-      btn.onclick = () => doUndoSignoff(evKey, roomLabel);
-    }
+    if (btn) paintSignoff(btn, evKey, state, roomLabel);
     card.classList.add('card-ready');
   }
 
@@ -3041,7 +3228,7 @@ function applySignoffToCard(evKey) {
     if (oldBadge) oldBadge.remove();
     const badge = document.createElement('span');
     badge.className = 'tl-signoff';
-    badge.innerHTML = `<span class="so-ts" title="Tech started by ${state.tsBy} ${state.tsAt} — click to undo">${state.tsBy}</span>`;
+    badge.innerHTML = `<span class="so-ts" title="Tech started by ${escapeHtml(state.tsBy)} ${escapeHtml(state.tsAt)} — click to undo">${escapeHtml(state.tsBy)}</span>`;
     const soTs = badge.querySelector('.so-ts');
     soTs.addEventListener('click', evt => {
       evt.stopPropagation();
@@ -3058,12 +3245,7 @@ function applySignoffToCard(evKey) {
 
   // ── Update detail modal if currently open for this event ──
   const dmBtn = document.querySelector(`.dm-signoff-btn[data-evkey="${CSS.escape(evKey)}"]`);
-  if (dmBtn) {
-    dmBtn.textContent = `${state.tsBy}  ·  ${state.tsAt}`;
-    dmBtn.classList.add('signed');
-    dmBtn.title = 'Tap to undo sign-off';
-    dmBtn.onclick = () => doUndoSignoff(evKey, roomLabel);
-  }
+  if (dmBtn) paintSignoff(dmBtn, evKey, state, roomLabel);
 }
 
 function showFirebaseSetup() {
@@ -3156,6 +3338,8 @@ function setTheme(name, opts) {
   opts = opts || {};
   if (!VALID_THEMES.includes(name)) name = 'dark';
   if (opts.syncToFirebase !== false) themeActionToken++;
+  // The Terminal boot sequence plays when someone picks the theme, not on every page load.
+  document.documentElement.classList.toggle('no-boot', !(name === 'terminal' && opts.syncToFirebase !== false));
   document.documentElement.setAttribute('data-theme', name);
   document.documentElement.setAttribute('data-mode', LIGHT_THEMES.includes(name) ? 'light' : 'dark');
   try { updateThemeMenuActiveState(name); } catch (e) { console.error('setTheme: updateThemeMenuActiveState failed', e); }
@@ -3436,21 +3620,19 @@ function renderNotes() {
     const entry = document.createElement('div');
     entry.className = 'note-entry';
     entry.innerHTML = `
-      <span class="note-initials">${n.by || '—'}</span>
+      <span class="note-initials">${escapeHtml(n.by || '—')}</span>
       <div class="note-body">
         <div class="note-text">${escapeHtml(n.text || '')}</div>
-        <div class="note-meta">${n.at || ''}</div>
+        <div class="note-meta">${escapeHtml(n.at || '')}</div>
       </div>
-      <button class="note-delete" onclick="deleteNote('${id}')" title="Delete note">✕</button>
+      <button class="note-delete" onclick="deleteNote('${qa(id)}')" title="Delete note">✕</button>
     `;
     list.appendChild(entry);
   });
 }
 
 function escapeHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
 function addNote() {
@@ -3485,12 +3667,17 @@ function addNote() {
 }
 
 function deleteNote(id) {
+  const prev = snapOf(notesCache[id]), path = notesPath() + '/' + id, dk = currentDateKey;
   if (db && currentDateKey) {
-    db.ref(notesPath() + '/' + id).remove();
+    db.ref(path).remove();
   } else {
     delete notesCache[id];
     renderNotes();
   }
+  if (prev) undoToast('Note deleted', () => {
+    if (db) db.ref(path).set(prev);
+    else if (currentDateKey === dk) { notesCache[id] = prev; renderNotes(); }
+  });
 }
 
 document.getElementById('notes-input').addEventListener('keydown', e => {
@@ -3500,8 +3687,36 @@ document.getElementById('notes-input').addEventListener('keydown', e => {
 /* ═══════════════════════════════
    TIME HELPERS
 ═══════════════════════════════ */
-const TL_START = 7;
-const TL_HOURS = 16;
+// The timeline normally runs 7 AM – 11 PM, and widens for a day with anything
+// earlier or later (6 AM calls, early tech starts, late strikes).
+let TL_START = 7;
+let TL_HOURS = 16;
+function setTlWindow(events) {
+  let lo = 7, hi = 23;
+  (events || []).forEach(ev => {
+    if (ev.allDay) return;
+    lo = Math.min(lo, Math.floor(ev.startH));
+    if (ev.hasTech) lo = Math.min(lo, Math.floor(techStartH(ev)));
+    const lab = laborStartH(ev); if (lab != null) lo = Math.min(lo, Math.floor(lab));
+    hi = Math.max(hi, Math.ceil(Math.min(ev.endH, 24)));
+  });
+  if (currentDateKey && typeof equipForDay === 'function') equipForDay(currentDateKey).forEach(r => {
+    if (!r.time) return; const [hh, mm] = r.time.split(':').map(Number);
+    lo = Math.min(lo, hh); hi = Math.max(hi, Math.min(24, Math.ceil(hh + mm / 60 + 0.5)));
+  });
+  lo = Math.max(0, lo); hi = Math.min(24, hi);
+  TL_START = lo; TL_HOURS = hi - lo;
+  const grid = document.getElementById('tl-grid');
+  if (grid) { grid.style.setProperty('--tl-cols', TL_HOURS); grid.style.minWidth = Math.max(900, 180 + TL_HOURS * 46) + 'px'; }
+  const hrs = document.getElementById('tl-hours');
+  if (hrs) {
+    let h = '<div class="tl-hlabel"></div>';
+    for (let i = lo; i < hi; i++) { const d = i % 12 || 12; h += `<div class="tl-hlabel">${d}${i < 12 || i === 24 ? 'A' : 'P'}</div>`; }
+    hrs.innerHTML = h;
+  }
+  const rng = document.getElementById('tl-range');
+  if (rng) rng.textContent = `TIMELINE ${fmtH(lo)} – ${hi >= 24 ? 'MIDNIGHT' : fmtH(hi)}`;
+}
 
 function fmtH(h) {
   if (h >= 24) h -= 24; // past-midnight end times (24 = 12 AM)
@@ -3513,7 +3728,7 @@ function fmtH(h) {
 }
 function fmtRange(s, e) {
   if (s === 7 && e === 23) return 'ALL DAY';
-  return fmtH(s) + ' – ' + fmtH(e);
+  return fmtH(s) + ' – ' + (e === 24 || e === 0 ? 'midnight' : fmtH(e));
 }
 function tlLeft(h)     { return ((h - TL_START) / TL_HOURS) * 100; }
 function tlWidth(s, e) { return ((e - s) / TL_HOURS) * 100; }
@@ -3845,12 +4060,40 @@ function parseMomentusText(rawText, lineSegs) {
   const rawLines = rawText.split('\n').map(l => l.trim().replace(FOOTNOTE_GLYPH_RE, ''));
   // Positions are optional: without them (older callers) the parser falls
   // back to telling items from notes by the trailing quantity.
-  const SEGS = Array.isArray(lineSegs) && lineSegs.length === rawLines.length ? lineSegs : null;
+  const SEGS = Array.isArray(lineSegs) && lineSegs.length === rawLines.length ? lineSegs.slice() : null;
+  const srcLines = rawLines.slice();   // what View Source shows: the PDF text as printed
   const lineX = idx => { const sg = SEGS && SEGS[idx]; return sg && sg.length ? sg[0][0] : null; };
   // Column bands, in PDF points.
   const X_ITEM_MIN = 255, X_NOTE_MIN = 269, X_CAT_MAX = 245, X_OUTLINE_MAX = 330;
   const inBand = (x, a, b) => x >= a && x < b;
   let curLine = 0;
+
+  /* Header rows are columns, and pdf.js sometimes hands several columns back
+     as one line: "GAB Multipurpose Room A&B 6:00 PM 8:00 PM Alpha Gamma Delta
+     - AGD Event Manager". The room+time pattern then fails, the event's items
+     get swallowed into its name, and every event after it shifts by one. With
+     positions we can rebuild those lines: keep the room (x≈220) and the two
+     event times (x≈92–135) and drop the client/status columns (x≥460).
+     Also drop the "starts previous day / ends next day" footnote glyph (a lone
+     3 or 4 at x≈35 or x≈206) so it can't end up glued to a room name. */
+  if (SEGS) {
+    const TIME_TOK = /^\d{1,2}(?::\d{2})?\s*[AP]M$/i;
+    const isGlyph = ([x, t]) => /^[34]$/.test(t) && (x < 45 || (x >= 200 && x < 215));
+    for (let k = 0; k < rawLines.length; k++) {
+      let sg = SEGS[k];
+      if (!sg || !sg.length) continue;
+      let changed = false;
+      if (sg.some(isGlyph)) { sg = sg.filter(x => !isGlyph(x)); SEGS[k] = sg; changed = true; }
+      const evt = sg.filter(([x, t]) => x >= 85 && x < 145 && TIME_TOK.test(t));
+      const cols = sg.filter(([x]) => x >= 460);
+      if (evt.length === 2 && cols.length) {
+        const room = sg.filter(([x]) => x >= 200 && x < 330).map(x => x[1]).join(' ');
+        rawLines[k] = (room ? room + ' ' : '') + evt[0][1] + ' ' + evt[1][1];
+        continue;
+      }
+      if (changed) rawLines[k] = sg.map(x => x[1]).join(' ').replace(FOOTNOTE_GLYPH_RE, '');
+    }
+  }
 
   // ── Day-header detection ──
   // The PDF may cover multiple days. Every day section gets parsed (not
@@ -4108,7 +4351,10 @@ function parseMomentusText(rawText, lineSegs) {
     if (!SEGS || e._srcStart == null) return;
     const end = e._hdrEnd != null ? e._hdrEnd : curLine;
     const client = [];
+    const ids = [];
     for (let k = e._srcStart; k < end && k < rawLines.length; k++) {
+      // Res ID then Book ID, each alone at the far right (x ≈ 717–726)
+      (SEGS[k] || []).forEach(([x, t]) => { if (x >= 690 && /^\d{5,9}$/.test(t)) ids.push(t); });
       if (isNoise(rawLines[k]) && !/\d{3}-\d{3}-\d{4}/.test(rawLines[k])) continue;
       if (isPageBoilerplate(rawLines[k]) || lineToDateKey(rawLines[k])) continue;
       (SEGS[k] || []).forEach(([x, t]) => {
@@ -4122,6 +4368,8 @@ function parseMomentusText(rawText, lineSegs) {
       });
     }
     e.client = client.join(' ').replace(/\s+/g, ' ').trim();
+    if (ids[0]) e.resId = ids[0];
+    if (ids[1]) e.bookId = ids[1];
   }
 
   // Is the next meaningful line indented at item/note level?
@@ -4181,7 +4429,7 @@ function parseMomentusText(rawText, lineSegs) {
         const start = e._srcStart;
         const end = (idx + 1 < events.length) ? events[idx + 1]._srcStart : endLineIdx;
         if (start != null && end != null && end > start) {
-          e.rawSource = rawLines.slice(start, end)
+          e.rawSource = srcLines.slice(start, end)
             .filter(l => l && !isPageBoilerplate(l))
             .join('\n');
         }
@@ -4493,6 +4741,7 @@ async function handleBuild(e) {
       else parsedDays.push(freshDay);
     });
     parsedDays.sort((a,b) => a.dateKey.localeCompare(b.dateKey));
+    result.days.forEach(d => migrateDay(d.dateKey));
 
     // Default to today's date if this PDF includes it, otherwise the
     // earliest day in the PDF — so an upload for a different day (looking
@@ -4500,7 +4749,12 @@ async function handleBuild(e) {
     const todaysEntry = result.days.find(d => d.dateKey === todayKey());
     const defaultDay = todaysEntry || result.days[0];
 
-    document.getElementById('shared-schedule-banner').classList.add('hidden');
+    {
+      const n = new Date(); let hh = n.getHours();
+      const at = (hh % 12 || 12) + ':' + String(n.getMinutes()).padStart(2, '0') + ' ' + (hh >= 12 ? 'PM' : 'AM');
+      result.days.forEach(d => { dayMeta[d.dateKey] = { by: myInitials || 'you', at }; });
+    }
+    dayNotice = null;
     renderDay(defaultDay.dateKey, defaultDay.dateLabel, defaultDay.events);
     // A quick sanity-check summary, not a correctness guarantee — but a
     // day that normally shows ~50 tech events suddenly showing 12 is
@@ -4509,11 +4763,19 @@ async function handleBuild(e) {
     // glued onto another event) — say so, so nothing goes missing silently.
     const unreadable = result.unreadable || [];
     const warnSuffix = unreadable.length
-      ? ` · ⚠ ${unreadable.length} event${unreadable.length === 1 ? '' : 's'} with tech needs couldn't be read: ` +
-        unreadable.slice(0, 3).map(u => (u.name || u.room || '?').slice(0, 40)).join('; ') + (unreadable.length > 3 ? '…' : '')
+      ? ` · ⚠ ${unreadable.length} event${unreadable.length === 1 ? '' : 's'} with tech needs couldn't be read — check the PDF for: ` +
+        unreadable.slice(0, 3).map(u => {
+          const nm = String(u.name || '').replace(/\s+/g, ' ').replace(/\b\d{1,2}(:\d{2})?\s*[AP]M\b/gi, '').trim();
+          const d = u.day ? keyToDate(u.day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' : '';
+          return d + (nm ? '“' + (nm.length > 36 ? nm.slice(0, 35) + '…' : nm) + '”' : '') + (u.room ? ' in ' + String(u.room).split(/\s+/).slice(0, 2).join(' ') : '') || '?';
+        }).join(', ') + (unreadable.length > 3 ? ` and ${unreadable.length - 3} more` : '')
       : '';
     weekChecked = {};
+    const daysTxt = result.days.length === 1 ? fmtDayShort(result.days[0].dateKey)
+      : `${result.days.length} days (${fmtDayShort(result.days[0].dateKey)} – ${fmtDayShort(result.days[result.days.length - 1].dateKey)})`;
+    const baseSummary = `Last upload: ${daysTxt} · ${totalEvents} tech event${totalEvents === 1 ? '' : 's'} of ${totalRawEvents}`;
     statusEl.textContent = `✓ ${pageCount} page${pageCount === 1 ? '' : 's'} → ${totalRawEvents} event${totalRawEvents === 1 ? '' : 's'} found → ${totalEvents} with tech needs, across ${result.days.length} day${result.days.length === 1 ? '' : 's'}` + warnSuffix;
+    setUploadSummary(baseSummary + (db ? ' · sharing…' : ' · this device only (offline)') + warnSuffix, unreadable.length > 0);
 
     // Share every day found with the team via Firebase — so a teammate
     // opening the app on any of these dates (today or not) can find it
@@ -4531,6 +4793,9 @@ async function handleBuild(e) {
       // full merged parsedDays, which can include stale placeholder
       // entries (events: null) from the known-dates index. Writing those
       // would overwrite real Firebase data for days this PDF doesn't cover.
+      // Keep what was there before, so replacing a teammate's upload can be undone.
+      const prevDays = await Promise.all(result.days.map(d =>
+        db.ref('schedule/' + d.dateKey).once('value').then(sn => sn.val()).catch(() => null)));
       Promise.all(result.days.map(d => {
         // JSON round-trip strips any `undefined` values, which Firebase
         // Realtime Database otherwise rejects (and fails the entire write).
@@ -4551,9 +4816,25 @@ async function handleBuild(e) {
       })).then(() => {
         console.log('Schedule shared with team:', result.days.map(d => d.dateKey));
         statusEl.textContent = summaryMsg;
+        setUploadSummary(baseSummary + ' · shared with the team' + warnSuffix, unreadable.length > 0);
+        const replaced = result.days.map((d, n) => ({ dk: d.dateKey, prev: prevDays[n] })).filter(x => x.prev && x.prev.events);
+        if (replaced.length) {
+          const who = [...new Set(replaced.map(x => x.prev.uploadedBy).filter(Boolean))].join(', ');
+          undoToast(`Replaced ${replaced.length} day${replaced.length === 1 ? '' : 's'} already uploaded${who ? ' by ' + who : ''}`, () => {
+            replaced.forEach(x => {
+              db.ref('schedule/' + x.dk).set(x.prev);
+              const ev = (Array.isArray(x.prev.events) ? x.prev.events : Object.values(x.prev.events)).map(normalizeEvent);
+              const pd = parsedDays.find(d => d.dateKey === x.dk); if (pd) pd.events = ev;
+              dayMeta[x.dk] = { by: x.prev.uploadedBy || '', at: x.prev.uploadedAt || '' };
+              if (x.dk === currentDateKey) renderDay(x.dk, x.prev.date || '', ev);
+            });
+            setUploadSummary('Upload undone — the previous version is back.', false);
+          });
+        }
       }).catch(err => {
         console.error('Failed to share schedule', err);
         statusEl.textContent = `✓ ${totalEvents} events loaded (local only — sharing failed: ${err.message})`;
+        setUploadSummary(baseSummary + ` · NOT shared — ${err.message}` + warnSuffix, true);
       });
     }
   } catch(err) {
@@ -4599,7 +4880,28 @@ function techStartH(ev) {
   if (ev && typeof ev.resStartH === 'number' && ev.resStartH <= ev.startH) return ev.resStartH;
   return ev.startH - 0.5;
 }
-var WS_SHOW = 8;     // items shown per category before "show all"
+// Labor windows from the worksheet ("2:00 PM – 7:30 PM"), earliest first.
+function parseClock(t) {
+  const m = String(t || '').match(/(\d{1,2})(?::(\d{2}))?\s*([AP])M/i);
+  if (!m) return null;
+  let h = Number(m[1]) % 12; if (/p/i.test(m[3])) h += 12;
+  return h + (Number(m[2]) || 0) / 60;
+}
+function laborWindows(ev) {
+  return toArr(ev && ev.sections).filter(x => x && x.labor && x.window).map(x => {
+    const [a, b] = String(x.window).split(/\s*[–-]\s*/);
+    const s = parseClock(a), e = parseClock(b);
+    const people = toArr(x.items).reduce((n, it) => n + (Number(it.qty) || 0), 0);
+    const tiers = [...new Set(toArr(x.items).map(it => it.code).filter(Boolean))].join('/');
+    return s == null ? null : { s, e, people, tiers, title: x.title };
+  }).filter(Boolean).sort((p, q) => p.s - q.s);
+}
+function laborStartH(ev) { const w = laborWindows(ev); return w.length ? w[0].s : null; }
+// "2× AV3 · 2 PM–7:30 PM" for each labor window
+function laborSummary(ev) {
+  return laborWindows(ev).map(w => (w.people ? w.people + '× ' : '') + (w.tiers || 'labor') + ' · ' + fmtH(w.s) + (w.e != null ? '–' + fmtH(w.e) : '')).join(', ');
+}
+var WS_SHOW = 40;    // items shown per category in the event window before "show all"
 // "FCOM 1200" on an item in an FCOM room just repeats the room; "CEC" on a mic
 // in that room means it comes from CEC — that one is worth showing.
 function roomBuilding(room) { return String(room || '').trim().split(/\s+/)[0].toUpperCase(); }
@@ -4618,9 +4920,10 @@ function wsSectionHtml(sec, full, bldg) {
   sec.items.forEach((it, n) => {
     const more = full && n >= WS_SHOW ? ' ws-more' : '';
     h += `<div class="ws-item${more}"><span class="ws-q">${it.qty == null ? '' : it.qty}</span><span class="ws-nm">${escapeHtml(it.name)}</span>` +
-      (codeIsForeign(it.code, bldg) ? `<span class="ws-code" title="Comes from ${escapeHtml(it.code)}">from ${escapeHtml(it.code)}</span>` : '<span></span>');
+      (sec.labor && it.code ? `<span class="ws-code ws-tier" title="Labor tier">${escapeHtml(it.code)}</span>`
+        : codeIsForeign(it.code, bldg) ? `<span class="ws-code" title="Comes from ${escapeHtml(it.code)}">from ${escapeHtml(it.code)}</span>` : '<span></span>');
     if (full && it.notes.length) h += `<div class="ws-notes">${it.notes.map(x => `<div>${escapeHtml(x)}</div>`).join('')}</div>`;
-    if (!full && it.notes.length) h += `<div class="ws-notes compact" title="${escapeHtml(it.notes.join('\n'))}">${escapeHtml(it.notes[0])}${it.notes.length > 1 ? ` <i>+${it.notes.length - 1}</i>` : ''}</div>`;
+    if (!full && it.notes.length) h += `<div class="ws-notes compact">${it.notes.map(x => `<div>${escapeHtml(x)}</div>`).join('')}</div>`;
     h += '</div>';
   });
   h += '</div>';
@@ -4630,16 +4933,17 @@ function wsSectionHtml(sec, full, bldg) {
 }
 function wsGeneralHtml(notes, compact) {
   if (!notes.length) return '';
-  if (compact) return `<div class="ws-gen compact" title="${escapeHtml(notes.join('\n'))}"><b>NOTE</b> ${escapeHtml(notes[0])}${notes.length > 1 ? ` <i>+${notes.length - 1}</i>` : ''}</div>`;
+  if (compact) return `<div class="ws-gen compact"><b>${notes.length > 1 ? 'NOTES' : 'NOTE'}</b> ${notes.map(escapeHtml).join('<br>')}</div>`;
   return `<div class="ws-gen"><div class="ws-gen-h">GENERAL NOTES</div>${notes.map(x => `<div>${escapeHtml(x)}</div>`).join('')}</div>`;
 }
 
 function showTooltip(ev, evKey, x, y) {
   clearTimeout(tooltipHideTimer);
   let h = '';
-  h += `<div class="tt-room">${ev.room}</div>`;
+  h += `<div class="tt-room">${escapeHtml(ev.room)}</div>`;
   h += `<div class="tt-time">${fmtRange(ev.startH, ev.endH)}</div>`;
-  h += `<div class="tt-name">${ev.name}</div>`;
+  { const lab = laborStartH(ev); if (ev.hasTech && lab != null && lab < techStartH(ev)) h += `<div class="evt-laborcall">LABOR CALL ${fmtH(lab)} · ${escapeHtml(laborSummary(ev))}</div>`; }
+  h += `<div class="tt-name">${escapeHtml(ev.name)}</div>`;
   if (ev.client) h += `<div class="tt-client">${escapeHtml(ev.client)}</div>`;
   if (ev.hasTech) h += `<div class="tt-badge">⚙ TECH START ${fmtH(techStartH(ev))}</div>`;
 
@@ -4666,12 +4970,12 @@ function showTooltip(ev, evKey, x, y) {
   }
 
   const tags = [];
-  ev.av.forEach(a       => tags.push(`<span class="tt-tag g">🎛 <b>${a.label}</b> ${a.name}</span>`));
-  ev.audio.forEach(a    => tags.push(`<span class="tt-tag g">🎙 <b>${a.label}</b> ${a.name}</span>`));
-  ev.video.forEach(v    => tags.push(`<span class="tt-tag g">📽 <b>${v.label}</b> ${v.name}</span>`));
-  ev.lighting.forEach(l => tags.push(`<span class="tt-tag g">💡 <b>${l.label}</b> ${l.name}</span>`));
-  ev.film.forEach(f     => tags.push(`<span class="tt-tag g">🎬 <b>${f.label}</b> ${f.name}</span>`));
-  ev.gentech.forEach(g  => tags.push(`<span class="tt-tag g">⚡ <b>${g.label}</b> ${g.name}</span>`));
+  ev.av.forEach(a       => tags.push(`<span class="tt-tag g">🎛 <b>${escapeHtml(a.label)}</b> ${escapeHtml(a.name)}</span>`));
+  ev.audio.forEach(a    => tags.push(`<span class="tt-tag g">🎙 <b>${escapeHtml(a.label)}</b> ${escapeHtml(a.name)}</span>`));
+  ev.video.forEach(v    => tags.push(`<span class="tt-tag g">📽 <b>${escapeHtml(v.label)}</b> ${escapeHtml(v.name)}</span>`));
+  ev.lighting.forEach(l => tags.push(`<span class="tt-tag g">💡 <b>${escapeHtml(l.label)}</b> ${escapeHtml(l.name)}</span>`));
+  ev.film.forEach(f     => tags.push(`<span class="tt-tag g">🎬 <b>${escapeHtml(f.label)}</b> ${escapeHtml(f.name)}</span>`));
+  ev.gentech.forEach(g  => tags.push(`<span class="tt-tag g">⚡ <b>${escapeHtml(g.label)}</b> ${escapeHtml(g.name)}</span>`));
 
   if (tags.length) h += `<div style="margin-top:7px;line-height:1.9">${tags.join('')}</div>`;
   else h += `<div class="tt-notech">No tech needs</div>`;
@@ -4709,7 +5013,7 @@ function openDetailModal(ev, evKey) {
   // Badges row
   // Tech start lives on the sign-off button and EC in the details row, so
   // the badge row is only for exceptions (catering, all day).
-  const badges = (ev.hasFood ? `<span class="dm-badge amber">🍽 CATERING</span>` : '') +
+  const badges = (ev.hasFood ? `<span class="dm-badge amber">🍽︎ CATERING</span>` : '') +
                  (ev.allDay  ? `<span class="dm-badge amber">ALL DAY</span>` : '');
   if (badges) body += `<div class="dm-badges">${badges}</div>`;
 
@@ -4717,7 +5021,7 @@ function openDetailModal(ev, evKey) {
     if (!items.length) return '';
     let s = `<div class="dept-lbl" onclick="toggleSection(this)">${label}</div>`;
     s += `<div class="dept-section dm-tags">`;
-    items.forEach(it => { s += `<span class="tag ${cls}"><span class="tag-qty">${it.label}</span>${it.name}</span>`; });
+    items.forEach(it => { s += `<span class="tag ${cls}"><span class="tag-qty">${escapeHtml(it.label)}</span>${escapeHtml(it.name)}</span>`; });
     s += `</div>`;
     return s;
   }
@@ -4774,9 +5078,9 @@ function openDetailModal(ev, evKey) {
   // Single sign-off button — only if event has tech needs
   if (ev.hasTech && !ev.allDay) {
     if (state.ts) {
-      body += `<button class="dm-signoff-btn signed" data-evkey="${evKey}">${state.tsBy}  ·  ${state.tsAt}</button>`;
+      body += `<button class="dm-signoff-btn signed" data-evkey="${evKey}" aria-disabled="true">${signedLabel(state)}</button>`;
     } else {
-      body += `<button class="dm-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')" title="Tech starts at ${fmtH(techStartH(ev))} — tap when the room is ready">SIGN OFF · ${fmtH(techStartH(ev))}</button>`;
+      body += `<button class="dm-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')" title="Tech starts at ${fmtH(techStartH(ev))} — tap when the room is ready">${unsignedLabel(ev)}</button>`;
     }
   }
 
@@ -4791,6 +5095,7 @@ function openDetailModal(ev, evKey) {
   if (ev.manual) body += `<div class="dm-flag"><button class="dm-flag-btn" onclick="editManualFromModal()">EDIT / DELETE THIS EVENT</button></div>`;
 
   document.getElementById('dm-body').innerHTML = body;
+  if ((signoffCache[evKey] || {}).ts) applySignoffToCard(evKey);
   const bg = document.getElementById('detail-modal-bg');
   bg.classList.remove('hidden');
   // Force reflow so the fadeIn/slideUp animations replay on each open
@@ -4847,6 +5152,7 @@ document.addEventListener('touchstart', function(e) {
    TIMELINE RENDER
 ═══════════════════════════════ */
 function renderTimeline(events) {
+  setTlWindow(events);
   // Separate rooms with only all-day events vs timed events
   const allRooms = [...new Set(events.map(e => e.room))].sort((a,b) => a.localeCompare(b));
   const timedRooms  = allRooms.filter(r => events.some(e => e.room === r && !e.allDay));
@@ -4901,7 +5207,7 @@ function renderTimeline(events) {
         summary.style.left  = tlLeft(minS) + '%';
         summary.style.width = tlWidth(minS, maxE) + '%';
         const techCount = fshEvents.filter(e => e.hasTech).length;
-        summary.textContent = `Fisher Center · ${fshRooms.length} rooms${techCount ? ` · ${techCount} tech` : ''}`;
+        summary.textContent = `Fisher Center · ${fshRooms.length} room${fshRooms.length === 1 ? '' : 's'}${techCount ? ` · ${techCount} tech` : ''}`;
         summary.style.pointerEvents = 'none';
         cells.appendChild(summary);
       }
@@ -5012,6 +5318,16 @@ function renderRoomCells(row, evs, allEventsForContext) {
     const c = document.createElement('div'); c.className = 'tl-cell'; cells.appendChild(c);
   }
 
+  // Events that overlap in one room get their own lane instead of stacking.
+  const laneOf = new Map(), laneEnds = [];
+  evs.slice().sort((x, y) => x.startH - y.startH || y.endH - x.endH).forEach(ev => {
+    let i = laneEnds.findIndex(end => end <= ev.startH + 1e-6);
+    if (i < 0) { i = laneEnds.length; laneEnds.push(0); }
+    laneEnds[i] = ev.endH; laneOf.set(ev, i);
+  });
+  const lanes = Math.max(1, laneEnds.length);
+  if (lanes > 1) { cells.style.minHeight = (lanes * 34 + 8) + 'px'; cells.classList.add('tl-lanes'); }
+
   evs.forEach(ev => {
     const s = Math.max(ev.startH, TL_START);
     const e = Math.min(ev.endH, TL_START + TL_HOURS);
@@ -5023,11 +5339,20 @@ function renderRoomCells(row, evs, allEventsForContext) {
     el.className = 'tl-evt ' + cls + (ev.manual ? ' tl-manual' : '');
     el.style.left  = tlLeft(s) + '%';
     el.style.width = tlWidth(s, e) + '%';
+    if (lanes > 1) {
+      const ln = laneOf.get(ev) || 0;
+      el.style.top = `calc(${ln * 100 / lanes}% + 4px)`;
+      el.style.height = `calc(${100 / lanes}% - 6px)`;
+      el.style.bottom = 'auto';
+    }
     // Hovering grows the block to fit its full name (never smaller than it is).
     el.style.setProperty('--w', tlWidth(s, e) + '%');
     el.classList.add('tl-grow');
     if (e - s < 1.25) el.classList.add('tl-narrow');
     el.dataset.evkey    = evKey;
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', `${ev.name}, ${ev.room}, ${fmtRange(ev.startH, ev.endH)}`);
     el.dataset.evname   = ev.name.toLowerCase();
     el.dataset.evroom   = ev.room.toLowerCase();
     el.dataset.evequip  = [...ev.av, ...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech,
@@ -5083,6 +5408,13 @@ function renderRoomCells(row, evs, allEventsForContext) {
         tline.title = 'Tech Start ' + fmtH(tsH);
         cells.appendChild(tline);
       }
+      const lab = laborStartH(ev);
+      if (lab != null && lab < tsH && lab >= TL_START) {
+        const ll = document.createElement('div');
+        ll.className = 'tl-laborline';
+        ll.style.left = tlLeft(lab) + '%';
+        cells.appendChild(ll);
+      }
     }
   });
 
@@ -5096,9 +5428,16 @@ function fmtDuration(mins) {
   return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
 }
 
+// Live time only means something on today's schedule. Viewing another day
+// returns null: no countdown, no LIVE/ENDED dimming.
+function liveNowH() {
+  if (currentDateKey && currentDateKey !== todayKey()) return null;
+  const d = new Date(); return d.getHours() + d.getMinutes() / 60;
+}
 function getCountdownText(startH, endH, allDay) {
   if (allDay) return { text: 'ALL DAY', cls: 'cd-future' };
-  const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+  const nowH = liveNowH();
+  if (nowH == null) return { text: '', cls: 'cd-none' };
   if (nowH >= endH) return { text: 'ENDED', cls: 'cd-ended' };
   if (nowH >= startH) {
     const minsLeft = Math.round((endH - nowH) * 60);
@@ -5110,7 +5449,7 @@ function getCountdownText(startH, endH, allDay) {
 
 /* Build a styled tag HTML string with prominent quantity */
 function makeTag(item, colorClass) {
-  return `<span class="tag ${colorClass}"><span class="tag-qty">${item.label}</span>${item.name}</span>`;
+  return `<span class="tag ${colorClass}"><span class="tag-qty">${escapeHtml(item.label)}</span>${escapeHtml(item.name)}</span>`;
 }
 
 /* Build a dept section if items exist */
@@ -5129,12 +5468,12 @@ function renderCards(events) {
   const sorted = [...events].sort((a,b) => a.startH - b.startH || a.room.localeCompare(b.room));
   const grid = document.getElementById('card-grid');
   grid.innerHTML = '';
-  const nowH = new Date().getHours() + new Date().getMinutes() / 60;
+  const nowH = liveNowH();
 
   // Diagnostic: show how many events were passed in, so a blank calendar
   // can be distinguished from "0 events received" vs a rendering failure.
   const debugCount = document.getElementById('cards-debug-count');
-  if (debugCount) debugCount.textContent = `(${events.length} event${events.length === 1 ? '' : 's'})`;
+  if (debugCount) debugCount.textContent = `· ${events.length} on this day`;
 
   sorted.forEach((ev, i) => {
     const card = document.createElement('div');
@@ -5143,45 +5482,47 @@ function renderCards(events) {
 
     const evKey = makeEventKey(ev);
     card.dataset.evkey = evKey;
+    card.tabIndex = 0;
+    card.setAttribute('aria-label', `${ev.name}, ${ev.room}, ${fmtRange(ev.startH, ev.endH)} — open details`);
 
     const hasFood    = ev.hasFood;
-    const isEnded    = nowH >= ev.endH && !ev.allDay;
+    const isEnded    = nowH != null && nowH >= ev.endH && !ev.allDay;
 
     card.dataset.hasTech    = ev.hasTech ? '1' : '0';
     card.dataset.allday     = ev.allDay ? '1' : '0';
     card.dataset.searchHide = '0';
-    card.dataset.searchText = (ev.room + ' ' + ev.name + ' ' + ev.type + ' ' +
-      [...ev.av, ...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech,
-       ...ev.avLabor, ...ev.audioLabor, ...ev.videoLabor, ...ev.lightingLabor, ...ev.filmLabor,
-       ...ev.gentechLabor, ...ev.techRental]
-      .map(it => it.name).join(' ') + ' ' + (ev.client || '') + ' ' + ev.notes.join(' ')).toLowerCase();
+    card.dataset.searchText = evSearchText(ev);
 
     if (isEnded) card.classList.add('card-ended');
 
-    const foodEmoji = hasFood ? `<span class="food-emoji" title="Food/beverage">🍽</span>` : '';
+    const foodEmoji = hasFood ? `<span class="food-emoji" title="Food/beverage">🍽︎</span>` : '';
     const cd = getCountdownText(ev.startH, ev.endH, ev.allDay);
 
     let inner = `<div class="card-room">`;
-    inner += `<span>${ev.room}</span>`;
+    inner += `<span>${escapeHtml(ev.room)}</span>`;
     const ecBadge = (ev.ec && ev.ec.trim())
-      ? `<span class="ec-badge" title="Event Coordinator">${ev.ec}</span>` : '';
-    inner += ecBadge;
-    if (ev.manual) inner += `<span class="ec-badge manual-badge" title="Added manually${ev.manualBy ? ' by ' + escapeHtml(ev.manualBy) : ''}">MANUAL</span>`;
-    inner += `<span class="card-tools">` + (ev.manual ? `<button class="ev-edit-btn" title="Edit or delete this manual event" onclick="editManual(event,'${ev.manualId}')">✎</button>` : '') + `<button class="eq-chip" data-evkey="${evKey}" onclick="onEqClick(event,'${evKey}')">+ EQ</button><button class="flag-btn" data-evkey="${evKey}" title="Flag this event" onclick="onFlagClick(event,'${evKey}')">${FLAG_ICON}</button>`;
+      ? `<span class="ec-badge" title="Event Coordinator">${escapeHtml(ev.ec)}</span>` : '';
+    // EC and MANUAL badges ride on the tools line (left side), so long room names don't add a third row.
+    const badges = ecBadge + (ev.manual ? `<span class="ec-badge manual-badge" title="Added manually${ev.manualBy ? ' by ' + escapeHtml(ev.manualBy) : ''}">MANUAL</span>` : '');
+    inner += `<span class="card-tools">` + (badges ? `<span class="card-badges">${badges}</span>` : '') + (ev.manual ? `<button class="ev-edit-btn" title="Edit or delete this manual event" onclick="editManual(event,'${ev.manualId}')">✎</button>` : '') + `<button class="eq-chip" data-evkey="${evKey}" onclick="onEqClick(event,'${evKey}')">+ SET/STRIKE</button><button class="flag-btn" data-evkey="${evKey}" title="Flag this event for the team" aria-label="Flag this event" onclick="onFlagClick(event,'${evKey}')">${FLAG_ICON} FLAG</button>`;
     if (ev.rawSource) {
-      inner += `<button class="view-src-icon-btn" title="View source text from the PDF">🔍</button>`;
+      inner += `<button class="view-src-icon-btn" title="Details and the worksheet's source text" aria-label="Open details">ⓘ</button>`;
     }
     inner += `</span>`;
     inner += `</div>`;
     inner += `<div class="evt">`;
-    const laborFlag = hasLabor(ev) ? `<span class="labor-flag" title="Labor attached"></span>` : '';
+    const laborFlag = hasLabor(ev) ? `<span class="labor-flag" title="Labor: ${escapeHtml(laborSummary(ev) || 'attached')}"></span>` : '';
     inner += `<div class="evt-time">${fmtRange(ev.startH, ev.endH)}${foodEmoji}${laborFlag}</div>`;
+    { // An AV call earlier than tech start is easy to miss — say it on the card.
+      const lab = laborStartH(ev);
+      if (ev.hasTech && lab != null && lab < techStartH(ev)) inner += `<div class="evt-laborcall">LABOR CALL ${fmtH(lab)} · ${escapeHtml(laborSummary(ev))}</div>`;
+    }
     inner += `<span class="evt-countdown ${cd.cls}" data-start="${ev.startH}" data-end="${ev.endH}">${cd.text}</span>`;
-    inner += `<div class="evt-name">${ev.name}</div>`;
+    inner += `<div class="evt-name">${escapeHtml(ev.name)}</div>`;
     if (ev.client) inner += `<div class="evt-client">${escapeHtml(ev.client)}</div>`;
     if (ev.type && ev.type.toLowerCase() !== ev.name.toLowerCase()
         && !/^(main event|rehearsal|practice|meeting|meal|reception|planning|ready|doors|client pre-access|breakout session|dressing room|production office|client load-in)$/i.test(ev.type)) {
-      inner += `<div class="evt-type">${ev.type}</div>`;
+      inner += `<div class="evt-type">${escapeHtml(ev.type)}</div>`;
     }
 
     // ── Department sections ──
@@ -5237,9 +5578,9 @@ function renderCards(events) {
     if (ev.hasTech && !ev.allDay) {
       const state = signoffCache[evKey] || {};
       if (state.ts) {
-        inner += `<div class="signoff-bar"><button class="tech-signoff-btn signed" data-evkey="${evKey}">${state.tsBy}</button></div>`;
+        inner += `<div class="signoff-bar"><button class="tech-signoff-btn signed" data-evkey="${evKey}" aria-disabled="true">${signedLabel(state)}</button></div>`;
       } else {
-        inner += `<div class="signoff-bar"><button class="tech-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">TECH STARTS AT ${fmtH(techStartH(ev))}</button></div>`;
+        inner += `<div class="signoff-bar"><button class="tech-signoff-btn" data-evkey="${evKey}" onclick="doSignoff('${evKey}')">${unsignedLabel(ev)}</button></div>`;
       }
     }
 
@@ -5269,6 +5610,7 @@ function renderCards(events) {
     }
   });
 
+  applyAllSignoffs();   // signed cards get their undo link
   filterCards();
   applySearch();
 }
@@ -5288,6 +5630,16 @@ function toggleSection(lbl) {
    SEARCH
 ═══════════════════════════════ */
 let searchQuery = '';
+// Everything a person might search an event by: name, room, type, items,
+// client, EC, contacts, notes.
+function evSearchText(ev) {
+  const items = [...ev.av, ...ev.audio, ...ev.video, ...ev.lighting, ...ev.film, ...ev.gentech,
+    ...ev.avLabor, ...ev.audioLabor, ...ev.videoLabor, ...ev.lightingLabor, ...ev.filmLabor,
+    ...ev.gentechLabor, ...ev.techRental].map(it => it.name);
+  toArr(ev.sections).forEach(sec => toArr(sec.items).forEach(it => items.push(it.name)));
+  return [ev.room, ev.name, ev.type, ev.evType, ev.client, ev.ec, ev.setup, toArr(ev.contacts).join(' '),
+    items.join(' '), toArr(ev.notes).join(' ')].filter(Boolean).join(' ').toLowerCase();
+}
 function handleSearch() {
   searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
   applySearch();
@@ -5305,16 +5657,25 @@ function applySearch() {
   filterCards();
   const countEl = document.getElementById('search-count');
   countEl.classList.toggle('hidden', !searchQuery);
-  if (searchQuery) countEl.textContent = visible + ' result' + (visible!==1?'s':'');
+  if (searchQuery) {
+    // Also say which other loaded days have matches, and let them be opened.
+    const other = parsedDays.filter(d => d.dateKey !== currentDateKey && Array.isArray(d.events))
+      .map(d => ({ k: d.dateKey, n: d.events.filter(ev => evSearchText(normalizeEvent(ev)).includes(searchQuery)).length }))
+      .filter(x => x.n).slice(0, 4);
+    countEl.innerHTML = escapeHtml(visible + ' here') + other.map(x =>
+      ` · <button type="button" class="sc-day" data-k="${x.k}">${escapeHtml(fmtDayShort(x.k))} (${x.n})</button>`).join('');
+    countEl.querySelectorAll('.sc-day').forEach(b => b.onclick = () => selectDay(b.dataset.k));
+  }
 
   // Timeline blocks — highlight matches, fade non-matches
+  const byKey = {};
+  allEvents.forEach(ev => { byKey[makeEventKey(ev)] = ev; });
   document.querySelectorAll('.tl-evt').forEach(el => {
     el.classList.remove('tl-search-match','tl-search-nomatch');
     if (!searchQuery) return;
-    const name  = (el.dataset.evname  || '');
-    const room  = (el.dataset.evroom  || '');
-    const equip = (el.dataset.evequip || '');
-    const match = name.includes(searchQuery) || room.includes(searchQuery) || equip.includes(searchQuery);
+    const ev = byKey[el.dataset.evkey];
+    const match = ev ? evSearchText(ev).includes(searchQuery)
+      : ((el.dataset.evname || '') + ' ' + (el.dataset.evroom || '') + ' ' + (el.dataset.evequip || '')).includes(searchQuery);
     el.classList.add(match ? 'tl-search-match' : 'tl-search-nomatch');
   });
 }
@@ -5346,7 +5707,7 @@ function updateNextUp(events) {
     const untilLabel = minsTo < 60 ? `in ${minsTo}m` : `in ${Math.floor(minsTo/60)}h${minsTo%60?' '+(minsTo%60)+'m':''}`;
     const entry = document.createElement('div');
     entry.className = 'uts-entry';
-    entry.innerHTML = `<div class="uts-dot"></div><span class="uts-time">${fmtH(ev.tsH)}</span><span class="uts-info">${ev.room} · ${ev.name}</span><span class="uts-until">${untilLabel}</span>`;
+    entry.innerHTML = `<div class="uts-dot"></div><span class="uts-time">${fmtH(ev.tsH)}</span><span class="uts-info">${escapeHtml(ev.room)} · ${escapeHtml(ev.name)}</span><span class="uts-until">${untilLabel}</span>`;
     list.appendChild(entry);
   });
   wrap.classList.remove('hidden');
@@ -5365,9 +5726,9 @@ function refreshCountdowns() {
     el.textContent = cd.text;
     el.className = 'evt-countdown ' + cd.cls;
     if (card) {
-      const nowH = new Date().getHours() + new Date().getMinutes() / 60;
-      card.classList.toggle('card-ended', nowH >= endH && !allDay);
-      card.classList.toggle('card-live',  nowH >= startH && nowH < endH);
+      const nowH = liveNowH();
+      card.classList.toggle('card-ended', nowH != null && nowH >= endH && !allDay);
+      card.classList.toggle('card-live',  nowH != null && nowH >= startH && nowH < endH);
     }
   });
   if (allEvents.length) updateNextUp(allEvents);
@@ -5384,6 +5745,12 @@ function tickClock() {
   h = h % 12 || 12;
   document.getElementById('hdr-clock').textContent =
     h + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + ' ' + ap;
+  // The header is always the real date beside the real clock; the day being
+  // viewed lives in the day picker.
+  const dEl = document.getElementById('hdr-date');
+  const dTxt = now.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase() + ' · ' +
+    now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+  if (dEl.textContent !== dTxt) dEl.textContent = dTxt;
 }
 tickClock();
 setInterval(tickClock, 1000);
@@ -5496,6 +5863,7 @@ function attachFlagsListener() {
   flagsListenerAttached = true;
   db.ref('flags').on('value', snap => {
     flagCache = snap.val() || {};
+    Object.keys(flagCache).forEach(dk => migrateLegacyKeys('flags/' + dk, dk, flagCache[dk]));
     onFlagsChanged();
   });
 }
@@ -5519,12 +5887,24 @@ function toggleFlag(dateKey, evKey) {
     return;
   }
   const go = (initials) => {
-    const note = prompt('Flag this event. What needs attention? (optional)', '');
-    if (note === null) return; // cancelled
-    setFlag(dateKey, evKey, { by: initials, at: nowTimeStr(), note: note.trim().slice(0, 200) });
+    flagDlg = { dateKey, evKey, initials };
+    const ev = allEvents.find(e => makeEventKey(e) === evKey);
+    document.getElementById('flg-sub').textContent = ev ? ev.name + ' · ' + ev.room : '';
+    document.getElementById('flg-note').value = '';
+    document.getElementById('flg-bg').classList.remove('hidden');
+    setTimeout(() => document.getElementById('flg-note').focus(), 30);
   };
   if (myInitials) go(myInitials);
   else promptInitials(initials => { if (initials) go(initials); });
+}
+let flagDlg = null;
+function closeFlagDialog() { flagDlg = null; document.getElementById('flg-bg').classList.add('hidden'); }
+function saveFlagDialog() {
+  if (!flagDlg) return;
+  const { dateKey, evKey, initials } = flagDlg;
+  const note = document.getElementById('flg-note').value.trim().slice(0, 200);
+  closeFlagDialog();
+  setFlag(dateKey, evKey, { by: initials, at: nowTimeStr(), note });
 }
 function onFlagClick(e, evKey) {
   if (e) e.stopPropagation();
@@ -5538,7 +5918,8 @@ function applyFlagToCard(card, fl) {
   const btn = card.querySelector('.flag-btn');
   if (btn) {
     btn.classList.toggle('on', !!fl);
-    btn.title = fl ? 'Flagged by ' + fl.by + ' — click to remove' : 'Flag this event';
+    btn.textContent = FLAG_ICON + (fl ? ' FLAGGED' : ' FLAG');
+    btn.title = fl ? 'Flagged by ' + fl.by + ' — click to remove' : 'Flag this event for the team';
   }
   if (!fl) return;
   const banner = document.createElement('div');
@@ -5740,6 +6121,7 @@ function paintWeek() {
         const chip = document.createElement('div');
         chip.className = 'wk-evt' + (fl ? ' wk-flagged-evt' : '') + (k < today ? ' wk-past' : '') + (ev.manual ? ' wk-manual' : '');
         chip.dataset.evkey = evKey;
+        chip.dataset.k = k;
         chip.addEventListener('click', () => jumpToEvent(k, evKey));
 
         const time = document.createElement('div'); time.className = 'wk-time';
@@ -5747,13 +6129,13 @@ function paintWeek() {
         time.appendChild(t);
         const icons = document.createElement('span'); icons.className = 'wk-icons';
         if (hasLabor(ev)) { const lf = document.createElement('span'); lf.className = 'labor-flag'; lf.title = 'Labor attached'; icons.appendChild(lf); }
-        if (ev.hasFood) { const f = document.createElement('span'); f.textContent = '🍽'; f.title = 'Food/beverage'; icons.appendChild(f); }
+        if (ev.hasFood) { const f = document.createElement('span'); f.textContent = '🍽︎'; f.title = 'Food/beverage'; icons.appendChild(f); }
         const eqList = equipForEvent(k, evKey);
         if (eqList.length) {
           const tg = document.createElement('span');
           const openN = eqList.filter(([, i]) => !i.struck).length;
-          tg.className = 'wk-eqtag' + (openN ? ' pending' : ''); tg.textContent = 'EQ' + eqList.length;
-          tg.title = eqList.length + ' equipment item(s) attached, ' + openN + ' not yet struck';
+          tg.className = 'wk-eqtag' + (openN ? ' pending' : ''); tg.textContent = '☐' + eqList.length;
+          tg.title = eqList.length + ' set/strike' + (eqList.length === 1 ? '' : 's') + ' attached, ' + openN + ' not yet struck';
           icons.appendChild(tg);
         }
         if (fl) { const f = document.createElement('span'); f.className = 'wk-flag-ic'; f.textContent = FLAG_ICON; f.title = 'Flagged'; icons.appendChild(f); }
@@ -5766,7 +6148,7 @@ function paintWeek() {
         chip.appendChild(rm);
         if (hasLabor(ev)) {
           // In the labor views, say which crews: AV, Audio, Lighting…
-          const lb = document.createElement('div'); lb.className = 'wk-labor'; lb.textContent = 'LABOR · ' + laborKinds(ev).join(', ');
+          const lb = document.createElement('div'); lb.className = 'wk-labor'; lb.textContent = 'LABOR · ' + (laborSummary(ev) || laborKinds(ev).join(', '));
           chip.appendChild(lb);
           chip.classList.add('wk-has-labor');
         }
@@ -5787,6 +6169,21 @@ function paintWeek() {
   document.getElementById('wk-label').textContent = fmt(a, false) + ' – ' + fmt(b, true);
   document.getElementById('wk-summary').textContent =
     totalEvents + (weekSort === 'labor-only' ? ' LABOR EVENT' : ' TECH EVENT') + (totalEvents === 1 ? '' : 'S') + (flagged.length ? ' · ' + flagged.length + ' FLAGGED' : '');
+
+  // Sign-off state on each chip (one read per day shown)
+  if (db) [...new Set([...grid.querySelectorAll('.wk-evt[data-k]')].map(c => c.dataset.k))].forEach(k => {
+    db.ref('signoffs/' + k).once('value').then(sn => {
+      const so = sn.val() || {};
+      grid.querySelectorAll(`.wk-evt[data-k="${k}"]`).forEach(c => {
+        const st = so[c.dataset.evkey];
+        if (!st || !st.ts || c.querySelector('.wk-so')) return;
+        const b = document.createElement('span'); b.className = 'wk-so'; b.textContent = '✓ ' + (st.tsBy || '');
+        b.title = 'Signed off' + (st.tsBy ? ' by ' + st.tsBy : '') + (st.tsAt ? ' at ' + st.tsAt : '');
+        const ic = c.querySelector('.wk-icons'); (ic || c).appendChild(b);
+        c.classList.add('wk-signed');
+      });
+    }).catch(() => {});
+  });
 
   // flagged strip
   const strip = document.getElementById('wk-flagged');
@@ -5882,7 +6279,7 @@ function openEventModal(opts) {
   g('evm-title').textContent = m ? 'EDIT MANUAL EVENT' : 'ADD EVENT';
   g('evm-save').textContent = m ? 'SAVE' : 'ADD';
   g('evm-del').classList.toggle('hidden', !m);
-  g('evm-date').textContent = g('hdr-date').textContent || currentDateKey;
+  g('evm-date').textContent = g('hdr-viewday').textContent || currentDateKey;
   g('evm-name').value = m ? m.name : '';
   g('evm-room').value = m ? m.room : (opts.room || '');
   g('evm-note').value = m ? (m.note || '') : '';
@@ -6024,9 +6421,13 @@ document.addEventListener('keydown', e => {
     ghost.style.display = 'flex';
   });
   rowsEl.addEventListener('mouseleave', hideGhost);
+  let lastPtr = 'mouse';
+  rowsEl.addEventListener('pointerdown', e => { lastPtr = e.pointerType || 'mouse'; }, true);
   rowsEl.addEventListener('click', e => {
     // A pinned set/strike card is open: this click just closes it.
     if (typeof eqPopPinned !== 'undefined' && eqPopPinned) return;
+    // On touch, a tap that dismisses an event's tooltip is just a dismiss.
+    if (lastPtr !== 'mouse' && tooltipVisible) { hideTooltip(); return; }
     if (addMode) {
       const sl = slotAt(e);
       if (!sl) return;
@@ -6066,6 +6467,7 @@ function attachEquipListener() {
   equipListenerAttached = true;
   db.ref('equipment').on('value', snap => {
     equipCache = snap.val() || {};
+    migrateEquipKeys();
     renderEquip();
   });
 }
@@ -6152,13 +6554,14 @@ function addEquipMarkers(cells, room) {
   if (!room || !currentDateKey) return;
   equipForDay(currentDateKey).filter(r => roomMatches(r.item.loc, room)).forEach(r => {
     let h = TL_START, timeTxt = '';
+    if (!r.time) timeTxt = ' (no time set)';
     if (r.time) {
       const [hh, mm] = r.time.split(':').map(Number);
       h = Math.min(Math.max(hh + mm / 60, TL_START), TL_START + TL_HOURS);
       timeTxt = ' ' + fmtH(hh + mm / 60);
     }
     const m = document.createElement('div');
-    m.className = 'tl-eqm ' + r.kind + (r.done ? ' done' : '');
+    m.className = 'tl-eqm ' + r.kind + (r.done ? ' done' : '') + (r.time ? '' : ' tbd');
     m.style.left = tlLeft(h) + '%';
     const verb = r.kind === 'set' ? 'Set up' : 'Strike';
     // Just a checkbox on the timeline. Details come from hovering, and
@@ -6356,7 +6759,7 @@ function saveEquipModal() {
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    if (invMove) { closeMove(); return; }
+    if (invMove) { cancelMove(); return; }
     if (invEdit) { closeItem(); return; }
     if (invsOpen) { closeStorageRooms(); return; }
   } else if (e.key === 'Enter' && e.target && e.target.tagName === 'INPUT' && (invMove || invEdit) && e.target.type !== 'date') {
@@ -6385,10 +6788,10 @@ function applyEquipBadges() {
   document.querySelectorAll('.card .eq-chip').forEach(btn => {
     const evKey = btn.dataset.evkey;
     const list = equipForEvent(currentDateKey, evKey);
-    if (!list.length) { btn.className = 'eq-chip'; btn.textContent = '+ EQ'; btn.title = 'Attach equipment to this event'; return; }
+    if (!list.length) { btn.className = 'eq-chip'; btn.textContent = '+ SET/STRIKE'; btn.title = 'Add a set up / strike for this event'; return; }
     const open = list.filter(([, i]) => !i.struck).length;
     btn.className = 'eq-chip has' + (open ? ' pending' : '');
-    btn.textContent = 'EQ ' + list.length;
+    btn.textContent = 'SET/STRIKE · ' + list.length;
     btn.title = list.length + ' item' + (list.length === 1 ? '' : 's') + ' attached (' + open + ' not yet struck). Click to add more.';
   });
 }
@@ -6467,7 +6870,7 @@ function toggleEquipStep(id, kind) {
     const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
     apply({ [f.done]: true, [f.by]: initials, [f.at]: h + ':' + String(m).padStart(2, '0') + ' ' + ap });
     // Tracked items follow the job: set up moves them into the room; strike asks where they went.
-    try { if (kind === 'set') invOnSetUp(it, initials); else invOnStrike(it); } catch (e) { console.error('inventory hook', e); }
+    try { if (kind === 'set') invOnSetUp(it, initials); else invOnStrike(it, () => apply({ [f.done]: false, [f.by]: null, [f.at]: null })); } catch (e) { console.error('inventory hook', e); }
   };
   if (myInitials) proceed(myInitials);
   else promptInitials(ini => { if (ini) proceed(ini); });
@@ -6537,7 +6940,7 @@ function downloadJSON(obj, name) {
 }
 function lastBackupLabel() {
   let t = 0; try { t = Number(localStorage.getItem('osves_last_backup')) || 0; } catch (e) {}
-  return t ? 'last ' + invAgo(t) + ' on this device' : 'never on this device';
+  return t ? 'Last backup ' + invAgo(t) + ' (this device)' : 'No backup yet from this device';
 }
 async function downloadBackup(prefix) {
   try {
@@ -6773,7 +7176,7 @@ function openMove(ids, o) {
   o = o || {};
   ids = ids.filter(id => invCache[id]); if (!ids.length) return;
   fillEquipRooms();
-  invMove = { ids, evName: o.evName || null, skip: !!o.skip };
+  invMove = { ids, evName: o.evName || null, skip: !!o.skip, onCancel: o.onCancel || null };
   const g = id => document.getElementById(id);
   g('invm-title').textContent = o.title || (ids.length > 1 ? 'MOVE ' + ids.length + ' ITEMS' : 'MOVE');
   const sub = g('invm-sub'); sub.textContent = o.sub || ''; sub.classList.toggle('hidden', !o.sub);
@@ -6782,12 +7185,19 @@ function openMove(ids, o) {
   g('invm-rows').innerHTML = ids.map((id, n) => `<div class="invm-row"><div class="invm-name">${invIcon(invCache[id].type)} ${escapeHtml(invCache[id].name)}<small>now: ${escapeHtml(invNow(invCache[id]))}</small></div>${destFieldHtml('mv' + n)}</div>`).join('');
   g('invm-note').value = ''; g('invm-err').classList.add('hidden');
   g('invm-skip').classList.toggle('hidden', !o.skip);
+  g('invm-cancel').textContent = o.onCancel ? 'CANCEL STRIKE' : 'CANCEL';
+  g('invm-cancel').title = o.onCancel ? 'Un-check the strike' : '';
   g('invm-bg').classList.remove('hidden');
   setTimeout(() => { const s = g('mv0-sel'); if (s) s.focus(); }, 30);
 }
 function moveAll(v) { if (invMove) invMove.ids.forEach((_, n) => setDest('mv' + n, v)); }
 function closeMove() { invMove = null; document.getElementById('invm-bg').classList.add('hidden'); }
-function skipMove() { closeMove(); }
+function skipMove() { if (invMove) invMove.onCancel = null; closeMove(); }
+function cancelMove() {
+  const undo = invMove && invMove.onCancel;
+  closeMove();
+  if (undo) { undo(); undoToast('Strike un-checked — nothing was moved', null); }
+}
 function saveMove() {
   if (!invMove) return;
   const err = document.getElementById('invm-err'), dests = [];
@@ -6823,9 +7233,10 @@ function invOnSetUp(it, who) {
   ids.forEach(id => invWrite(id, null, { kind: 'room', loc: it.loc }, 'Set up', who, it.evName || it.name));
   if (!db) renderEquip();
 }
-function invOnStrike(it) {
+// CANCEL un-does the strike check-off; SKIP keeps it and leaves locations alone.
+function invOnStrike(it, undoStrike) {
   const ids = invAssetIds(it); if (!ids.length) return;
-  openMove(ids, { title: 'STRUCK — WHERE DID IT GO?', sub: (it.name || '') + (it.loc ? ' · ' + it.loc : ''), evName: it.evName || it.name, skip: true });
+  openMove(ids, { title: 'STRUCK — WHERE DID IT GO?', sub: (it.name || '') + (it.loc ? ' · ' + it.loc : ''), evName: it.evName || it.name, skip: true, onCancel: undoStrike });
 }
 
 /* ── Add / edit item ── */
@@ -7139,6 +7550,85 @@ function renderEquip() {
 }
 if (db) { attachEquipListener(); attachInvListener(); }
 renderEquip();
+
+
+/* ═══════════════════════════════
+   DIALOGS — one place for roles, focus, Tab trapping and Esc.
+   Esc closes only the topmost dialog; focus moves in when one opens and
+   goes back to whatever opened it when it closes.
+═══════════════════════════════ */
+(function initDialogs() {
+  const D = [
+    ['detail-modal-bg', () => closeDetailModal()],
+    ['modal-bg',        () => closeModal()],
+    ['eqm-bg',          () => closeEquipModal()],
+    ['evm-bg',          () => closeEventModal()],
+    ['invm-bg',         () => cancelMove()],
+    ['inve-bg',         () => closeItem()],
+    ['invs-bg',         () => closeStorageRooms()],
+    ['clr-bg',          () => closeClear()],
+    ['flg-bg',          () => closeFlagDialog()],
+    ['signin-bg',       null],
+  ];
+  const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]):not([type=hidden]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const openers = new Map();
+  const shown = el => el && !el.classList.contains('hidden') && getComputedStyle(el).display !== 'none';
+  const panelOf = bg => bg.firstElementChild;
+  D.forEach(([id]) => {
+    const bg = document.getElementById(id); if (!bg) return;
+    const p = panelOf(bg); if (!p) return;
+    p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true');
+    const t = p.querySelector('[id$="-title"], .eqm-title, .modal-title, .dm-name');
+    if (t) { if (!t.id) t.id = id + '-ttl'; p.setAttribute('aria-labelledby', t.id); }
+    if (!p.hasAttribute('tabindex')) p.setAttribute('tabindex', '-1');
+    new MutationObserver(() => {
+      if (shown(bg)) {
+        if (!openers.has(id)) {
+          openers.set(id, document.activeElement);
+          setTimeout(() => { if (shown(bg) && !p.contains(document.activeElement)) { const f = p.querySelector(FOCUSABLE); (f || p).focus({ preventScroll: true }); } }, 40);
+        }
+      } else if (openers.has(id)) {
+        const o = openers.get(id); openers.delete(id);
+        if (o && o.isConnected && typeof o.focus === 'function' && !topDialog()) try { o.focus({ preventScroll: true }); } catch (e) {}
+      }
+    }).observe(bg, { attributes: true, attributeFilter: ['class', 'style'] });
+  });
+  function topDialog() {
+    let best = null, bz = -1, bi = -1;
+    D.forEach(([id, close], i) => {
+      const bg = document.getElementById(id); if (!shown(bg)) return;
+      const z = parseInt(getComputedStyle(bg).zIndex, 10) || 0;
+      const order = [...document.body.children].indexOf(bg);
+      if (z > bz || (z === bz && order > bi)) { best = { bg, close }; bz = z; bi = order; }
+    });
+    return best;
+  }
+  window.addEventListener('keydown', e => {
+    const top = topDialog(); if (!top) return;
+    if (e.key === 'Escape') {
+      e.preventDefault(); e.stopImmediatePropagation();
+      if (top.close) top.close();
+    } else if (e.key === 'Tab') {
+      const p = panelOf(top.bg);
+      const f = [...p.querySelectorAll(FOCUSABLE)].filter(x => x.offsetParent !== null);
+      if (!f.length) { e.preventDefault(); return; }
+      const first = f[0], last = f[f.length - 1];
+      if (!p.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }, true);
+})();
+
+// Keyboard: Enter / Space on a focused timeline block or card opens it.
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const t = e.target;
+  if (!t || !t.matches || !t.matches('.tl-evt[data-evkey], .card[data-evkey]')) return;
+  e.preventDefault();
+  const ev = allEvents.find(x => makeEventKey(x) === t.dataset.evkey);
+  if (ev) openDetailModal(ev, t.dataset.evkey);
+});
 
 // Init Firebase on load
 initFirebase();
